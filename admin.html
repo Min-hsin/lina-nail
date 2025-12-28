@@ -7,7 +7,10 @@
     <style>
         :root { --bg-color: #FFFBF0; --header-bg: #EFEBE9; --text-main: #4E342E; --text-sub: #8D6E63; --card-bg: #FFFFFF; --accent-color: #A1887F; --border-color: #D7CCC8; --danger: #D32F2F; --success: #388E3C; --pending: #FBC02D; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "PingFang TC", sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); font-size: 16px; height: 100vh; display: flex; flex-direction: column; overflow: hidden; -webkit-tap-highlight-color: transparent; }
+        
+        /* 修正手機版面被吃掉的問題：移除 height: 100vh */
+        body { background-color: var(--bg-color); color: var(--text-main); font-size: 16px; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+        
         .icon { width: 22px; height: 22px; fill: currentColor; vertical-align: middle; margin-right: 5px; }
         #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.7); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; }
         .spinner { border: 5px solid #f3f3f3; border-top: 5px solid var(--accent-color); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
@@ -15,13 +18,19 @@
         #loginOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg-color); z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; }
         .login-box { background: #fff; padding: 40px; border-radius: 16px; width: 90%; max-width: 400px; box-shadow: 0 4px 20px rgba(141, 110, 99, 0.15); text-align: center; border: 1px solid var(--border-color); }
         .login-input { padding: 12px; font-size: 1.2rem; margin: 20px 0; border: 1px solid #ccc; border-radius: 8px; width: 100%; text-align: center; outline: none;}
-        header { background-color: var(--header-bg); padding: 12px 15px; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
-        .nav-scroller { display: flex; gap: 10px; overflow-x: auto; white-space: nowrap; padding-bottom: 5px; }
+        
+        /* 改用 Sticky Header 確保滑動順暢 */
+        header { position: sticky; top: 0; z-index: 1000; background-color: var(--header-bg); padding: 12px 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; padding-top: env(safe-area-inset-top); }
+        
+        .nav-scroller { display: flex; gap: 10px; overflow-x: auto; white-space: nowrap; padding-bottom: 5px; -webkit-overflow-scrolling: touch; }
         .nav-scroller::-webkit-scrollbar { display: none; }
         .nav-btn { background: #fff; border: 1px solid var(--border-color); color: var(--text-sub); padding: 8px 15px; cursor: pointer; font-size: 0.95rem; font-weight: bold; border-radius: 20px; transition: 0.2s; display: flex; align-items: center; white-space: nowrap; }
         .nav-btn.active { background-color: var(--text-main); color: #fff; border-color: var(--text-main); }
         .btn-home { text-decoration: none; font-weight: bold; color: var(--text-main); font-size: 0.9rem; border: 1px solid var(--text-main); padding: 5px 10px; border-radius: 8px; }
-        main { flex: 1; padding: 15px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        
+        /* Main 取消 overflow-y: auto，讓 body 自己捲動 */
+        main { flex: 1; padding: 15px; padding-bottom: 80px; }
+        
         .page-section { display: none; animation: fadeIn 0.3s; }
         .page-section.active { display: block; }
         @keyframes fadeIn { from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)} }
@@ -53,7 +62,7 @@
         .cal-badge { display: block; font-size: 0.8rem; background: var(--accent-color); color: #fff; padding: 4px; border-radius: 4px; margin-top: 2px; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .cal-badge.blocked { background: #BDBDBD; font-size: 0.75rem;} 
         .cal-badge.pending { background: var(--pending); color: #333; }
-        .settings-tab-nav { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px; overflow-x: auto; }
+        .settings-tab-nav { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .settings-tab-btn { background: none; border: none; padding: 8px 15px; cursor: pointer; font-size: 1rem; color: #888; white-space: nowrap; }
         .settings-tab-btn.active { color: var(--text-main); font-weight: bold; border-bottom: 3px solid var(--text-main); }
         .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #fff; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; }

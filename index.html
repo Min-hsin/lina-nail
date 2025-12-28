@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lina nail 莉娜時尚館</title>
     <style>
-        /* CSS 樣式區域 */
         :root { --bg-color: #F9F7F2; --card-bg: #FFFFFF; --primary-text: #5D4037; --secondary-text: #8D6E63; --accent-color: #BCAAA4; --accent-light: #EFEBE9; --accent-dark: #8D6E63; --border-color: #E0E0E0; --promo-highlight: #D32F2F; --nav-height: 60px; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "PingFang TC", sans-serif; }
         body { background-color: var(--bg-color); color: var(--primary-text); padding-top: var(--nav-height); line-height: 1.6; padding-bottom: 80px; }
@@ -73,7 +72,7 @@
         .nail-sub-btn { flex: 1; padding: 12px; text-align: center; border: 1px solid var(--accent-color); border-radius: 8px; background: #fff; color: var(--primary-text); cursor: pointer; font-weight: bold; position: relative; }
         .nail-sub-btn.active { background: var(--accent-color); color: white; }
         .nail-sub-btn.filled::after { content: '✓'; position: absolute; top: -5px; right: -5px; background: #4CAF50; color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; }
-        /* 改回3欄 */
+        /* 3欄設計 */
         .cat-group { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; } 
         .cat-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px 5px; border: 1px solid #eee; border-radius: 20px; background: #fff; cursor: pointer; transition: 0.3s; height: 100px; font-size: 0.9rem; font-weight: bold; color: var(--primary-text); box-shadow: 0 2px 5px rgba(0,0,0,0.03); position: relative; }
         .cat-btn:hover { background: #f9f9f9; }
@@ -167,8 +166,10 @@
                 <input type="tel" id="custPhone" placeholder="聯絡電話 (輸入完畢自動檢查會員)" class="form-input" onblur="checkMemberStatus()">
                 <div id="newGuestSection"><p style="color:var(--accent-dark); font-size:0.9rem; margin-bottom:10px; font-weight:bold;">✨ 歡迎新朋友！請完善資料</p><label style="font-size:0.9rem; font-weight:bold;">性別</label><div class="gender-group"><label class="gender-label"><input type="radio" name="custGender" value="女" checked onchange="updateWaxingOptions()"> 女</label><label class="gender-label"><input type="radio" name="custGender" value="男" onchange="updateWaxingOptions()"> 男</label></div><label style="font-size:0.9rem; font-weight:bold;">生日 (享壽星優惠)</label><input type="date" id="custBday" class="form-input"></div>
                 <label style="font-weight:bold; margin-top:10px; display:block;">預約日期</label><span class="date-hint">（僅開放2週）</span><input type="date" id="bookDate" class="form-input">
-                <label style="font-weight:bold;">預約時間</label><select id="bookTime" class="form-input"><option value="">請選擇時段</option><option value="10:00">10:00</option><option value="13:00">13:00</option><option value="15:30">15:30</option><option value="18:00">18:00</option><option value="其他">其他 備注可微調時間</option></select>
-                
+                <label style="font-weight:bold;">預約時間</label>
+                <select id="bookTime" class="form-input" onchange="toggleCustomTime()"><option value="">請選擇時段</option><option value="10:00">10:00</option><option value="13:00">13:00</option><option value="15:30">15:30</option><option value="18:00">18:00</option><option value="其他">其他 備注可微調時間</option></select>
+                <div id="customTimeBox" style="display:none; margin-top:-10px; margin-bottom:10px;"><label style="font-size:0.9rem; color:#666;">請選擇確切時間：</label><input type="time" id="customTimeInput" class="form-input" onchange="checkAvailability()"></div>
+
                 <p style="font-weight:bold; margin-bottom:10px; margin-top:20px;">預約項目 (點第二次可取消)</p>
                 <div class="cat-group">
                     <button type="button" class="cat-btn active" id="btn-nail" onclick="setServiceCat('nail')"><svg class="cat-icon" viewBox="0 0 24 24"><path d="M19 12H16V8C16 6.34 14.66 5 13 5V3H15V1H9V3H11V5C9.34 5 8 6.34 8 8V12H5C3.34 12 2 13.34 2 15V22H22V15C22 13.34 20.66 12 19 12ZM14 8V12H10V8C10 7.45 10.45 7 11 7H13C13.55 7 14 7.45 14 8Z" /></svg>美甲服務</button>
@@ -206,7 +207,7 @@
 
                 <div class="selected-summary" id="bookingSummary" style="display:none;"><div class="summary-title">目前已選擇預約項目：</div><ul id="summaryList" style="padding-left:20px; margin-top:5px;"></ul></div>
                 <textarea id="custNote" rows="2" placeholder="備註 (如：時間微調、其他需求)" style="width:100%; padding:10px; margin-top:15px; border:1px solid #ddd; border-radius:8px;"></textarea>
-                <button type="button" class="btn-submit" onclick="sendLine()">確認預約並跳轉官方LINE</button>
+                <button type="button" class="btn-submit" onclick="submitBooking()">確認預約並跳轉官方LINE</button>
             </form>
         </section>
         <section id="contact" class="card"><h2>聯絡方式</h2><div class="contact-grid"><a href="https://www.facebook.com/share/18LuFgiUqx" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7h-2.54v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02z"/></svg><span>Facebook</span></a><a href="https://www.instagram.com/lina__.nail" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg><span>Instagram</span></a><a href="https://lin.ee/8eSVhBH" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10s10-4.48 10-10C22 6.48 17.52 2 12 2zm4.64 13.91c-.13.38-.49.59-.88.48l-1.07-.31c-.39-.11-.62-.51-.5-1.06l.32-1.39c-.93.56-2.15.93-3.48 1.01l-.25 1.25c-.09.43-.51.7-.93.6l-1.07-.22c-.42-.09-.69-.51-.6-.93l1.1-5.46c.09-.43.51-.7.93-.6l1.07.22c.42.09.69.51.6.93l-.26 1.29c1.4-.04 2.69-.47 3.73-1.15l-.36-1.5c-.11-.47.16-.95.62-1.09l1.07-.31c.46-.13.94.14 1.05.61l1.32 5.63z"/></svg><span>官方 Line</span></a><a href="tel:034831890" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg><span>撥打電話</span><span class="contact-sub">03-483-1890</span></a></div>
@@ -228,21 +229,23 @@
         window.onload = async function() { await initDB(); 
             document.getElementById('shopTitle').addEventListener('click', ()=>{ window.location.href='admin.html'; });
             const dateInput = document.getElementById('bookDate');
-            
             const tzOffset = new Date().getTimezoneOffset() * 60000;
             const today = new Date(Date.now() - tzOffset);
             const maxDate = new Date(Date.now() - tzOffset);
-            maxDate.setDate(today.getDate() + 14); // 2週後
+            maxDate.setDate(today.getDate() + 14); 
             const formatDate = (date) => date.toISOString().split('T')[0];
-            
             dateInput.min = formatDate(today);
             dateInput.max = formatDate(maxDate);
-
             dateInput.addEventListener('change', function() {
                 if (document.getElementById('bookingForm').dataset.blacklist === "true") { alert("已額滿"); this.value = ""; return; }
                 if(this.value > this.max) { alert('更多時間請至官方賴訊問'); this.value = ''; return; }
+                // 公休檢查 (全天公休)
                 const blocks = db.blockedSlots.filter(b => b.date.startsWith(this.value));
-                if (blocks.some(b => b.start <= "10:00" && b.end >= "19:00")) { alert("該日期為公休日"); this.value = ""; }
+                if (blocks.some(b => b.start === "00:00" && b.end === "23:59")) { 
+                    alert("今日公休"); this.value = ""; 
+                    return;
+                }
+                checkAvailability(); // 檢查時段
             });
         };
 
@@ -250,7 +253,7 @@
             document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active')); 
             document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
             document.getElementById(id).classList.add('active'); 
-            btn.classList.add('active'); // 修正：使用傳入的 btn 參數添加 active
+            btn.classList.add('active'); 
         }
         function switchNailSub(part) { document.getElementById('sub-hand').classList.remove('active'); document.getElementById('sub-foot').classList.remove('active'); document.getElementById('sub-'+part).classList.add('active'); document.getElementById('nail-hand-options').style.display = (part==='hand')?'block':'none'; document.getElementById('nail-foot-options').style.display = (part==='foot')?'block':'none'; }
         
@@ -275,7 +278,6 @@
                 if (events.length > 0) {
                     container.style.display = 'block';
                     events.forEach(ev => {
-                        // 使用 checkbox 允許複選
                         optionsDiv.innerHTML += `<label class="radio-item"><input type="checkbox" class="event-opt" value="${ev.name}"> ${ev.name}</label>`;
                     });
                     bindRadioEvents();
@@ -283,17 +285,83 @@
                     container.style.display = 'none';
                 }
             }
+            checkAvailability();
         }
 
-        // Login Logic with Appointment Sync
+        // --- 防撞機制與時間選擇 ---
+        function toggleCustomTime() {
+            const timeSelect = document.getElementById('bookTime').value;
+            const customBox = document.getElementById('customTimeBox');
+            if (timeSelect === '其他') { // 明確檢查值是否為 '其他'
+                customBox.style.display = 'block';
+            } else {
+                customBox.style.display = 'none';
+            }
+            checkAvailability();
+        }
+
+        function checkAvailability() {
+            const date = document.getElementById('bookDate').value;
+            let time = document.getElementById('bookTime').value;
+            
+            if (time === '其他') {
+                time = document.getElementById('customTimeInput').value;
+            }
+
+            if (!date || !time) return;
+
+            // 計算工時 (預設 2.5)
+            let duration = 2.5; 
+            const data = getSelectedData();
+            if (data.totalDuration > 0) duration = data.totalDuration;
+
+            // 計算結束時間
+            const startHour = parseInt(time.split(':')[0]);
+            const startMin = parseInt(time.split(':')[1]);
+            const endTotalMin = (startHour * 60 + startMin) + (duration * 60);
+            
+            // 檢查衝突
+            const apps = db.appointments.filter(a => a.date === date && a.status !== '已取消');
+            const blocks = db.blockedSlots.filter(b => b.date === date);
+            
+            const isOverlap = (s1, e1, s2, e2) => {
+                return (s1 < e2 && s2 < e1);
+            };
+
+            const userStartMin = startHour * 60 + startMin;
+            const userEndMin = endTotalMin;
+
+            let conflict = false;
+
+            // 檢查預約
+            apps.forEach(a => {
+                const aStart = parseInt(a.time.split(':')[0]) * 60 + parseInt(a.time.split(':')[1]);
+                const aEnd = aStart + (2.5 * 60); 
+                if (isOverlap(userStartMin, userEndMin, aStart, aEnd)) conflict = true;
+            });
+
+            // 檢查公休
+            blocks.forEach(b => {
+                const bStart = parseInt(b.start.split(':')[0]) * 60 + parseInt(b.start.split(':')[1]);
+                const bEnd = parseInt(b.end.split(':')[0]) * 60 + parseInt(b.end.split(':')[1]);
+                if (isOverlap(userStartMin, userEndMin, bStart, bEnd)) conflict = true;
+            });
+
+            if (conflict) {
+                alert("該時段已被預約或為公休時段，請選擇其他時間。");
+                if(document.getElementById('bookTime').value !== '其他') document.getElementById('bookTime').value = "";
+                document.getElementById('customTimeInput').value = "";
+            }
+        }
+
+        // Login Logic
         function login() {
             initDB();
             const phoneInput = document.getElementById('mPhone').value.trim();
             const nameInput = document.getElementById('mName').value.trim();
             
-            // 寬鬆比對電話 (包含即可，且自動補0比對)
             const member = db.members.find(m => {
-                let p1 = String(m.phone).replace(/\D/g,''); // 去除所有非數字
+                let p1 = String(m.phone).replace(/\D/g,''); 
                 let p2 = String(phoneInput).replace(/\D/g,'');
                 return m.name === nameInput && (p1.includes(p2) || p2.includes(p1));
             });
@@ -307,9 +375,8 @@
                 document.getElementById('mBalance').innerText = "$" + member.balance;
                 document.getElementById('mDiscount').innerText = getDiscountText(member.level);
                 document.getElementById('custName').value = member.name;
-                document.getElementById('custPhone').value = member.phone; // 自動帶入標準格式電話
+                document.getElementById('custPhone').value = member.phone;
                 
-                // 課程清單 (簡單的文字列表)
                 if (member.courses) {
                    document.getElementById('courseList').innerHTML = `<li>${member.courses}</li>`;
                 } else {
@@ -318,15 +385,13 @@
 
                 checkMemberStatus(); 
                 
-                // 顯示未來預約
                 const today = new Date().toISOString().split('T')[0];
-                const myApps = db.appointments.filter(a => String(a.phone).includes(member.phone) && a.date >= today).sort((a,b)=> new Date(a.date)-new Date(b.date));
+                const myApps = db.appointments.filter(a => String(a.phone).includes(member.phone) && a.date >= today && a.status !== '已取消').sort((a,b)=> new Date(a.date)-new Date(b.date));
                 const appList = document.getElementById('tab-booking');
                 
                 if(myApps.length === 0) appList.innerHTML = "<p style='padding:10px; color:#999;'>目前無預約</p>";
                 else appList.innerHTML = myApps.map(a => `<div class="history-card"><div class="h-row-top"><span>${a.date} ${a.time}</span><span>${a.status || '已預約'}</span></div><div class="h-row-btm">${a.item}</div></div>`).join('');
                 
-                // ★ 雙重比對機制：用 ID 或 電話 去找消費紀錄 ★
                 renderHistory();
             } else { alert("登入失敗：請確認姓名與電話是否與後台資料一致"); }
         }
@@ -338,25 +403,18 @@
             return '無';
         }
 
-        // 萬能歷史紀錄讀取 + 分頁 (修正版)
         function renderHistory() {
-            // 比對邏輯：ID 吻合 OR 電話吻合 OR 名字吻合
-            // 這是為了解決後台有時候存了電話、有時候存了ID的問題
             txHistory = db.transactions.filter(t => {
-                // 將所有資料去除非數字字元，變成純淨字串來比對
                 const tVal = String(t.memberid || '').replace(/\D/g, ''); 
                 const mId = String(currentMember.id || '').replace(/\D/g, '');
                 const mPhone = String(currentMember.phone || '').replace(/\D/g, '');
                 
-                // 1. ID 對 ID
                 if (tVal === mId && mId.length > 3) return true;
-                // 2. 交易記錄存的是電話 (09xxx 對 09xxx)
-                if (tVal.includes(mPhone) || mPhone.includes(tVal)) return true;
-                // 3. 交易紀錄存的是名字 (最後防線，針對舊資料)
+                if (tVal === mPhone && mPhone.length > 5) return true;
                 if (String(t.memberid) === currentMember.name) return true;
 
                 return false;
-            }).sort((a,b) => new Date(b.date) - new Date(a.date)); // 依照日期降序 (新的在上面)
+            }).sort((a,b) => new Date(b.date) - new Date(a.date));
 
             currentPage = 1;
             displayHistoryPage();
@@ -389,7 +447,6 @@
                 </div>`
             ).join('');
 
-            // 分頁按鈕
             const totalPages = Math.ceil(txHistory.length / itemsPerPage);
             let btns = "";
             if (totalPages > 1) {
@@ -400,10 +457,7 @@
             pagination.innerHTML = btns;
         }
 
-        function changePage(delta) {
-            currentPage += delta;
-            displayHistoryPage();
-        }
+        function changePage(delta) { currentPage += delta; displayHistoryPage(); }
 
         function checkMemberStatus() {
             const phone = document.getElementById('custPhone').value;
@@ -435,9 +489,9 @@
                         this.closest('.radio-item').classList.add('checked');
                     }
                     updateBookingSummary();
+                    checkAvailability();
                 });
             });
-             // 為動態生成的活動 Checkbox 綁定事件
              document.querySelectorAll('.event-opt').forEach(chk => {
                 chk.addEventListener('change', function() {
                     if(this.checked) this.closest('.radio-item').classList.add('checked');
@@ -447,16 +501,14 @@
             });
         }
 
-        // Toggle Logic (Click twice to cancel)
         document.addEventListener('DOMContentLoaded', () => {
             bindRadioEvents();
-            
-            // Update checkbox style
             document.querySelectorAll('input[type="checkbox"]').forEach(chk => {
                 chk.addEventListener('change', function() {
                     if(this.checked) this.closest('.radio-item').classList.add('checked');
                     else this.closest('.radio-item').classList.remove('checked');
                     updateBookingSummary();
+                    checkAvailability();
                 });
             });
         });
@@ -465,11 +517,10 @@
             let items = [];
             let totalDuration = 0;
             
-            // Event (Checkbox)
             const eventExtras = Array.from(document.querySelectorAll('.event-opt:checked')).map(e=>e.value);
             if (eventExtras.length > 0) { 
                 items.push(`[活動] ${eventExtras.join(' ')}`); 
-                totalDuration += (2 * eventExtras.length); // 假設每個活動 2 小時，或您希望不計時可改為 0
+                totalDuration += (2 * eventExtras.length); 
             }
 
             const handState = document.querySelector('input[name="hand_state"]:checked')?.value;
@@ -484,7 +535,6 @@
 
             if (handState || handStyle || handExtras.length > 0 || footState || footStyle || footExtras.length > 0) {
                 let nailTime = 0;
-                // 工時計算邏輯
                 const calcPartDuration = (state, style, extras) => {
                     let partTime = 0;
                     if (style) {
@@ -533,51 +583,55 @@
             } else { summaryBox.style.display = 'none'; }
         }
 
-        function sendLine() {
-            if (document.getElementById('bookingForm').dataset.blacklist === "true") {
-                alert("已額滿"); // 黑名單阻擋
-                return;
-            }
-
+        function submitBooking() {
+            if (document.getElementById('bookingForm').dataset.blacklist === "true") { alert("已額滿"); return; }
             const name = document.getElementById('custName').value;
             const phone = document.getElementById('custPhone').value;
             const date = document.getElementById('bookDate').value;
-            const time = document.getElementById('bookTime').value;
+            let time = document.getElementById('bookTime').value;
+            if (time === '其他') time = document.getElementById('customTimeInput').value;
             const note = document.getElementById('custNote').value;
             
             if(!name || !phone || !date || !time) { alert("請填寫完整預約資料"); return; }
-            
             const data = getSelectedData();
             if(data.items.length === 0) { alert("請至少選擇一項服務"); return; }
 
-            // 18:00 限制
-            if (time === "18:00" && data.totalDuration > 3.5) {
-                alert("最晚預約時段18:00僅能預約一個項目 (工時限制)");
-                return;
-            }
+            checkAvailability();
+            if(document.getElementById('bookTime').value === "") return; 
 
-            let genderText = "", bday = "";
-            const isNewGuest = document.getElementById('newGuestSection').classList.contains('open');
-            if(isNewGuest) {
-                const gender = document.querySelector('input[name="custGender"]:checked')?.value;
-                genderText = gender ? `(${gender})` : "";
-                bday = document.getElementById('custBday').value;
-            }
+            showLoading(true);
 
-            const duration = data.totalDuration;
-            const maxDuration = duration + 0.5;
-            let msg = `【預約資訊】\n姓名：${name} ${isNewGuest ? genderText + '(新客)' : '(會員)'}\n電話：${phone}`;
-            if(isNewGuest && bday) msg += `\n生日：${bday}`;
-            msg += `\n日期：${date}\n時間：${time}\n\n${data.items.join('\n')}\n\n備註：${note}`;
-            msg += `\n----------------\n(系統預估工時: ${duration} - ${maxDuration} 小時)`;
+            const bookingData = [Date.now().toString(), date, time, name, phone, data.items.join(', '), "前台預約(待確認)", "待確認"];
+            
+            fetch(GAS_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'add', sheet: 'appointments', data: bookingData })
+            }).then(() => {
+                showLoading(false);
+                let genderText = "", bday = "";
+                const isNewGuest = document.getElementById('newGuestSection').classList.contains('open');
+                if(isNewGuest) {
+                    const gender = document.querySelector('input[name="custGender"]:checked')?.value;
+                    genderText = gender ? `(${gender})` : "";
+                    bday = document.getElementById('custBday').value;
+                }
+                const duration = data.totalDuration;
+                const maxDuration = duration + 0.5;
+                let msg = `【預約資訊】\n姓名：${name} ${isNewGuest ? genderText + '(新客)' : '(會員)'}\n電話：${phone}`;
+                if(isNewGuest && bday) msg += `\n生日：${bday}`;
+                msg += `\n日期：${date}\n時間：${time}\n\n${data.items.join('\n')}\n\n備註：${note}`;
+                msg += `\n----------------\n(系統預估工時: ${duration} - ${maxDuration} 小時)`;
 
-            navigator.clipboard.writeText(msg).then(() => {
-                alert("預約內容已複製！即將跳轉官方LINE，請貼上送出。");
-                window.location.href = "https://lin.ee/8eSVhBH";
+                navigator.clipboard.writeText(msg).then(() => {
+                    alert("預約已送出！請至官方LINE貼上訊息確認。");
+                    window.location.href = "https://lin.ee/8eSVhBH";
+                });
+            }).catch(e => {
+                showLoading(false);
+                alert("連線錯誤，請稍後再試");
             });
         }
         
-        // Helper
         function formatDateSimple(dateStr) {
             if(!dateStr || dateStr === '-') return '-';
             const parts = dateStr.split('-');
@@ -589,7 +643,7 @@
         function switchHistoryTab(tab, btn) { 
             document.querySelectorAll('.h-tab').forEach(t => t.classList.remove('active')); 
             document.querySelectorAll('.history-list').forEach(l => l.style.display = 'none'); 
-            btn.classList.add('active'); // 修正：使用傳入的 btn
+            btn.classList.add('active'); 
             document.getElementById('tab-' + tab).style.display = 'block'; 
         }
         function updateWaxingOptions() { /* ... (Same as prev) */ }
