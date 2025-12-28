@@ -313,7 +313,7 @@
         }
         function init() { renderDashboard(); }
 
-        // Dashboard
+        // Dashboard (Fix: lowercase keys)
         function renderDashboard() {
             const today = getTodayString();
             document.getElementById('todayDateStr').innerText = `今日預約 (${today.replace(/-/g,'/')})`;
@@ -381,7 +381,7 @@
         }
         function deleteMember() { const id = document.getElementById('mem-id').value; if(confirm("確定刪除此會員？")) postData('delete', 'members', null, id).then(()=>closeModal('memberModal')); }
 
-        // Transactions
+        // Transactions (萬能比對)
         function renderTransactions() {
             const list = document.getElementById('tx-list');
             list.innerHTML = "";
@@ -396,7 +396,17 @@
                     return false;
                 });
                 const mName = m ? m.name : '未知';
-                list.innerHTML += `<div class="data-card"><div style="display:flex;justify-content:space-between;font-weight:bold;margin-bottom:5px;"><span>${t.date.replace(/-/g,'/')}</span><span>$${t.amount}</span></div><div style="font-size:1.1rem;color:var(--text-main);">${mName} - ${t.type}</div><div style="color:var(--text-sub);">${t.item} ${t.note?`(${t.note})`:''}</div><div style="text-align:right; margin-top:10px;"><button class="btn btn-edit" style="width:auto; padding:5px 10px; margin-right:5px;" onclick="openTxEdit('${t.id}')">修改</button><button class="btn btn-del" style="width:auto; padding:5px 10px;" onclick="deleteTx('${t.id}')">刪除</button></div></div>`;
+                
+                // ★ 日期美化 2025/2/2
+                let prettyDate = t.date;
+                try {
+                    if(t.date.includes('-')) {
+                        const p = t.date.split('-');
+                        prettyDate = `${parseInt(p[0])}/${parseInt(p[1])}/${parseInt(p[2])}`;
+                    }
+                } catch(e){}
+
+                list.innerHTML += `<div class="data-card"><div style="display:flex;justify-content:space-between;font-weight:bold;margin-bottom:5px;"><span>${prettyDate}</span><span>$${t.amount}</span></div><div style="font-size:1.1rem;color:var(--text-main);">${mName} - ${t.type}</div><div style="color:var(--text-sub);">${t.item} ${t.note?`(${t.note})`:''}</div><div style="text-align:right; margin-top:10px;"><button class="btn btn-edit" style="width:auto; padding:5px 10px; margin-right:5px;" onclick="openTxEdit('${t.id}')">修改</button><button class="btn btn-del" style="width:auto; padding:5px 10px;" onclick="deleteTx('${t.id}')">刪除</button></div></div>`;
             });
         }
         function openTxModal() {
@@ -416,6 +426,7 @@
                 <div class="form-group"><label>類型</label><select id="tx-type" onchange="toggleBalanceOption()"><option>消費</option><option>儲值</option><option>購買課程</option><option value="使用課程">使用課程</option><option>產品</option></select></div>
                 <div class="form-group"><label>項目</label><input id="tx-item"></div>
                 <div class="form-group"><label>金額</label><input type="number" id="tx-amt" value="0"></div>
+                
                 <div class="form-group" style="background:#e3f2fd; padding:15px; border-radius:8px;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <label style="margin:0; color:#1565c0; font-weight:bold;">💰 連動會員儲值金</label>
@@ -423,8 +434,13 @@
                     </div>
                     <p style="font-size:0.8rem; color:#666; margin-top:5px;">開啟：自動扣款或儲值<br>關閉：僅記錄，不影響餘額 (付現)</p>
                 </div>
+
                 <div class="form-group"><label>備註</label><input id="tx-note"></div>
                 <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('commonModal')">取消</button><button class="btn btn-primary" style="width:auto;" onclick="saveTx()">確認</button></div>`;
+            
+            // ★ 重要修正：開啟時清空舊資料
+            document.getElementById('tx-mem-val').value = '';
+            
             modal.classList.add('open');
             toggleBalanceOption();
         }
@@ -435,8 +451,8 @@
             else toggle.checked = true; 
         }
         function autoFillMember() {
-            // ★ 手機搜尋優化：比對字串，不只比對電話
             const val = document.getElementById('tx-search').value;
+            // 寬鬆比對：只要輸入的字串包含在電話裡
             const m = db.members.find(x => val.includes(x.phone));
             if (m) {
                 document.getElementById('tx-mem-val').value = m.id; 
@@ -458,7 +474,7 @@
         function deleteTxById() { deleteTx(document.getElementById('tx-id').value); closeModal('txModal'); }
         function deleteTx(id) { if(confirm("確定刪除此交易？(若當初有連動餘額，系統將自動回補/扣除款項)")) postData('delete', 'transactions', null, id, { sheet: 'transactions' }); }
 
-        // Calendar
+        // Calendar (Same)
         let currentMonth = new Date();
         function changeMonth(n) { currentMonth.setMonth(currentMonth.getMonth()+n); renderCalendar(); }
         function renderCalendar() {
@@ -522,7 +538,6 @@
             document.getElementById('commonModal').classList.add('open');
         }
         function autoFillApp() {
-            // ★ 手機搜尋優化：比對 input 字串是否包含電話
             const val = document.getElementById('app-search').value;
             const m = db.members.find(x => val.includes(x.phone));
             if (m) {

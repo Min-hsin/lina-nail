@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lina nail 莉娜時尚館</title>
     <style>
-        /* CSS 樣式區域 (保持不變) */
         :root { --bg-color: #F9F7F2; --card-bg: #FFFFFF; --primary-text: #5D4037; --secondary-text: #8D6E63; --accent-color: #BCAAA4; --accent-light: #EFEBE9; --accent-dark: #8D6E63; --border-color: #E0E0E0; --promo-highlight: #D32F2F; --nav-height: 60px; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "PingFang TC", sans-serif; }
         body { background-color: var(--bg-color); color: var(--primary-text); padding-top: var(--nav-height); line-height: 1.6; padding-bottom: 80px; }
@@ -94,10 +93,7 @@
         .pay-container { display: flex; justify-content: space-around; padding: 10px 0; }
         .pay-item { display: flex; flex-direction: column; align-items: center; font-size: 0.85rem; color: #555; }
         .pay-icon { width: 40px; height: 40px; margin-bottom: 5px; }
-        /* 活動區塊樣式 */
         .event-section { border: 2px dashed var(--accent-color); padding: 15px; border-radius: 8px; margin-bottom: 20px; background: #fff3e0; display: none; }
-        
-        /* ★ 補上的 Loading 樣式 ★ */
         #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; }
         .spinner { border: 5px solid #f3f3f3; border-top: 5px solid var(--accent-color); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -244,7 +240,6 @@
         let currentPage = 1;
         const itemsPerPage = 20;
 
-        // ★ 定義 showLoading (確保它在最外面，不會找不到) ★
         function showLoading(show) {
             const overlay = document.getElementById('loadingOverlay');
             if(overlay) overlay.style.display = show ? 'flex' : 'none';
@@ -259,39 +254,27 @@
 
         window.onload = async function() { 
             await initDB(); 
-            
             document.getElementById('shopTitle').addEventListener('click', ()=>{ window.location.href='admin.html'; });
-            
-            // 載入後自動開啟美甲頁籤
             setServiceCat('nail'); 
-
             const dateInput = document.getElementById('bookDate');
             const tzOffset = new Date().getTimezoneOffset() * 60000;
             const today = new Date(Date.now() - tzOffset);
             const maxDate = new Date(Date.now() - tzOffset);
             maxDate.setDate(today.getDate() + 14); 
             const formatDate = (date) => date.toISOString().split('T')[0];
-            
             dateInput.min = formatDate(today);
             dateInput.max = formatDate(maxDate);
 
-            // ★ 修正黑名單檢查：只在「選完日期後」且「有值」才檢查，避免未選先跳
+            // ★ 修正：黑名單檢查改在這裡，且必須有值
             dateInput.addEventListener('change', function() {
                 if(!this.value) return; 
-
                 if (document.getElementById('bookingForm').dataset.blacklist === "true") { 
-                    alert("已額滿"); 
-                    this.value = ""; 
-                    return; 
+                    alert("已額滿"); this.value = ""; return; 
                 }
-                
                 if(this.value > this.max) { alert('更多時間請至官方賴訊問'); this.value = ''; return; }
-                
-                // 公休檢查
                 const blocks = db.blockedSlots.filter(b => b.date.startsWith(this.value));
                 if (blocks.some(b => b.start === "00:00" && b.end === "23:59")) { 
-                    alert("今日公休"); this.value = ""; 
-                    return;
+                    alert("今日公休"); this.value = ""; return;
                 }
                 checkAvailability(); 
             });
@@ -310,28 +293,22 @@
             document.getElementById('btn-'+cat).classList.add('active'); 
             document.querySelectorAll('.srv-group').forEach(g=>g.style.display='none'); 
             document.getElementById('srv-'+cat).style.display='block'; 
-            
             if(['nail', 'skin', 'wax'].includes(cat)) {
                 const containerId = cat + '-event-container';
                 const optionsId = cat + 'EventOptions';
                 const eventCatName = cat + '-event';
-                
                 const container = document.getElementById(containerId);
                 const optionsDiv = document.getElementById(optionsId);
-                
                 if(container && optionsDiv) {
                     optionsDiv.innerHTML = '';
                     const events = db.services.filter(s => s.cat === eventCatName && String(s.active) === "true");
-
                     if (events.length > 0) {
                         container.style.display = 'block';
                         events.forEach(ev => {
                             optionsDiv.innerHTML += `<label class="radio-item"><input type="checkbox" class="event-opt" value="${ev.name}" data-cat="${eventCatName}"> ${ev.name}</label>`;
                         });
                         bindRadioEvents();
-                    } else {
-                        container.style.display = 'none';
-                    }
+                    } else { container.style.display = 'none'; }
                 }
             }
             checkAvailability();
@@ -340,56 +317,37 @@
         function toggleCustomTime() {
             const timeSelect = document.getElementById('bookTime').value;
             const customBox = document.getElementById('customTimeBox');
-            if (timeSelect === '其他') { 
-                customBox.style.display = 'block';
-            } else {
-                customBox.style.display = 'none';
-            }
+            if (timeSelect === '其他') customBox.style.display = 'block'; else customBox.style.display = 'none';
             checkAvailability();
         }
 
         function checkAvailability() {
             const date = document.getElementById('bookDate').value;
             let time = document.getElementById('bookTime').value;
-            
-            if (time === '其他') {
-                time = document.getElementById('customTimeInput').value;
-            }
-
+            if (time === '其他') time = document.getElementById('customTimeInput').value;
             if (!date || !time) return;
-
             let duration = 2.5; 
             const data = getSelectedData();
             if (data.totalDuration > 0) duration = data.totalDuration;
-
             const startHour = parseInt(time.split(':')[0]);
             const startMin = parseInt(time.split(':')[1]);
             const endTotalMin = (startHour * 60 + startMin) + (duration * 60);
-            
             const apps = db.appointments.filter(a => a.date === date && a.status !== '已取消');
             const blocks = db.blockedSlots.filter(b => b.date === date);
-            
-            const isOverlap = (s1, e1, s2, e2) => {
-                return (s1 < e2 && s2 < e1);
-            };
-
+            const isOverlap = (s1, e1, s2, e2) => { return (s1 < e2 && s2 < e1); };
             const userStartMin = startHour * 60 + startMin;
             const userEndMin = endTotalMin;
-
             let conflict = false;
-
             apps.forEach(a => {
                 const aStart = parseInt(a.time.split(':')[0]) * 60 + parseInt(a.time.split(':')[1]);
                 const aEnd = aStart + (2.5 * 60); 
                 if (isOverlap(userStartMin, userEndMin, aStart, aEnd)) conflict = true;
             });
-
             blocks.forEach(b => {
                 const bStart = parseInt(b.start.split(':')[0]) * 60 + parseInt(b.start.split(':')[1]);
                 const bEnd = parseInt(b.end.split(':')[0]) * 60 + parseInt(b.end.split(':')[1]);
                 if (isOverlap(userStartMin, userEndMin, bStart, bEnd)) conflict = true;
             });
-
             if (conflict) {
                 alert("該時段已被預約或為公休時段，請選擇其他時間。");
                 if(document.getElementById('bookTime').value !== '其他') document.getElementById('bookTime').value = "";
@@ -401,13 +359,11 @@
             initDB();
             const phoneInput = document.getElementById('mPhone').value.trim();
             const nameInput = document.getElementById('mName').value.trim();
-            
             const member = db.members.find(m => {
                 let p1 = String(m.phone).replace(/\D/g,''); 
                 let p2 = String(phoneInput).replace(/\D/g,'');
                 return m.name === nameInput && (p1.includes(p2) || p2.includes(p1));
             });
-
             if (member) {
                 currentMember = member;
                 document.getElementById('loginSection').style.display = 'none';
@@ -418,22 +374,26 @@
                 document.getElementById('mDiscount').innerText = getDiscountText(member.level);
                 document.getElementById('custName').value = member.name;
                 document.getElementById('custPhone').value = member.phone;
-                
-                if (member.courses) {
-                   document.getElementById('courseList').innerHTML = `<li>${member.courses}</li>`;
-                } else {
-                   document.getElementById('courseList').innerHTML = `<li style="color:#999;">無剩餘課程</li>`;
-                }
-
+                if (member.courses) document.getElementById('courseList').innerHTML = `<li>${member.courses}</li>`;
+                else document.getElementById('courseList').innerHTML = `<li style="color:#999;">無剩餘課程</li>`;
                 checkMemberStatus(); 
                 
+                // ★ 修正：顯示多筆未來預約
                 const today = new Date().toISOString().split('T')[0];
-                const myApps = db.appointments.filter(a => String(a.phone).includes(member.phone) && a.date >= today && a.status !== '已取消').sort((a,b)=> new Date(a.date)-new Date(b.date));
+                const myApps = db.appointments.filter(a => String(a.phone).includes(member.phone) && a.date >= today && a.status !== '已取消')
+                                .sort((a,b)=> new Date(a.date) - new Date(b.date)); // 排序
+                
                 const appList = document.getElementById('tab-booking');
-                
                 if(myApps.length === 0) appList.innerHTML = "<p style='padding:10px; color:#999;'>目前無預約</p>";
-                else appList.innerHTML = myApps.map(a => `<div class="history-card"><div class="h-row-top"><span>${a.date} ${a.time}</span><span>${a.status || '已預約'}</span></div><div class="h-row-btm">${a.item}</div></div>`).join('');
-                
+                else {
+                    // ★ 迴圈顯示每一筆
+                    appList.innerHTML = myApps.map(a => 
+                        `<div class="history-card">
+                            <div class="h-row-top"><span>${formatDateBeautiful(a.date)} ${a.time}</span><span>${a.status || '已預約'}</span></div>
+                            <div class="h-row-btm">${a.item}</div>
+                        </div>`
+                    ).join('');
+                }
                 renderHistory();
             } else { alert("登入失敗：請確認姓名與電話是否與後台資料一致"); }
         }
@@ -450,14 +410,11 @@
                 const tVal = String(t.memberid || '').replace(/\D/g, ''); 
                 const mId = String(currentMember.id || '').replace(/\D/g, '');
                 const mPhone = String(currentMember.phone || '').replace(/\D/g, '');
-                
                 if (tVal === mId && mId.length > 3) return true;
                 if (tVal === mPhone && mPhone.length > 5) return true;
                 if (String(t.memberid) === currentMember.name) return true;
-
                 return false;
             }).sort((a,b) => new Date(b.date) - new Date(a.date));
-
             currentPage = 1;
             displayHistoryPage();
         }
@@ -465,30 +422,11 @@
         function displayHistoryPage() {
             const listContent = document.getElementById('tx-list-content');
             const pagination = document.getElementById('tx-pagination');
-            
-            if(txHistory.length === 0) {
-                listContent.innerHTML = "<p style='padding:10px; color:#999;'>無消費紀錄</p>";
-                pagination.innerHTML = "";
-                return;
-            }
-
+            if(txHistory.length === 0) { listContent.innerHTML = "<p style='padding:10px; color:#999;'>無消費紀錄</p>"; pagination.innerHTML = ""; return; }
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
             const pageItems = txHistory.slice(start, end);
-
-            listContent.innerHTML = pageItems.map(h => 
-                `<div class="history-card">
-                    <div class="h-row-top">
-                        <span>${formatDateSimple(h.date)}</span>
-                        <span>$${h.amount}</span>
-                    </div>
-                    <div class="h-row-btm">
-                        <span>${h.item} <span style="font-size:0.8rem; color:#888;">${h.note ? '('+h.note+')' : ''}</span></span>
-                        <span class="h-balance">${h.type}</span>
-                    </div>
-                </div>`
-            ).join('');
-
+            listContent.innerHTML = pageItems.map(h => `<div class="history-card"><div class="h-row-top"><span>${formatDateBeautiful(h.date)}</span><span>$${h.amount}</span></div><div class="h-row-btm"><span>${h.item} <span style="font-size:0.8rem; color:#888;">${h.note ? '('+h.note+')' : ''}</span></span><span class="h-balance">${h.type}</span></div></div>`).join('');
             const totalPages = Math.ceil(txHistory.length / itemsPerPage);
             let btns = "";
             if (totalPages > 1) {
@@ -518,32 +456,20 @@
 
         function bindRadioEvents() {
              document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
-                if (input.dataset.bound === "true") return; // 如果綁定過就跳過
-                input.dataset.bound = "true"; // 標記已綁定
-
+                if (input.dataset.bound === "true") return; 
+                input.dataset.bound = "true"; 
                 input.addEventListener('click', function() {
-                    // Radio Toggle Logic
                     if (this.type === 'radio') {
                         if (this.dataset.wasChecked === 'true') {
-                            this.checked = false;
-                            this.dataset.wasChecked = 'false';
+                            this.checked = false; this.dataset.wasChecked = 'false';
                             this.closest('.radio-item').classList.remove('checked');
                         } else {
-                            // Clear others in same name
-                            document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => {
-                                r.dataset.wasChecked = 'false';
-                                r.closest('.radio-item').classList.remove('checked');
-                            });
+                            document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => { r.dataset.wasChecked = 'false'; r.closest('.radio-item').classList.remove('checked'); });
                             this.dataset.wasChecked = 'true';
                             this.closest('.radio-item').classList.add('checked');
                         }
                     }
-                    // Checkbox Logic (Visual only)
-                    if (this.type === 'checkbox') {
-                         if(this.checked) this.closest('.radio-item').classList.add('checked');
-                         else this.closest('.radio-item').classList.remove('checked');
-                    }
-                    
+                    if (this.type === 'checkbox') { if(this.checked) this.closest('.radio-item').classList.add('checked'); else this.closest('.radio-item').classList.remove('checked'); }
                     updateBookingSummary();
                     checkAvailability();
                 });
@@ -554,8 +480,7 @@
             bindRadioEvents();
             document.querySelectorAll('input[type="checkbox"]').forEach(chk => {
                 chk.addEventListener('change', function() {
-                    if(this.checked) this.closest('.radio-item').classList.add('checked');
-                    else this.closest('.radio-item').classList.remove('checked');
+                    if(this.checked) this.closest('.radio-item').classList.add('checked'); else this.closest('.radio-item').classList.remove('checked');
                     updateBookingSummary();
                     checkAvailability();
                 });
@@ -565,42 +490,21 @@
         function getSelectedData() {
             let items = [];
             let totalDuration = 0;
-            
             const eventExtras = Array.from(document.querySelectorAll('.event-opt:checked')).map(e=>e.value);
-            if (eventExtras.length > 0) { 
-                items.push(`[活動] ${eventExtras.join(' ')}`); 
-                totalDuration += (2 * eventExtras.length); 
-            }
-
+            if (eventExtras.length > 0) { items.push(`[活動] ${eventExtras.join(' ')}`); totalDuration += (2 * eventExtras.length); }
             const handState = document.querySelector('input[name="hand_state"]:checked')?.value;
             const handStyle = document.querySelector('input[name="hand_style"]:checked')?.value;
             const handExtras = Array.from(document.querySelectorAll('.hand-opt:checked')).map(e=>e.value);
             const footState = document.querySelector('input[name="foot_state"]:checked')?.value;
             const footStyle = document.querySelector('input[name="foot_style"]:checked')?.value;
             const footExtras = Array.from(document.querySelectorAll('.foot-opt:checked')).map(e=>e.value);
-
             if(handState || handStyle || handExtras.length > 0) document.getElementById('sub-hand').classList.add('filled'); else document.getElementById('sub-hand').classList.remove('filled');
             if(footState || footStyle || footExtras.length > 0) document.getElementById('sub-foot').classList.add('filled'); else document.getElementById('sub-foot').classList.remove('filled');
-
             if (handState || handStyle || handExtras.length > 0 || footState || footStyle || footExtras.length > 0) {
                 let nailTime = 0;
                 const calcPartDuration = (state, style, extras) => {
                     let partTime = 0;
-                    if (style) {
-                        if (style.includes('單色') || style.includes('貓眼') || style.includes('跳色')) partTime = 2;
-                        else partTime = 2.5; 
-                    } else {
-                        if (state && state.includes('不續作')) partTime = 1;
-                        if (extras.length > 0) {
-                            extras.forEach(ex => {
-                                if(ex.includes('基礎')) partTime += 1;
-                                else if(ex.includes('嫩白') || ex.includes('足底')) partTime += 1.5;
-                                else if(ex.includes('深層')) partTime += 2;
-                            });
-                        }
-                    }
-                    if(extras.some(e=>e.includes('全延'))) partTime += 1;
-                    return partTime;
+                    if (style) { if (style.includes('單色') || style.includes('貓眼') || style.includes('跳色')) partTime = 2; else partTime = 2.5; } else { if (state && state.includes('不續作')) partTime = 1; if (extras.length > 0) { extras.forEach(ex => { if(ex.includes('基礎')) partTime += 1; else if(ex.includes('嫩白') || ex.includes('足底')) partTime += 1.5; else if(ex.includes('深層')) partTime += 2; }); } } if(extras.some(e=>e.includes('全延'))) partTime += 1; return partTime;
                 };
                 nailTime += calcPartDuration(handState, handStyle, handExtras);
                 nailTime += calcPartDuration(footState, footStyle, footExtras);
@@ -609,15 +513,10 @@
                 totalDuration += nailTime;
                 document.getElementById('btn-nail').classList.add('has-selection');
             } else { document.getElementById('btn-nail').classList.remove('has-selection'); }
-
             const skinCourse = document.querySelector('input[name="skin_course"]:checked')?.value;
-            if (skinCourse) { items.push(`[肌膚] ${skinCourse}`); totalDuration += 2.5; document.getElementById('btn-skin').classList.add('has-selection'); } 
-            else { document.getElementById('btn-skin').classList.remove('has-selection'); }
-
+            if (skinCourse) { items.push(`[肌膚] ${skinCourse}`); totalDuration += 2.5; document.getElementById('btn-skin').classList.add('has-selection'); } else { document.getElementById('btn-skin').classList.remove('has-selection'); }
             const waxArea = document.querySelector('input[name="wax_area"]:checked')?.value;
-            if (waxArea) { items.push(`[除毛] ${waxArea}`); totalDuration += 1; document.getElementById('btn-wax').classList.add('has-selection'); } 
-            else { document.getElementById('btn-wax').classList.remove('has-selection'); }
-            
+            if (waxArea) { items.push(`[除毛] ${waxArea}`); totalDuration += 1; document.getElementById('btn-wax').classList.add('has-selection'); } else { document.getElementById('btn-wax').classList.remove('has-selection'); }
             return { items, totalDuration };
         }
 
@@ -632,17 +531,15 @@
             } else { summaryBox.style.display = 'none'; }
         }
 
-        // ★ 萬能複製與送出邏輯 ★
         async function copyText(text) {
             try {
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     await navigator.clipboard.writeText(text);
                 } else { throw new Error('Clipboard API unavailable'); }
             } catch (err) {
-                // Fallback: 傳統隱藏文字框複製法 (最穩)
                 const textArea = document.createElement("textarea");
                 textArea.value = text;
-                textArea.style.position = "fixed";  // 避免頁面滾動
+                textArea.style.position = "fixed";  
                 textArea.style.opacity = "0";
                 document.body.appendChild(textArea);
                 textArea.focus();
@@ -678,7 +575,6 @@
                 checkAvailability();
                 if(document.getElementById('bookTime').value === "") return; 
 
-                // 卸甲檢查
                 const nailEvents = Array.from(document.querySelectorAll('.event-opt:checked')).filter(e => e.dataset.cat === 'nail-event');
                 const isNailService = nailEvents.length > 0 || document.querySelector('input[name="hand_style"]:checked') || document.querySelectorAll('.hand-opt:checked').length > 0 || document.querySelector('input[name="foot_style"]:checked') || document.querySelectorAll('.foot-opt:checked').length > 0;
                 if (isNailService) {
@@ -686,7 +582,6 @@
                     if (!hasRemoval) { alert("⚠️ 預約美甲項目 (含活動) 必須選擇【卸甲/不需卸甲】狀態 (手部或足部)"); return; }
                 }
 
-                // 1. 先複製文字 (最優先)
                 let genderText = "", bday = "";
                 const isNewGuest = document.getElementById('newGuestSection').classList.contains('open');
                 if(isNewGuest) {
@@ -700,16 +595,11 @@
                 if(isNewGuest && bday) msg += `\n生日：${bday}`;
                 msg += `\n日期：${date}\n時間：${time}\n\n${data.items.join('\n')}\n\n備註：${note}`;
                 
-                // 去除工時顯示
-                // msg += `\n----------------\n(系統預估工時: ${duration} - ${maxDuration} 小時)`;
-
                 copyText(msg); 
 
-                // 2. 顯示 Loading 並送出
                 showLoading(true);
-                const bookingData = [Date.now().toString(), date, time, name, phone, data.items.join(', '), "前台預約(待確認)", "待確認"];
+                const bookingData = [Date.now().toString(), date, time, name, phone, data.items.join(', '), note, "待確認"]; // 確保狀態為待確認
                 
-                // 不管資料庫成功失敗，最後都跳轉 LINE
                 fetch(GAS_URL, {
                     method: 'POST',
                     body: JSON.stringify({ action: 'add', sheet: 'appointments', data: bookingData })
@@ -728,12 +618,19 @@
             }
         }
         
-        function formatDateSimple(dateStr) {
+        // ★ 修正：日期美化函數 2025/2/2
+        function formatDateBeautiful(dateStr) {
             if(!dateStr || dateStr === '-') return '-';
-            const parts = dateStr.split('-');
-            if(parts.length < 3) return dateStr;
-            return `${parseInt(parts[0])}/${parseInt(parts[1])}/${parseInt(parts[2])}`;
+            try {
+                // 嘗試解析 yyyy-MM-dd
+                const parts = dateStr.split('-');
+                if(parts.length === 3) {
+                    return `${parseInt(parts[0])}/${parseInt(parts[1])}/${parseInt(parts[2])}`;
+                }
+                return dateStr;
+            } catch(e) { return dateStr; }
         }
+        
         function logout() { document.getElementById('loginSection').style.display = 'block'; document.getElementById('dashboardSection').style.display = 'none'; }
         function showAsset(type, btn) { document.querySelectorAll('.mem-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); document.querySelectorAll('.asset-info-box').forEach(b => b.classList.remove('show')); document.getElementById('info-' + type).classList.add('show'); }
         function switchHistoryTab(tab, btn) { 
