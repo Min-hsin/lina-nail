@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lina nail 莉娜時尚館</title>
     <style>
-        /* CSS 樣式區域 (保持不變) */
+        /* CSS 樣式區域 */
         :root { --bg-color: #F9F7F2; --card-bg: #FFFFFF; --primary-text: #5D4037; --secondary-text: #8D6E63; --accent-color: #BCAAA4; --accent-light: #EFEBE9; --accent-dark: #8D6E63; --border-color: #E0E0E0; --promo-highlight: #D32F2F; --nav-height: 60px; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "PingFang TC", sans-serif; }
         body { background-color: var(--bg-color); color: var(--primary-text); padding-top: var(--nav-height); line-height: 1.6; padding-bottom: 80px; }
@@ -211,9 +211,6 @@
                 <button type="button" class="btn-submit" onclick="submitBooking()">確認預約並跳轉官方LINE</button>
             </form>
         </section>
-        <section id="contact" class="card"><h2>聯絡方式</h2><div class="contact-grid"><a href="https://www.facebook.com/share/18LuFgiUqx" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7h-2.54v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02z"/></svg><span>Facebook</span></a><a href="https://www.instagram.com/lina__.nail" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg><span>Instagram</span></a><a href="https://lin.ee/8eSVhBH" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10s10-4.48 10-10C22 6.48 17.52 2 12 2zm4.64 13.91c-.13.38-.49.59-.88.48l-1.07-.31c-.39-.11-.62-.51-.5-1.06l.32-1.39c-.93.56-2.15.93-3.48 1.01l-.25 1.25c-.09.43-.51.7-.93.6l-1.07-.22c-.42-.09-.69-.51-.6-.93l1.1-5.46c.09-.43.51-.7.93-.6l1.07.22c.42.09.69.51.6.93l-.26 1.29c1.4-.04 2.69-.47 3.73-1.15l-.36-1.5c-.11-.47.16-.95.62-1.09l1.07-.31c.46-.13.94.14 1.05.61l1.32 5.63z"/></svg><span>官方 Line</span></a><a href="tel:034831890" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg><span>撥打電話</span><span class="contact-sub">03-483-1890</span></a></div>
-            <a href="https://maps.app.goo.gl/e3jjS3mCBjc5YgAq9?g_st=ipc" target="_blank" class="address-box"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>桃園市觀音區莊敬路100-1號1樓</a>
-        </section>
     </div>
 
     <script>
@@ -296,7 +293,8 @@
                 if (events.length > 0) {
                     container.style.display = 'block';
                     events.forEach(ev => {
-                        optionsDiv.innerHTML += `<label class="radio-item"><input type="checkbox" class="event-opt" value="${ev.name}"> ${ev.name}</label>`;
+                        // 修正：動態新增時也加上 data-cat
+                        optionsDiv.innerHTML += `<label class="radio-item"><input type="checkbox" class="event-opt" value="${ev.name}" data-cat="${eventCatName}"> ${ev.name}</label>`;
                     });
                     // 重新綁定點擊事件
                     bindRadioEvents();
@@ -494,6 +492,7 @@
             }
         }
 
+        // ★ 修正：防止重複綁定 (加上 dataset.bound 檢查)
         function bindRadioEvents() {
              document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
                 if (input.dataset.bound === "true") return; // 如果綁定過就跳過
@@ -516,7 +515,7 @@
                             this.closest('.radio-item').classList.add('checked');
                         }
                     }
-                    // Checkbox Logic (Visual only, state handles itself)
+                    // Checkbox Logic (Visual only)
                     if (this.type === 'checkbox') {
                          if(this.checked) this.closest('.radio-item').classList.add('checked');
                          else this.closest('.radio-item').classList.remove('checked');
@@ -625,6 +624,26 @@
 
             checkAvailability();
             if(document.getElementById('bookTime').value === "") return; 
+
+            // ★ 卸甲檢查邏輯 ★
+            // 檢查是否有選：美甲活動 OR 美甲項目 (款式/保養/延甲)
+            // 注意：data-cat 必須要正確抓到 'nail-event'
+            const nailEvents = Array.from(document.querySelectorAll('.event-opt:checked')).filter(e => e.dataset.cat === 'nail-event');
+            
+            const isNailService = nailEvents.length > 0 || 
+                                  document.querySelector('input[name="hand_style"]:checked') ||
+                                  document.querySelectorAll('.hand-opt:checked').length > 0 ||
+                                  document.querySelector('input[name="foot_style"]:checked') ||
+                                  document.querySelectorAll('.foot-opt:checked').length > 0;
+
+            if (isNailService) {
+                const hasRemoval = document.querySelector('input[name="hand_state"]:checked') || 
+                                   document.querySelector('input[name="foot_state"]:checked');
+                if (!hasRemoval) {
+                    alert("⚠️ 預約美甲項目 (含活動) 必須選擇【卸甲/不需卸甲】狀態 (手部或足部)");
+                    return; // 阻止送出
+                }
+            }
 
             showLoading(true);
 
