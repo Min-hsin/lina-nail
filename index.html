@@ -96,15 +96,13 @@
         .pay-icon { width: 40px; height: 40px; margin-bottom: 5px; }
         /* 活動區塊樣式 */
         .event-section { border: 2px dashed var(--accent-color); padding: 15px; border-radius: 8px; margin-bottom: 20px; background: #fff3e0; display: none; }
-        
-        /* ★ 補上的 Loading 樣式 ★ */
-        #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; }
+        #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.7); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; }
         .spinner { border: 5px solid #f3f3f3; border-top: 5px solid var(--accent-color); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
-    <div id="loadingOverlay"><div class="spinner"></div><p style="margin-top: 15px; font-weight: bold; color: #555;">處理中，請稍候...</p></div>
+    <div id="loadingOverlay"><div class="spinner"></div><p style="margin-top: 15px; font-weight: bold; color: #555;">處理中...</p></div>
 
     <nav>
         <a href="#home">首頁</a><a href="#pricing">價目表</a><a href="#member">會員中心</a><a href="#booking">快速預約</a><a href="#contact">聯絡我們</a>
@@ -244,7 +242,7 @@
         let currentPage = 1;
         const itemsPerPage = 20;
 
-        // ★ 定義 showLoading (確保它在最外面) ★
+        // ★ 定義 showLoading (確保它在最外面，不會找不到) ★
         function showLoading(show) {
             const overlay = document.getElementById('loadingOverlay');
             if(overlay) overlay.style.display = show ? 'flex' : 'none';
@@ -649,71 +647,75 @@
         }
 
         function submitBooking() {
-            // 1. 基礎檢查
-            if (typeof GAS_URL === 'undefined' || GAS_URL.includes('YOUR_GAS_URL')) {
-                alert("系統錯誤：未設定後端網址");
-                return;
+            try {
+                if (GAS_URL === 'YOUR_GAS_URL_HERE' || GAS_URL.length < 10) {
+                    alert("⚠️ 系統錯誤：請聯繫店家 (後端網址未設定)");
+                    return;
+                }
+
+                if (document.getElementById('bookingForm').dataset.blacklist === "true") { alert("已額滿"); return; }
+                const name = document.getElementById('custName').value;
+                const phone = document.getElementById('custPhone').value;
+                const date = document.getElementById('bookDate').value;
+                let time = document.getElementById('bookTime').value;
+                if (time === '其他') time = document.getElementById('customTimeInput').value;
+                const note = document.getElementById('custNote').value;
+                
+                if(!name || !phone || !date || !time) { alert("請填寫完整預約資料"); return; }
+                const data = getSelectedData();
+                if(data.items.length === 0) { alert("請至少選擇一項服務"); return; }
+
+                checkAvailability();
+                if(document.getElementById('bookTime').value === "") return; 
+
+                // 卸甲檢查
+                const nailEvents = Array.from(document.querySelectorAll('.event-opt:checked')).filter(e => e.dataset.cat === 'nail-event');
+                const isNailService = nailEvents.length > 0 || document.querySelector('input[name="hand_style"]:checked') || document.querySelectorAll('.hand-opt:checked').length > 0 || document.querySelector('input[name="foot_style"]:checked') || document.querySelectorAll('.foot-opt:checked').length > 0;
+                if (isNailService) {
+                    const hasRemoval = document.querySelector('input[name="hand_state"]:checked') || document.querySelector('input[name="foot_state"]:checked');
+                    if (!hasRemoval) { alert("⚠️ 預約美甲項目 (含活動) 必須選擇【卸甲/不需卸甲】狀態 (手部或足部)"); return; }
+                }
+
+                // 1. 先複製文字 (最優先)
+                let genderText = "", bday = "";
+                const isNewGuest = document.getElementById('newGuestSection').classList.contains('open');
+                if(isNewGuest) {
+                    const gender = document.querySelector('input[name="custGender"]:checked')?.value;
+                    genderText = gender ? `(${gender})` : "";
+                    bday = document.getElementById('custBday').value;
+                }
+                const duration = data.totalDuration;
+                const maxDuration = duration + 0.5;
+                let msg = `【預約資訊】\n姓名：${name} ${isNewGuest ? genderText + '(新客)' : '(會員)'}\n電話：${phone}`;
+                if(isNewGuest && bday) msg += `\n生日：${bday}`;
+                msg += `\n日期：${date}\n時間：${time}\n\n${data.items.join('\n')}\n\n備註：${note}`;
+                
+                // 去除工時顯示
+                // msg += `\n----------------\n(系統預估工時: ${duration} - ${maxDuration} 小時)`;
+
+                copyText(msg); 
+
+                // 2. 顯示 Loading 並送出
+                showLoading(true);
+                const bookingData = [Date.now().toString(), date, time, name, phone, data.items.join(', '), "前台預約(待確認)", "待確認"];
+                
+                // 不管資料庫成功失敗，最後都跳轉 LINE
+                fetch(GAS_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'add', sheet: 'appointments', data: bookingData })
+                }).then(() => {
+                    showLoading(false);
+                    alert("預約內容已複製！即將跳轉官方LINE，請貼上送出。");
+                    window.location.href = "https://lin.ee/8eSVhBH";
+                }).catch(e => {
+                    showLoading(false);
+                    alert("預約內容已複製！即將跳轉官方LINE (請直接貼上)");
+                    window.location.href = "https://lin.ee/8eSVhBH";
+                });
+
+            } catch (err) {
+                alert("發生未預期的錯誤：" + err.message);
             }
-            if (document.getElementById('bookingForm').dataset.blacklist === "true") { alert("已額滿"); return; }
-            
-            const name = document.getElementById('custName').value;
-            const phone = document.getElementById('custPhone').value;
-            const date = document.getElementById('bookDate').value;
-            let time = document.getElementById('bookTime').value;
-            if (time === '其他') time = document.getElementById('customTimeInput').value;
-            const note = document.getElementById('custNote').value;
-            
-            if(!name || !phone || !date || !time) { alert("請填寫完整預約資料"); return; }
-            const data = getSelectedData();
-            if(data.items.length === 0) { alert("請至少選擇一項服務"); return; }
-
-            checkAvailability();
-            if(document.getElementById('bookTime').value === "") return; 
-
-            // 卸甲檢查
-            const nailEvents = Array.from(document.querySelectorAll('.event-opt:checked')).filter(e => e.dataset.cat === 'nail-event');
-            const isNailService = nailEvents.length > 0 || document.querySelector('input[name="hand_style"]:checked') || document.querySelectorAll('.hand-opt:checked').length > 0 || document.querySelector('input[name="foot_style"]:checked') || document.querySelectorAll('.foot-opt:checked').length > 0;
-            if (isNailService) {
-                const hasRemoval = document.querySelector('input[name="hand_state"]:checked') || document.querySelector('input[name="foot_state"]:checked');
-                if (!hasRemoval) { alert("⚠️ 預約美甲項目 (含活動) 必須選擇【卸甲/不需卸甲】狀態 (手部或足部)"); return; }
-            }
-
-            // 2. 準備訊息
-            let genderText = "", bday = "";
-            const isNewGuest = document.getElementById('newGuestSection').classList.contains('open');
-            if(isNewGuest) {
-                const gender = document.querySelector('input[name="custGender"]:checked')?.value;
-                genderText = gender ? `(${gender})` : "";
-                bday = document.getElementById('custBday').value;
-            }
-            const duration = data.totalDuration;
-            const maxDuration = duration + 0.5;
-            let msg = `【預約資訊】\n姓名：${name} ${isNewGuest ? genderText + '(新客)' : '(會員)'}\n電話：${phone}`;
-            if(isNewGuest && bday) msg += `\n生日：${bday}`;
-            msg += `\n日期：${date}\n時間：${time}\n\n${data.items.join('\n')}\n\n備註：${note}`;
-            msg += `\n----------------\n(系統預估工時: ${duration} - ${maxDuration} 小時)`;
-
-            // 3. 執行複製 (不等待結果)
-            copyText(msg);
-
-            // 4. 開始送出資料
-            showLoading(true);
-            const bookingData = [Date.now().toString(), date, time, name, phone, data.items.join(', '), "前台預約(待確認)", "待確認"];
-            
-            // 5. 存資料庫 (不管成功失敗都跳轉，確保不卡住)
-            fetch(GAS_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'add', sheet: 'appointments', data: bookingData })
-            }).then(() => {
-                showLoading(false);
-                alert("預約內容已複製！即將跳轉官方LINE，請貼上送出。");
-                window.location.href = "https://lin.ee/8eSVhBH";
-            }).catch(e => {
-                showLoading(false);
-                // 就算連線失敗，也要讓客人去 LINE，不要讓客人覺得壞掉了
-                alert("預約內容已複製！請至官方LINE貼上訊息。");
-                window.location.href = "https://lin.ee/8eSVhBH";
-            });
         }
         
         function formatDateSimple(dateStr) {
