@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lina nail 莉娜時尚館</title>
     <style>
+        /* CSS 樣式區域 */
         :root { --bg-color: #F9F7F2; --card-bg: #FFFFFF; --primary-text: #5D4037; --secondary-text: #8D6E63; --accent-color: #BCAAA4; --accent-light: #EFEBE9; --accent-dark: #8D6E63; --border-color: #E0E0E0; --promo-highlight: #D32F2F; --nav-height: 60px; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "PingFang TC", sans-serif; }
         body { background-color: var(--bg-color); color: var(--primary-text); padding-top: var(--nav-height); line-height: 1.6; padding-bottom: 80px; }
@@ -224,21 +225,35 @@
         const itemsPerPage = 20;
 
         async function initDB() {
-            try { const res = await fetch(GAS_URL + '?action=getAll'); db = await res.json(); } catch(e) { console.error(e); }
+            try { 
+                const res = await fetch(GAS_URL + '?action=getAll'); 
+                db = await res.json(); 
+            } catch(e) { console.error(e); }
         }
-        window.onload = async function() { await initDB(); 
+
+        // ★ 修正重點在這邊 window.onload ★
+        window.onload = async function() { 
+            await initDB(); 
+            
             document.getElementById('shopTitle').addEventListener('click', ()=>{ window.location.href='admin.html'; });
+            
+            // 修正：載入完成後，主動執行一次「設定美甲分類」，這樣活動才會跑出來
+            setServiceCat('nail'); 
+
             const dateInput = document.getElementById('bookDate');
             const tzOffset = new Date().getTimezoneOffset() * 60000;
             const today = new Date(Date.now() - tzOffset);
             const maxDate = new Date(Date.now() - tzOffset);
             maxDate.setDate(today.getDate() + 14); 
             const formatDate = (date) => date.toISOString().split('T')[0];
+            
             dateInput.min = formatDate(today);
             dateInput.max = formatDate(maxDate);
+
             dateInput.addEventListener('change', function() {
                 if (document.getElementById('bookingForm').dataset.blacklist === "true") { alert("已額滿"); this.value = ""; return; }
                 if(this.value > this.max) { alert('更多時間請至官方賴訊問'); this.value = ''; return; }
+                
                 // 公休檢查 (全天公休)
                 const blocks = db.blockedSlots.filter(b => b.date.startsWith(this.value));
                 if (blocks.some(b => b.start === "00:00" && b.end === "23:59")) { 
@@ -272,7 +287,10 @@
                 const container = document.getElementById(containerId);
                 const optionsDiv = document.getElementById(optionsId);
                 
+                // 清空舊選項
                 optionsDiv.innerHTML = '';
+                
+                // 篩選出該分類且啟用中的活動
                 const events = db.services.filter(s => s.cat === eventCatName && String(s.active) === "true");
 
                 if (events.length > 0) {
@@ -280,11 +298,13 @@
                     events.forEach(ev => {
                         optionsDiv.innerHTML += `<label class="radio-item"><input type="checkbox" class="event-opt" value="${ev.name}"> ${ev.name}</label>`;
                     });
+                    // 重新綁定點擊事件
                     bindRadioEvents();
                 } else {
                     container.style.display = 'none';
                 }
             }
+            // 每次切換類別也重新檢查一下時段狀態
             checkAvailability();
         }
 
@@ -292,7 +312,7 @@
         function toggleCustomTime() {
             const timeSelect = document.getElementById('bookTime').value;
             const customBox = document.getElementById('customTimeBox');
-            if (timeSelect === '其他') { // 明確檢查值是否為 '其他'
+            if (timeSelect === '其他') { 
                 customBox.style.display = 'block';
             } else {
                 customBox.style.display = 'none';
