@@ -313,7 +313,7 @@
         }
         function init() { renderDashboard(); }
 
-        // Dashboard (Fix: lowercase keys)
+        // Dashboard
         function renderDashboard() {
             const today = getTodayString();
             document.getElementById('todayDateStr').innerText = `今日預約 (${today.replace(/-/g,'/')})`;
@@ -381,7 +381,7 @@
         }
         function deleteMember() { const id = document.getElementById('mem-id').value; if(confirm("確定刪除此會員？")) postData('delete', 'members', null, id).then(()=>closeModal('memberModal')); }
 
-        // Transactions (萬能比對)
+        // Transactions
         function renderTransactions() {
             const list = document.getElementById('tx-list');
             list.innerHTML = "";
@@ -401,11 +401,12 @@
         }
         function openTxModal() {
             const modal = document.getElementById('commonModal');
-            const opts = db.members.map(m => `<option value="${m.phone}" label="${m.name}"></option>`).join('');
+            // ★ 手機搜尋優化：把電話和姓名都放進 value，讓手機鍵盤可以搜尋
+            const opts = db.members.map(m => `<option value="${m.phone} ${m.name}">`).join('');
             document.getElementById('modalBody').innerHTML = `
                 <h3>新增消費</h3>
                 <div class="form-group">
-                    <label>搜尋會員 (輸入電話)</label>
+                    <label>搜尋會員 (輸入電話或姓名)</label>
                     <input list="mem-list" id="tx-search" oninput="autoFillMember()" placeholder="請輸入電話">
                     <datalist id="mem-list">${opts}</datalist>
                     <div id="tx-mem-name-display" style="color:green; font-weight:bold; margin-top:5px;"></div>
@@ -415,7 +416,6 @@
                 <div class="form-group"><label>類型</label><select id="tx-type" onchange="toggleBalanceOption()"><option>消費</option><option>儲值</option><option>購買課程</option><option value="使用課程">使用課程</option><option>產品</option></select></div>
                 <div class="form-group"><label>項目</label><input id="tx-item"></div>
                 <div class="form-group"><label>金額</label><input type="number" id="tx-amt" value="0"></div>
-                
                 <div class="form-group" style="background:#e3f2fd; padding:15px; border-radius:8px;">
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <label style="margin:0; color:#1565c0; font-weight:bold;">💰 連動會員儲值金</label>
@@ -423,7 +423,6 @@
                     </div>
                     <p style="font-size:0.8rem; color:#666; margin-top:5px;">開啟：自動扣款或儲值<br>關閉：僅記錄，不影響餘額 (付現)</p>
                 </div>
-
                 <div class="form-group"><label>備註</label><input id="tx-note"></div>
                 <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('commonModal')">取消</button><button class="btn btn-primary" style="width:auto;" onclick="saveTx()">確認</button></div>`;
             modal.classList.add('open');
@@ -436,8 +435,9 @@
             else toggle.checked = true; 
         }
         function autoFillMember() {
+            // ★ 手機搜尋優化：比對字串，不只比對電話
             const val = document.getElementById('tx-search').value;
-            const m = db.members.find(x => x.phone === val);
+            const m = db.members.find(x => val.includes(x.phone));
             if (m) {
                 document.getElementById('tx-mem-val').value = m.id; 
                 document.getElementById('tx-mem-name-display').innerText = "已選取： " + m.name;
@@ -508,7 +508,8 @@
                 html+=`</ul>`;
             } else if(blocks.length===0) html+=`<p style="color:#999; text-align:center;">無行程</p>`;
             
-            const opts = db.members.map(m => `<option value="${m.phone}" label="${m.name}">`).join('');
+            // ★ 手機搜尋優化：手動預約也改為 value 含姓名
+            const opts = db.members.map(m => `<option value="${m.phone} ${m.name}">`).join('');
             html+=`<hr style="margin:20px 0;"><h4 style="margin-bottom:10px">手動新增預約</h4>
             <div class="form-group"><input type="time" id="new-app-time"></div>
             <div class="form-group"><label>搜尋會員 (選填，自動帶入)</label><input list="app-mem-list" id="app-search" oninput="autoFillApp()" style="width:100%"><datalist id="app-mem-list">${opts}</datalist></div>
@@ -521,8 +522,9 @@
             document.getElementById('commonModal').classList.add('open');
         }
         function autoFillApp() {
+            // ★ 手機搜尋優化：比對 input 字串是否包含電話
             const val = document.getElementById('app-search').value;
-            const m = db.members.find(x => x.phone === val);
+            const m = db.members.find(x => val.includes(x.phone));
             if (m) {
                 document.getElementById('new-app-name').value = m.name;
                 document.getElementById('new-app-phone').value = m.phone;
