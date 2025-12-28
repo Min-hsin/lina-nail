@@ -233,32 +233,22 @@
 
         window.onload = async function() { 
             await initDB(); 
-            
             document.getElementById('shopTitle').addEventListener('click', ()=>{ window.location.href='admin.html'; });
-            
             setServiceCat('nail'); 
-
             const dateInput = document.getElementById('bookDate');
             const tzOffset = new Date().getTimezoneOffset() * 60000;
             const today = new Date(Date.now() - tzOffset);
             const maxDate = new Date(Date.now() - tzOffset);
             maxDate.setDate(today.getDate() + 14); 
             const formatDate = (date) => date.toISOString().split('T')[0];
-            
             dateInput.min = formatDate(today);
             dateInput.max = formatDate(maxDate);
-
             dateInput.addEventListener('change', function() {
                 if (document.getElementById('bookingForm').dataset.blacklist === "true") { alert("已額滿"); this.value = ""; return; }
                 if(this.value > this.max) { alert('更多時間請至官方賴訊問'); this.value = ''; return; }
-                
-                // 公休檢查 (全天公休)
                 const blocks = db.blockedSlots.filter(b => b.date.startsWith(this.value));
-                if (blocks.some(b => b.start === "00:00" && b.end === "23:59")) { 
-                    alert("今日公休"); this.value = ""; 
-                    return;
-                }
-                checkAvailability(); // 檢查時段
+                if (blocks.some(b => b.start === "00:00" && b.end === "23:59")) { alert("今日公休"); this.value = ""; return; }
+                checkAvailability();
             });
         };
 
@@ -275,97 +265,59 @@
             document.getElementById('btn-'+cat).classList.add('active'); 
             document.querySelectorAll('.srv-group').forEach(g=>g.style.display='none'); 
             document.getElementById('srv-'+cat).style.display='block'; 
-            
-            // 處理活動顯示
             if(['nail', 'skin', 'wax'].includes(cat)) {
                 const containerId = cat + '-event-container';
                 const optionsId = cat + 'EventOptions';
                 const eventCatName = cat + '-event';
-                
                 const container = document.getElementById(containerId);
                 const optionsDiv = document.getElementById(optionsId);
-                
-                // 清空舊選項
                 optionsDiv.innerHTML = '';
-                
-                // 篩選出該分類且啟用中的活動
                 const events = db.services.filter(s => s.cat === eventCatName && String(s.active) === "true");
-
                 if (events.length > 0) {
                     container.style.display = 'block';
                     events.forEach(ev => {
-                        // 修正：動態新增時也加上 data-cat
                         optionsDiv.innerHTML += `<label class="radio-item"><input type="checkbox" class="event-opt" value="${ev.name}" data-cat="${eventCatName}"> ${ev.name}</label>`;
                     });
-                    // 重新綁定點擊事件
                     bindRadioEvents();
-                } else {
-                    container.style.display = 'none';
-                }
+                } else { container.style.display = 'none'; }
             }
-            // 每次切換類別也重新檢查一下時段狀態
             checkAvailability();
         }
 
-        // --- 防撞機制與時間選擇 ---
         function toggleCustomTime() {
             const timeSelect = document.getElementById('bookTime').value;
             const customBox = document.getElementById('customTimeBox');
-            if (timeSelect === '其他') { 
-                customBox.style.display = 'block';
-            } else {
-                customBox.style.display = 'none';
-            }
+            if (timeSelect === '其他') customBox.style.display = 'block'; else customBox.style.display = 'none';
             checkAvailability();
         }
 
         function checkAvailability() {
             const date = document.getElementById('bookDate').value;
             let time = document.getElementById('bookTime').value;
-            
-            if (time === '其他') {
-                time = document.getElementById('customTimeInput').value;
-            }
-
+            if (time === '其他') time = document.getElementById('customTimeInput').value;
             if (!date || !time) return;
-
-            // 計算工時 (預設 2.5)
             let duration = 2.5; 
             const data = getSelectedData();
             if (data.totalDuration > 0) duration = data.totalDuration;
-
-            // 計算結束時間
             const startHour = parseInt(time.split(':')[0]);
             const startMin = parseInt(time.split(':')[1]);
             const endTotalMin = (startHour * 60 + startMin) + (duration * 60);
-            
-            // 檢查衝突
             const apps = db.appointments.filter(a => a.date === date && a.status !== '已取消');
             const blocks = db.blockedSlots.filter(b => b.date === date);
-            
-            const isOverlap = (s1, e1, s2, e2) => {
-                return (s1 < e2 && s2 < e1);
-            };
-
+            const isOverlap = (s1, e1, s2, e2) => { return (s1 < e2 && s2 < e1); };
             const userStartMin = startHour * 60 + startMin;
             const userEndMin = endTotalMin;
-
             let conflict = false;
-
-            // 檢查預約
             apps.forEach(a => {
                 const aStart = parseInt(a.time.split(':')[0]) * 60 + parseInt(a.time.split(':')[1]);
                 const aEnd = aStart + (2.5 * 60); 
                 if (isOverlap(userStartMin, userEndMin, aStart, aEnd)) conflict = true;
             });
-
-            // 檢查公休
             blocks.forEach(b => {
                 const bStart = parseInt(b.start.split(':')[0]) * 60 + parseInt(b.start.split(':')[1]);
                 const bEnd = parseInt(b.end.split(':')[0]) * 60 + parseInt(b.end.split(':')[1]);
                 if (isOverlap(userStartMin, userEndMin, bStart, bEnd)) conflict = true;
             });
-
             if (conflict) {
                 alert("該時段已被預約或為公休時段，請選擇其他時間。");
                 if(document.getElementById('bookTime').value !== '其他') document.getElementById('bookTime').value = "";
@@ -373,18 +325,15 @@
             }
         }
 
-        // Login Logic
         function login() {
             initDB();
             const phoneInput = document.getElementById('mPhone').value.trim();
             const nameInput = document.getElementById('mName').value.trim();
-            
             const member = db.members.find(m => {
                 let p1 = String(m.phone).replace(/\D/g,''); 
                 let p2 = String(phoneInput).replace(/\D/g,'');
                 return m.name === nameInput && (p1.includes(p2) || p2.includes(p1));
             });
-
             if (member) {
                 currentMember = member;
                 document.getElementById('loginSection').style.display = 'none';
@@ -395,22 +344,14 @@
                 document.getElementById('mDiscount').innerText = getDiscountText(member.level);
                 document.getElementById('custName').value = member.name;
                 document.getElementById('custPhone').value = member.phone;
-                
-                if (member.courses) {
-                   document.getElementById('courseList').innerHTML = `<li>${member.courses}</li>`;
-                } else {
-                   document.getElementById('courseList').innerHTML = `<li style="color:#999;">無剩餘課程</li>`;
-                }
-
+                if (member.courses) document.getElementById('courseList').innerHTML = `<li>${member.courses}</li>`;
+                else document.getElementById('courseList').innerHTML = `<li style="color:#999;">無剩餘課程</li>`;
                 checkMemberStatus(); 
-                
                 const today = new Date().toISOString().split('T')[0];
                 const myApps = db.appointments.filter(a => String(a.phone).includes(member.phone) && a.date >= today && a.status !== '已取消').sort((a,b)=> new Date(a.date)-new Date(b.date));
                 const appList = document.getElementById('tab-booking');
-                
                 if(myApps.length === 0) appList.innerHTML = "<p style='padding:10px; color:#999;'>目前無預約</p>";
                 else appList.innerHTML = myApps.map(a => `<div class="history-card"><div class="h-row-top"><span>${a.date} ${a.time}</span><span>${a.status || '已預約'}</span></div><div class="h-row-btm">${a.item}</div></div>`).join('');
-                
                 renderHistory();
             } else { alert("登入失敗：請確認姓名與電話是否與後台資料一致"); }
         }
@@ -427,14 +368,11 @@
                 const tVal = String(t.memberid || '').replace(/\D/g, ''); 
                 const mId = String(currentMember.id || '').replace(/\D/g, '');
                 const mPhone = String(currentMember.phone || '').replace(/\D/g, '');
-                
                 if (tVal === mId && mId.length > 3) return true;
                 if (tVal === mPhone && mPhone.length > 5) return true;
                 if (String(t.memberid) === currentMember.name) return true;
-
                 return false;
             }).sort((a,b) => new Date(b.date) - new Date(a.date));
-
             currentPage = 1;
             displayHistoryPage();
         }
@@ -442,30 +380,11 @@
         function displayHistoryPage() {
             const listContent = document.getElementById('tx-list-content');
             const pagination = document.getElementById('tx-pagination');
-            
-            if(txHistory.length === 0) {
-                listContent.innerHTML = "<p style='padding:10px; color:#999;'>無消費紀錄</p>";
-                pagination.innerHTML = "";
-                return;
-            }
-
+            if(txHistory.length === 0) { listContent.innerHTML = "<p style='padding:10px; color:#999;'>無消費紀錄</p>"; pagination.innerHTML = ""; return; }
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
             const pageItems = txHistory.slice(start, end);
-
-            listContent.innerHTML = pageItems.map(h => 
-                `<div class="history-card">
-                    <div class="h-row-top">
-                        <span>${formatDateSimple(h.date)}</span>
-                        <span>$${h.amount}</span>
-                    </div>
-                    <div class="h-row-btm">
-                        <span>${h.item} <span style="font-size:0.8rem; color:#888;">${h.note ? '('+h.note+')' : ''}</span></span>
-                        <span class="h-balance">${h.type}</span>
-                    </div>
-                </div>`
-            ).join('');
-
+            listContent.innerHTML = pageItems.map(h => `<div class="history-card"><div class="h-row-top"><span>${formatDateSimple(h.date)}</span><span>$${h.amount}</span></div><div class="h-row-btm"><span>${h.item} <span style="font-size:0.8rem; color:#888;">${h.note ? '('+h.note+')' : ''}</span></span><span class="h-balance">${h.type}</span></div></div>`).join('');
             const totalPages = Math.ceil(txHistory.length / itemsPerPage);
             let btns = "";
             if (totalPages > 1) {
@@ -495,32 +414,20 @@
 
         function bindRadioEvents() {
              document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
-                if (input.dataset.bound === "true") return; // 如果綁定過就跳過
-                input.dataset.bound = "true"; // 標記已綁定
-
+                if (input.dataset.bound === "true") return; 
+                input.dataset.bound = "true"; 
                 input.addEventListener('click', function() {
-                    // Radio Toggle Logic
                     if (this.type === 'radio') {
                         if (this.dataset.wasChecked === 'true') {
-                            this.checked = false;
-                            this.dataset.wasChecked = 'false';
+                            this.checked = false; this.dataset.wasChecked = 'false';
                             this.closest('.radio-item').classList.remove('checked');
                         } else {
-                            // Clear others in same name
-                            document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => {
-                                r.dataset.wasChecked = 'false';
-                                r.closest('.radio-item').classList.remove('checked');
-                            });
+                            document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => { r.dataset.wasChecked = 'false'; r.closest('.radio-item').classList.remove('checked'); });
                             this.dataset.wasChecked = 'true';
                             this.closest('.radio-item').classList.add('checked');
                         }
                     }
-                    // Checkbox Logic (Visual only)
-                    if (this.type === 'checkbox') {
-                         if(this.checked) this.closest('.radio-item').classList.add('checked');
-                         else this.closest('.radio-item').classList.remove('checked');
-                    }
-                    
+                    if (this.type === 'checkbox') { if(this.checked) this.closest('.radio-item').classList.add('checked'); else this.closest('.radio-item').classList.remove('checked'); }
                     updateBookingSummary();
                     checkAvailability();
                 });
@@ -531,8 +438,7 @@
             bindRadioEvents();
             document.querySelectorAll('input[type="checkbox"]').forEach(chk => {
                 chk.addEventListener('change', function() {
-                    if(this.checked) this.closest('.radio-item').classList.add('checked');
-                    else this.closest('.radio-item').classList.remove('checked');
+                    if(this.checked) this.closest('.radio-item').classList.add('checked'); else this.closest('.radio-item').classList.remove('checked');
                     updateBookingSummary();
                     checkAvailability();
                 });
@@ -542,42 +448,21 @@
         function getSelectedData() {
             let items = [];
             let totalDuration = 0;
-            
             const eventExtras = Array.from(document.querySelectorAll('.event-opt:checked')).map(e=>e.value);
-            if (eventExtras.length > 0) { 
-                items.push(`[活動] ${eventExtras.join(' ')}`); 
-                totalDuration += (2 * eventExtras.length); 
-            }
-
+            if (eventExtras.length > 0) { items.push(`[活動] ${eventExtras.join(' ')}`); totalDuration += (2 * eventExtras.length); }
             const handState = document.querySelector('input[name="hand_state"]:checked')?.value;
             const handStyle = document.querySelector('input[name="hand_style"]:checked')?.value;
             const handExtras = Array.from(document.querySelectorAll('.hand-opt:checked')).map(e=>e.value);
             const footState = document.querySelector('input[name="foot_state"]:checked')?.value;
             const footStyle = document.querySelector('input[name="foot_style"]:checked')?.value;
             const footExtras = Array.from(document.querySelectorAll('.foot-opt:checked')).map(e=>e.value);
-
             if(handState || handStyle || handExtras.length > 0) document.getElementById('sub-hand').classList.add('filled'); else document.getElementById('sub-hand').classList.remove('filled');
             if(footState || footStyle || footExtras.length > 0) document.getElementById('sub-foot').classList.add('filled'); else document.getElementById('sub-foot').classList.remove('filled');
-
             if (handState || handStyle || handExtras.length > 0 || footState || footStyle || footExtras.length > 0) {
                 let nailTime = 0;
                 const calcPartDuration = (state, style, extras) => {
                     let partTime = 0;
-                    if (style) {
-                        if (style.includes('單色') || style.includes('貓眼') || style.includes('跳色')) partTime = 2;
-                        else partTime = 2.5; 
-                    } else {
-                        if (state && state.includes('不續作')) partTime = 1;
-                        if (extras.length > 0) {
-                            extras.forEach(ex => {
-                                if(ex.includes('基礎')) partTime += 1;
-                                else if(ex.includes('嫩白') || ex.includes('足底')) partTime += 1.5;
-                                else if(ex.includes('深層')) partTime += 2;
-                            });
-                        }
-                    }
-                    if(extras.some(e=>e.includes('全延'))) partTime += 1;
-                    return partTime;
+                    if (style) { if (style.includes('單色') || style.includes('貓眼') || style.includes('跳色')) partTime = 2; else partTime = 2.5; } else { if (state && state.includes('不續作')) partTime = 1; if (extras.length > 0) { extras.forEach(ex => { if(ex.includes('基礎')) partTime += 1; else if(ex.includes('嫩白') || ex.includes('足底')) partTime += 1.5; else if(ex.includes('深層')) partTime += 2; }); } } if(extras.some(e=>e.includes('全延'))) partTime += 1; return partTime;
                 };
                 nailTime += calcPartDuration(handState, handStyle, handExtras);
                 nailTime += calcPartDuration(footState, footStyle, footExtras);
@@ -586,15 +471,10 @@
                 totalDuration += nailTime;
                 document.getElementById('btn-nail').classList.add('has-selection');
             } else { document.getElementById('btn-nail').classList.remove('has-selection'); }
-
             const skinCourse = document.querySelector('input[name="skin_course"]:checked')?.value;
-            if (skinCourse) { items.push(`[肌膚] ${skinCourse}`); totalDuration += 2.5; document.getElementById('btn-skin').classList.add('has-selection'); } 
-            else { document.getElementById('btn-skin').classList.remove('has-selection'); }
-
+            if (skinCourse) { items.push(`[肌膚] ${skinCourse}`); totalDuration += 2.5; document.getElementById('btn-skin').classList.add('has-selection'); } else { document.getElementById('btn-skin').classList.remove('has-selection'); }
             const waxArea = document.querySelector('input[name="wax_area"]:checked')?.value;
-            if (waxArea) { items.push(`[除毛] ${waxArea}`); totalDuration += 1; document.getElementById('btn-wax').classList.add('has-selection'); } 
-            else { document.getElementById('btn-wax').classList.remove('has-selection'); }
-            
+            if (waxArea) { items.push(`[除毛] ${waxArea}`); totalDuration += 1; document.getElementById('btn-wax').classList.add('has-selection'); } else { document.getElementById('btn-wax').classList.remove('has-selection'); }
             return { items, totalDuration };
         }
 
@@ -607,6 +487,22 @@
                 summaryBox.style.display = 'block';
                 data.items.forEach(item => { let li = document.createElement('li'); li.innerText = item; summaryList.appendChild(li); });
             } else { summaryBox.style.display = 'none'; }
+        }
+
+        // ★ 萬能複製與送出邏輯 ★
+        async function copyText(text) {
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(text);
+                } else { throw new Error('Clipboard API unavailable'); }
+            } catch (err) {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+            }
         }
 
         function submitBooking() {
@@ -625,31 +521,15 @@
             checkAvailability();
             if(document.getElementById('bookTime').value === "") return; 
 
-            // ★ 卸甲檢查邏輯 (含活動) ★
-            // 檢查是否有選：美甲活動 OR 美甲項目 (款式/保養/延甲)
-            // 注意：data-cat 必須要正確抓到 'nail-event'
+            // 卸甲檢查
             const nailEvents = Array.from(document.querySelectorAll('.event-opt:checked')).filter(e => e.dataset.cat === 'nail-event');
-            
-            const isNailService = nailEvents.length > 0 || 
-                                  document.querySelector('input[name="hand_style"]:checked') ||
-                                  document.querySelectorAll('.hand-opt:checked').length > 0 ||
-                                  document.querySelector('input[name="foot_style"]:checked') ||
-                                  document.querySelectorAll('.foot-opt:checked').length > 0;
-
+            const isNailService = nailEvents.length > 0 || document.querySelector('input[name="hand_style"]:checked') || document.querySelectorAll('.hand-opt:checked').length > 0 || document.querySelector('input[name="foot_style"]:checked') || document.querySelectorAll('.foot-opt:checked').length > 0;
             if (isNailService) {
-                const hasRemoval = document.querySelector('input[name="hand_state"]:checked') || 
-                                   document.querySelector('input[name="foot_state"]:checked');
-                if (!hasRemoval) {
-                    alert("⚠️ 預約美甲項目 (含活動) 必須選擇【卸甲/不需卸甲】狀態 (手部或足部)");
-                    return; // 阻止送出
-                }
+                const hasRemoval = document.querySelector('input[name="hand_state"]:checked') || document.querySelector('input[name="foot_state"]:checked');
+                if (!hasRemoval) { alert("⚠️ 預約美甲項目 (含活動) 必須選擇【卸甲/不需卸甲】狀態 (手部或足部)"); return; }
             }
 
-            showLoading(true);
-
-            // 1. 複製到剪貼簿 (Copy to Clipboard First)
-            const duration = data.totalDuration;
-            const maxDuration = duration + 0.5;
+            // 1. 先複製文字 (最優先)
             let genderText = "", bday = "";
             const isNewGuest = document.getElementById('newGuestSection').classList.contains('open');
             if(isNewGuest) {
@@ -657,35 +537,31 @@
                 genderText = gender ? `(${gender})` : "";
                 bday = document.getElementById('custBday').value;
             }
-            
+            const duration = data.totalDuration;
+            const maxDuration = duration + 0.5;
             let msg = `【預約資訊】\n姓名：${name} ${isNewGuest ? genderText + '(新客)' : '(會員)'}\n電話：${phone}`;
             if(isNewGuest && bday) msg += `\n生日：${bday}`;
             msg += `\n日期：${date}\n時間：${time}\n\n${data.items.join('\n')}\n\n備註：${note}`;
             msg += `\n----------------\n(系統預估工時: ${duration} - ${maxDuration} 小時)`;
 
-            navigator.clipboard.writeText(msg).then(() => {
-                // Clipboard success, continue to DB
-                saveToDBAndRedirect(date, time, name, phone, data.items.join(', '), "前台預約(待確認)", "待確認");
-            }).catch(err => {
-                // Clipboard failed (e.g. mobile restriction), still save to DB but warn user
-                console.error('Clipboard failed', err);
-                saveToDBAndRedirect(date, time, name, phone, data.items.join(', '), "前台預約(待確認)", "待確認");
-            });
-        }
+            copyText(msg); // 執行複製
 
-        function saveToDBAndRedirect(date, time, name, phone, item, note, status) {
-            const bookingData = [Date.now().toString(), date, time, name, phone, item, note, status];
+            // 2. 顯示 Loading 並送出
+            showLoading(true);
+            const bookingData = [Date.now().toString(), date, time, name, phone, data.items.join(', '), "前台預約(待確認)", "待確認"];
             
             fetch(GAS_URL, {
                 method: 'POST',
                 body: JSON.stringify({ action: 'add', sheet: 'appointments', data: bookingData })
             }).then(() => {
                 showLoading(false);
-                alert("預約已送出！請至官方LINE貼上訊息確認。");
+                alert("預約內容已複製！即將跳轉官方LINE，請貼上送出。");
                 window.location.href = "https://lin.ee/8eSVhBH";
             }).catch(e => {
                 showLoading(false);
-                alert("連線錯誤，請稍後再試");
+                // 就算連線失敗，也要讓客人去 LINE
+                alert("網路連線較慢，預約單已複製，請直接貼上給我們確認！");
+                window.location.href = "https://lin.ee/8eSVhBH";
             });
         }
         
