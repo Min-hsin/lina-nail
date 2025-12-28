@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lina nail 莉娜時尚館</title>
     <style>
-        /* CSS 樣式區域 */
+        /* CSS 樣式區域 (保持不變) */
         :root { --bg-color: #F9F7F2; --card-bg: #FFFFFF; --primary-text: #5D4037; --secondary-text: #8D6E63; --accent-color: #BCAAA4; --accent-light: #EFEBE9; --accent-dark: #8D6E63; --border-color: #E0E0E0; --promo-highlight: #D32F2F; --nav-height: 60px; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "PingFang TC", sans-serif; }
         body { background-color: var(--bg-color); color: var(--primary-text); padding-top: var(--nav-height); line-height: 1.6; padding-bottom: 80px; }
@@ -96,13 +96,15 @@
         .pay-icon { width: 40px; height: 40px; margin-bottom: 5px; }
         /* 活動區塊樣式 */
         .event-section { border: 2px dashed var(--accent-color); padding: 15px; border-radius: 8px; margin-bottom: 20px; background: #fff3e0; display: none; }
-        #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.7); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; }
+        
+        /* ★ 補上的 Loading 樣式 ★ */
+        #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; }
         .spinner { border: 5px solid #f3f3f3; border-top: 5px solid var(--accent-color); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
-    <div id="loadingOverlay"><div class="spinner"></div><p style="margin-top: 15px; font-weight: bold; color: #555;">處理中...</p></div>
+    <div id="loadingOverlay"><div class="spinner"></div><p style="margin-top: 15px; font-weight: bold; color: #555;">處理中，請稍候...</p></div>
 
     <nav>
         <a href="#home">首頁</a><a href="#pricing">價目表</a><a href="#member">會員中心</a><a href="#booking">快速預約</a><a href="#contact">聯絡我們</a>
@@ -130,7 +132,7 @@
                 <div class="section-title">保養護理</div><div class="skin-item"><div class="skin-header"><span>手部基礎</span><span>$600</span></div><div class="skin-flow">舒緩淨手浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 護甲油 - 指緣油</div></div><div class="skin-item"><div class="skin-header"><span>手部嫩白</span><span>$900</span></div><div class="skin-flow">舒緩淨手浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 去角質(至手腕) - 滋潤修護 - 護甲油 - 指緣油</div></div><div class="skin-item"><div class="skin-header"><span>手部深層</span><span>$1200</span></div><div class="skin-flow">舒緩淨手浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 去角質(至手肘) - 按摩舒壓 - 滋潤修護 - 護甲油 - 指緣油</div></div><div class="skin-item"><div class="skin-header"><span>足部基礎</span><span>$800</span></div><div class="skin-flow">舒緩淨足浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 護甲油 - 指緣油</div></div><div class="skin-item"><div class="skin-header"><span>足底修護</span><span>$1200</span></div><div class="skin-flow">舒緩淨足浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 足底去繭 - 去角質(至腳踝) - 滋潤修護 - 護甲油 - 指緣油</div></div><div class="skin-item"><div class="skin-header"><span>足部深層</span><span>$1500</span></div><div class="skin-flow">舒緩淨足浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 足底去繭 - 去角質(至膝蓋) - 按摩舒壓 - 滋潤修護 - 護甲油 - 指緣油</div></div><div class="list-row" style="background:#FDFBF9;"><span class="list-title">加購嫩白保濕敷膜</span><span class="list-price">$200</span></div>
             </div>
             <div id="skin" class="tab-content">
-                <div class="section-title">一般課程</div><div class="skin-item"><div class="skin-header"><span>臉部清潔 (體驗價)</span><span>$999</span></div><div class="skin-flow">卸妝 - 洗臉 - 清粉刺 - 照光 - 軟膜舒緩鎮定 - 基本保養 - 防曬</div></div><div class="skin-item"><div class="skin-header"><span>韓國小氣泡深層清潔</span><span>$1200</span></div><span class="note-red">搭配儀器加強清潔</span><div class="skin-flow">卸妝 - 洗臉 - 清粉刺 - 小氣泡 - 照光 - 軟膜 - 基本保養 - 防曬</div></div><div class="skin-item"><div class="skin-header"><span>一般客製化肌膚管理</span><span>$1400</span></div><span class="note-red">依照膚況搭配 保濕舒緩</span><div class="skin-flow">卸妝 - 洗臉 - 清粉刺 - 音波去角質/小氣泡 - 照光 - 導入 - 軟膜 - 基本保養 - 防曬</div></div><div class="skin-item"><div class="skin-header"><span>MTS客製化安瓶課程</span><span>$1800</span></div><span class="note-red">依照膚況搭配安瓶 MTS加強安瓶滲透吸收</span><div class="skin-flow">卸妝 - 洗臉 - 清粉刺 - 音波去角質/小氣泡 - MTS客製化安瓶導入 - 照光 - 安瓶導入 - 軟膜 - 基本保養 - 防曬</div></div><div class="list-row" style="background:#FDFBF9;"><span class="list-title">升級雪花補水面膜</span><span class="list-price">$50</span></div>
+                <div class="section-title">一般課程</div><div class="skin-item"><div class="skin-header"><span>臉部清潔 (體驗價)</span><span>$999</span></div><div class="skin-flow">卸妝 - 洗臉 - 清粉刺 - 照光 - 軟膜舒緩鎮定 - 基本保養 - 防曬</div></div><div class="skin-item"><div class="skin-header"><span>韓國小氣泡深層清潔</span><span>$1200</span></div><span class="note-red">搭配儀器加強清潔</span><div class="skin-flow">卸妝 - 洗臉 - 清粉刺 - 小氣泡 - 照光 - 軟膜 - 基本保養 - 防曬</div></div><div class="skin-item"><div class="skin-header"><span>一般客製化肌膚管理</span><span>$1400</span></div><span class="note-red">依照膚況搭配 保濕舒緩</span><div class="skin-flow">卸妝 - 洗臉 - 清粉刺 - 音波去角質/小氣泡 -照光 - 導入 - 軟膜 - 基本保養 - 防曬</div></div><div class="skin-item"><div class="skin-header"><span>MTS客製化安瓶課程</span><span>$1800</span></div><span class="note-red">依照膚況搭配安瓶 MTS加強安瓶滲透吸收</span><div class="skin-flow">卸妝 - 洗臉 - 清粉刺 - 音波去角質/小氣泡 - MTS客製化安瓶導入 - 照光 - 安瓶導入 - 軟膜 - 基本保養 - 防曬</div></div><div class="list-row" style="background:#FDFBF9;"><span class="list-title">升級雪花補水面膜</span><span class="list-price">$50</span></div>
                 <div class="section-title">高階課程</div><div class="skin-item"><div class="skin-header"><span>黃金24K金箔課程</span><span>$2300</span></div><div class="skin-flow">嫩白 淡化細紋黑斑 刺激膠原蛋白增生 排除面部毒素化妝品殘留</div></div><div class="skin-item"><div class="skin-header"><span>木乃伊緊緻小臉</span><span>$2100</span></div><div class="skin-flow">嫩白保濕 調理暗沉蠟黃膚色不均 緊緻拉提縮小毛孔</div></div><div class="skin-item"><div class="skin-header"><span>葉綠素抗痘</span><span>$2000</span></div><div class="skin-flow">清潔毛孔髒污 調理粉刺內胞痘痘問題 減少黑色素產生</div></div><div class="skin-item"><div class="skin-header"><span>水光炸彈</span><span>$2000</span></div><div class="skin-flow">小分子精華 強效補水 調節缺水性油水不平衡 生成水分保護膜彈潤透亮</div></div><div class="skin-item"><div class="skin-header"><span>韓國海藻矽針煥膚</span><span>$2300</span></div><div class="skin-flow">調理痘痘、痘疤凹疤問題 緊緻肌膚 加速老廢角質代謝</div></div><div class="skin-item"><div class="skin-header"><span>R2海綿藻針</span><span>$2000</span></div><div class="skin-flow">調理粉刺痘痘、痘疤凹疤問題 緊緻肌膚 緩解毛孔阻塞</div></div>
             </div>
             <div id="wax" class="tab-content">
@@ -273,8 +275,16 @@
             dateInput.min = formatDate(today);
             dateInput.max = formatDate(maxDate);
 
+            // ★ 修正黑名單檢查：只在「選完日期後」且「有值」才檢查，避免未選先跳
             dateInput.addEventListener('change', function() {
-                if (document.getElementById('bookingForm').dataset.blacklist === "true") { alert("已額滿"); this.value = ""; return; }
+                if(!this.value) return; 
+
+                if (document.getElementById('bookingForm').dataset.blacklist === "true") { 
+                    alert("已額滿"); 
+                    this.value = ""; 
+                    return; 
+                }
+                
                 if(this.value > this.max) { alert('更多時間請至官方賴訊問'); this.value = ''; return; }
                 
                 // 公休檢查
