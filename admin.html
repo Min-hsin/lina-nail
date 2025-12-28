@@ -2,748 +2,563 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lina nail 莉娜時尚館</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lina Nail 後台管理</title>
     <style>
-        /* CSS 樣式區域 (保持不變) */
-        :root { --bg-color: #F9F7F2; --card-bg: #FFFFFF; --primary-text: #5D4037; --secondary-text: #8D6E63; --accent-color: #BCAAA4; --accent-light: #EFEBE9; --accent-dark: #8D6E63; --border-color: #E0E0E0; --promo-highlight: #D32F2F; --nav-height: 60px; }
+        :root { --bg-color: #FFFBF0; --header-bg: #EFEBE9; --text-main: #4E342E; --text-sub: #8D6E63; --card-bg: #FFFFFF; --accent-color: #A1887F; --border-color: #D7CCC8; --danger: #D32F2F; --success: #388E3C; --pending: #FBC02D; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "PingFang TC", sans-serif; }
-        body { background-color: var(--bg-color); color: var(--primary-text); padding-top: var(--nav-height); line-height: 1.6; padding-bottom: 80px; }
-        nav { position: fixed; top: 0; left: 0; width: 100%; height: var(--nav-height); background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 1000; display: flex; overflow-x: auto; white-space: nowrap; }
-        nav a { display: inline-flex; align-items: center; padding: 0 20px; height: 100%; color: var(--primary-text); text-decoration: none; font-size: 0.95rem; font-weight: 500; }
-        .container { max-width: 600px; margin: 20px auto; padding: 0 15px; }
-        .card { background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
-        h1 { font-size: 1.5rem; font-weight: bold; margin-bottom: 5px; }
-        h2 { font-size: 1.2rem; margin-bottom: 15px; border-left: 4px solid var(--accent-color); padding-left: 10px; font-weight: bold; }
-        .tab-nav { display: flex; overflow-x: auto; gap: 8px; margin-bottom: 20px; padding-bottom: 5px; }
-        .tab-btn { background: #fff; border: 1px solid var(--accent-color); color: var(--primary-text); padding: 8px 16px; border-radius: 20px; cursor: pointer; white-space: nowrap; font-size: 0.9rem; transition: 0.2s; }
-        .tab-btn.active { background: var(--accent-color); color: #fff; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .tab-content { display: none; animation: fadeIn 0.3s; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        .grid-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 5px; padding: 10px 0; border-bottom: 1px dashed var(--border-color); font-size: 0.95rem; align-items: center; }
-        .grid-header { font-weight: bold; background: var(--accent-light); border-radius: 6px; text-align: center; padding: 8px 0; border-bottom: none; }
-        .col-left { text-align: left; padding-left: 8px; } .col-center { text-align: center; }
-        .list-row { display: flex; justify-content: space-between; padding: 10px 8px; border-bottom: 1px dashed var(--border-color); font-size: 0.95rem; align-items: baseline; }
-        .list-row:last-child { border-bottom: none; }
-        .section-title { background: #FDFBF9; color: var(--secondary-text); padding: 8px; text-align: center; font-weight: bold; margin: 25px 0 10px; border-radius: 6px; border: 1px solid #eee; }
-        .section-title:first-child { margin-top: 0; }
-        .removal-box { padding: 10px 0; border-bottom: 1px dashed var(--border-color); }
-        .removal-title { font-weight: bold; font-size: 1rem; margin-bottom: 5px; padding-left: 8px; }
-        .removal-row { display: flex; justify-content: space-between; padding-left: 15px; padding-right: 8px; font-size: 0.95rem; margin-bottom: 2px; }
-        .removal-note { font-size: 0.8rem; color: #999; padding-left: 15px; margin-bottom: 8px; }
-        .skin-item { margin-bottom: 15px; border-bottom: 1px solid #f0f0f0; padding-bottom: 15px; }
-        .skin-header { display: flex; justify-content: space-between; font-weight: bold; font-size: 1rem; color: var(--primary-text); }
-        .skin-flow { font-size: 0.85rem; color: #666; margin-top: 5px; line-height: 1.5; text-align: justify; }
-        .note-red { color: #D32F2F; font-size: 0.85rem; display: block; margin-top: 4px; font-weight: 500; }
-        .promo-highlight { font-size: 1.1rem; font-weight: 900; color: var(--promo-highlight); margin: 0 3px; }
-        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-        .contact-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff; border: 1px solid #eee; border-radius: 10px; padding: 15px; color: var(--primary-text); text-decoration: none; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
-        .contact-btn:hover { background: #fafafa; border-color: var(--accent-color); }
-        .contact-btn span { margin-top: 5px; font-weight: 500; font-size: 0.95rem; }
-        .contact-sub { font-size: 0.75rem; color: #999; margin-top: 2px; }
-        .address-box { display: flex; align-items: center; padding: 15px; background: #fff; border: 1px solid #eee; border-radius: 10px; text-decoration: none; color: var(--primary-text); font-size: 0.9rem; }
-        .svg-icon { width: 22px; height: 22px; fill: currentColor; }
-        .member-btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .mem-btn { background: #FFF; border: 1px solid var(--accent-color); color: var(--primary-text); padding: 20px 10px; border-radius: 10px; text-align: center; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: 0.2s; font-size: 1rem; font-weight: bold; }
-        .mem-btn:hover, .mem-btn.active { background: var(--accent-color); color: #fff; }
-        .asset-info-box { background: #FDFBF9; border: 1px solid #eee; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 20px; display: none; }
-        .asset-info-box.show { display: block; animation: fadeIn 0.3s; }
-        .history-tabs { display: flex; border-bottom: 1px solid #eee; margin-bottom: 15px; }
-        .h-tab { flex: 1; text-align: center; padding: 10px; cursor: pointer; color: #999; border-bottom: 2px solid transparent; font-size: 0.95rem; }
-        .h-tab.active { color: var(--primary-text); border-bottom-color: var(--accent-color); font-weight: bold; }
-        .history-list { list-style: none; font-size: 0.9rem; min-height: 100px; }
-        .history-card { background: #fff; border: 1px solid #eee; border-radius: 8px; padding: 12px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
-        .h-row-top { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 5px; color: #333; }
-        .h-row-btm { display: flex; justify-content: space-between; font-size: 0.9rem; color: #666; }
-        .h-balance { font-size: 0.85rem; color: #999; }
-        .form-input { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; outline: none; }
-        .form-input:focus { border-color: var(--accent-color); }
-        .sub-label { font-size: 0.95rem; font-weight: bold; color: var(--secondary-text); margin-top: 15px; margin-bottom: 8px; display: block; }
-        .date-hint { font-size: 0.85rem; color: #888; display: block; margin-top: -8px; margin-bottom: 10px; }
-        .radio-group { display: flex; flex-direction: column; gap: 8px; }
-        .radio-item { display: flex; align-items: center; background: #fff; padding: 12px; border: 1px solid #eee; border-radius: 4px; font-size: 1rem; cursor: pointer; transition: 0.2s; position: relative; }
-        .radio-item:hover { border-color: var(--accent-color); }
-        .radio-item input { display: none; }
-        .radio-item::before { content: ''; display: inline-block; width: 18px; height: 18px; border: 1px solid #ccc; background: white; margin-right: 12px; border-radius: 4px; }
-        .radio-item.checked { border-color: var(--accent-color); background: #fdfbf9; }
-        .radio-item.checked::before { background-color: var(--accent-color); border-color: var(--accent-color); content: '✓'; color: white; text-align: center; line-height: 18px; font-size: 14px; }
-        .radio-item.disabled-opt { opacity: 0.5; pointer-events: none; background: #f5f5f5; color: #999; border-color: #ddd; }
-        .nail-sub-tabs { display: flex; gap: 10px; margin-bottom: 15px; }
-        .nail-sub-btn { flex: 1; padding: 12px; text-align: center; border: 1px solid var(--accent-color); border-radius: 8px; background: #fff; color: var(--primary-text); cursor: pointer; font-weight: bold; position: relative; }
-        .nail-sub-btn.active { background: var(--accent-color); color: white; }
-        .nail-sub-btn.filled::after { content: '✓'; position: absolute; top: -5px; right: -5px; background: #4CAF50; color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; }
-        /* 3欄設計 */
-        .cat-group { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; } 
-        .cat-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px 5px; border: 1px solid #eee; border-radius: 20px; background: #fff; cursor: pointer; transition: 0.3s; height: 100px; font-size: 0.9rem; font-weight: bold; color: var(--primary-text); box-shadow: 0 2px 5px rgba(0,0,0,0.03); position: relative; }
-        .cat-btn:hover { background: #f9f9f9; }
-        .cat-btn.active { background: var(--accent-color); color: #fff; border-color: var(--accent-color); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(188, 170, 164, 0.4); }
-        .cat-btn.has-selection::after { content: '✓'; position: absolute; top: -5px; right: -5px; background: #4CAF50; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; border: 2px solid #fff; }
-        .cat-btn.has-selection { border: 2px solid #4CAF50; }
-        .cat-icon { width: 36px; height: 36px; margin-bottom: 8px; fill: currentColor; }
-        .selected-summary { background: #fff8e1; border: 1px solid #ffe082; border-radius: 8px; padding: 15px; margin: 15px 0; font-size: 0.9rem; color: #5d4037; }
-        .btn-submit { background: var(--accent-color); color: #fff; border: none; width: 100%; padding: 15px; border-radius: 8px; font-size: 1rem; margin-top: 20px; cursor: pointer; }
-        #newGuestSection { overflow: hidden; transition: max-height 0.5s ease-out; max-height: 0; padding: 0 5px; }
-        #newGuestSection.open { max-height: 250px; }
-        .gender-group { display: flex; gap: 20px; margin-bottom: 10px; align-items: center; }
-        .gender-label { display: flex; align-items: center; cursor: pointer; }
-        .gender-label input { display: inline-block; margin-right: 5px; width: 18px; height: 18px; accent-color: var(--accent-dark); }
-        .pagination { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-        .page-btn { padding: 5px 12px; border: 1px solid #ddd; background: #fff; cursor: pointer; border-radius: 4px; font-size: 0.9rem;}
-        .page-btn.disabled { opacity: 0.5; pointer-events: none; }
-        .pay-container { display: flex; justify-content: space-around; padding: 10px 0; }
-        .pay-item { display: flex; flex-direction: column; align-items: center; font-size: 0.85rem; color: #555; }
-        .pay-icon { width: 40px; height: 40px; margin-bottom: 5px; }
-        /* 活動區塊樣式 */
-        .event-section { border: 2px dashed var(--accent-color); padding: 15px; border-radius: 8px; margin-bottom: 20px; background: #fff3e0; display: none; }
         
-        /* ★ 補上的 Loading 樣式 ★ */
-        #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; }
+        /* 修正手機版面被吃掉的問題：移除 height: 100vh */
+        body { background-color: var(--bg-color); color: var(--text-main); font-size: 16px; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+        
+        .icon { width: 22px; height: 22px; fill: currentColor; vertical-align: middle; margin-right: 5px; }
+        #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.7); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; }
         .spinner { border: 5px solid #f3f3f3; border-top: 5px solid var(--accent-color); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #loginOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--bg-color); z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+        .login-box { background: #fff; padding: 40px; border-radius: 16px; width: 90%; max-width: 400px; box-shadow: 0 4px 20px rgba(141, 110, 99, 0.15); text-align: center; border: 1px solid var(--border-color); }
+        .login-input { padding: 12px; font-size: 1.2rem; margin: 20px 0; border: 1px solid #ccc; border-radius: 8px; width: 100%; text-align: center; outline: none;}
+        
+        /* 改用 Sticky Header 確保滑動順暢 */
+        header { position: sticky; top: 0; z-index: 1000; background-color: var(--header-bg); padding: 12px 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; padding-top: env(safe-area-inset-top); }
+        
+        .nav-scroller { display: flex; gap: 10px; overflow-x: auto; white-space: nowrap; padding-bottom: 5px; -webkit-overflow-scrolling: touch; }
+        .nav-scroller::-webkit-scrollbar { display: none; }
+        .nav-btn { background: #fff; border: 1px solid var(--border-color); color: var(--text-sub); padding: 8px 15px; cursor: pointer; font-size: 0.95rem; font-weight: bold; border-radius: 20px; transition: 0.2s; display: flex; align-items: center; white-space: nowrap; }
+        .nav-btn.active { background-color: var(--text-main); color: #fff; border-color: var(--text-main); }
+        .btn-home { text-decoration: none; font-weight: bold; color: var(--text-main); font-size: 0.9rem; border: 1px solid var(--text-main); padding: 5px 10px; border-radius: 8px; }
+        
+        /* Main 取消 overflow-y: auto，讓 body 自己捲動 */
+        main { flex: 1; padding: 15px; padding-bottom: 80px; }
+        
+        .page-section { display: none; animation: fadeIn 0.3s; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)} }
+        .card-container { display: flex; flex-direction: column; gap: 15px; }
+        .data-card { background: var(--card-bg); border-radius: 12px; padding: 20px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.03); position: relative; }
+        h2 { font-size: 1.3rem; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        h3 { font-size: 1.2rem; margin-bottom: 15px; }
+        .app-card-header { display: flex; justify-content: space-between; font-weight: 900; font-size: 1.2rem; color: var(--text-main); margin-bottom: 10px; border-bottom: 1px dashed #eee; padding-bottom: 10px; }
+        .app-card-body { font-size: 1rem; line-height: 1.6; color: #555; }
+        .app-card-note { color: var(--text-sub); font-weight: bold; margin-top: 5px; display: block;}
+        .app-card-actions { margin-top: 15px; display: flex; justify-content: flex-end; gap: 10px; }
+        .status-badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; color: #fff; margin-left: 5px; }
+        .status-pending { background-color: var(--pending); }
+        .status-confirmed { background-color: var(--success); }
+        .mem-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; border-bottom: 1px dashed #eee; padding-bottom: 10px;}
+        .mem-name { font-size: 1.4rem; font-weight: 900; color: var(--text-main); display: block;} 
+        .mem-phone { font-size: 1.2rem; font-weight: bold; color: var(--text-main); display: block; margin-top: 5px;} 
+        .mem-sub { font-size: 1rem; color: var(--text-sub); margin-bottom: 8px; font-weight: 500; } 
+        .mem-detail { font-size: 0.95rem; color: #888; line-height: 1.6; } 
+        .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; justify-content: center; }
+        .btn-primary { background: var(--text-main); color: #fff; width: 100%; margin-bottom: 15px; padding: 12px; font-weight: bold; }
+        .btn-edit { background: #fff; border: 1px solid var(--accent-color); color: var(--accent-color); }
+        .btn-del { background: #fff; border: 1px solid var(--danger); color: var(--danger); font-weight: bold; }
+        .btn-secondary { background: #eee; color: #555; }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 1.2rem; font-weight: bold; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+        .cal-day { background: #fff; border: 1px solid #eee; min-height: 100px; padding: 5px; cursor: pointer; border-radius: 6px; position: relative; }
+        .cal-day.today { background: #FFF8E1; border: 2px solid #FFD54F; }
+        .cal-badge { display: block; font-size: 0.8rem; background: var(--accent-color); color: #fff; padding: 4px; border-radius: 4px; margin-top: 2px; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .cal-badge.blocked { background: #BDBDBD; font-size: 0.75rem;} 
+        .cal-badge.pending { background: var(--pending); color: #333; }
+        .settings-tab-nav { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .settings-tab-btn { background: none; border: none; padding: 8px 15px; cursor: pointer; font-size: 1rem; color: #888; white-space: nowrap; }
+        .settings-tab-btn.active { color: var(--text-main); font-weight: bold; border-bottom: 3px solid var(--text-main); }
+        .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #fff; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; }
+        .switch-row input[type="text"] { font-size: 1.2rem; font-weight: bold; color: var(--text-main); border: none; background: transparent; width: 70%;}
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(20px); }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
+        .modal.open { display: flex; }
+        .modal-content { background: #fff; padding: 25px; border-radius: 12px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--text-sub); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1.1rem; outline:none; }
+        .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
     </style>
 </head>
 <body>
-    <div id="loadingOverlay"><div class="spinner"></div><p style="margin-top: 15px; font-weight: bold; color: #555;">處理中，請稍候...</p></div>
 
-    <nav>
-        <a href="#home">首頁</a><a href="#pricing">價目表</a><a href="#member">會員中心</a><a href="#booking">快速預約</a><a href="#contact">聯絡我們</a>
-    </nav>
-    <div class="container">
-        <div id="home" class="card" style="text-align: center; padding: 40px 20px; user-select: none;">
-            <h1 id="shopTitle" style="cursor: pointer;">Lina nail 莉娜時尚館</h1>
-            <p style="color: var(--secondary-text);">專業美甲 · 韓式肌膚管理 · 熱蠟除毛</p>
+    <div id="loadingOverlay"><div class="spinner"></div><p style="margin-top: 15px; font-weight: bold; color: #555;">資料同步中...</p></div>
+
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h2 style="border:none; margin-bottom:20px;">Lina Nail 後台</h2>
+            <input type="password" id="adminPassInput" class="login-input" placeholder="請輸入密碼">
+            <button class="btn btn-primary" onclick="checkLogin()">登入</button>
         </div>
-        <section id="pricing" class="card">
-            <h2>服務價目表</h2>
-            <div class="tab-nav">
-                <button class="tab-btn active" onclick="showTab('nail', this)">美甲</button>
-                <button class="tab-btn" onclick="showTab('skin', this)">肌膚管理</button>
-                <button class="tab-btn" onclick="showTab('wax', this)">熱蠟除毛</button>
-                <button class="tab-btn" onclick="showTab('promo', this)">優惠活動</button>
-                <button class="tab-btn" onclick="showTab('member-card', this)">儲值會員</button>
-            </div>
-            <div id="nail" class="tab-content active">
-                <div class="section-title">凝膠指甲 (含基礎保養/建構)</div><div class="grid-3 grid-header"><div class="col-left">項目</div><div class="col-center">手</div><div class="col-center">足</div></div><div class="grid-3"><div class="col-left">透明凝膠</div><div class="col-center">$800</div><div class="col-center">$1000</div></div><div class="grid-3"><div class="col-left">單色凝膠</div><div class="col-center">$1000</div><div class="col-center">$1200</div></div><div class="grid-3"><div class="col-left">漸層凝膠</div><div class="col-center">$1200</div><div class="col-center">$1400</div></div><div class="grid-3"><div class="col-left">法式凝膠</div><div class="col-center">$1400</div><div class="col-center">$1600</div></div><div class="grid-3"><div class="col-left">延甲(指模)/指</div><div class="col-center">$100</div><div class="col-center">$120</div></div><div class="grid-3"><div class="col-left">手延甲(甲片)/指</div><div class="col-center">$80</div><div class="col-center">-</div></div>
-                <div class="section-title">卸甲 / 修補</div><div class="removal-box"><div class="removal-title">凝膠卸甲</div><div class="removal-row"><span>續作</span><span>$200</span></div><div class="removal-row"><span>不續作</span><span>$500</span></div><div class="removal-note">(含簡易保養)</div></div><div class="removal-box"><div class="removal-title">水晶卸甲</div><div class="removal-row"><span>續作</span><span>$300</span></div><div class="removal-row"><span>不續作</span><span>$600</span></div><div class="removal-note">(含簡易保養)</div></div><div class="list-row"><span class="list-title">水晶修補 / 指</span><span class="list-price">$80</span></div><div class="list-row"><span class="list-title">絲綢補甲 / 指</span><span class="list-price">$50</span></div>
-                <div class="section-title">造型設計</div><div class="list-row"><span class="list-title">跳一色</span><span class="list-price">$100</span></div><div class="list-row"><span class="list-title">貓眼 / 鏡面</span><span class="list-price">$200</span></div><div class="list-row"><span class="list-title">暈染 / 指</span><span class="list-price">$100 up</span></div><div class="list-row"><span class="list-title">手繪 / 指</span><span class="list-price">$50 up</span></div><div class="list-row"><span class="list-title">亮片 / 指</span><span class="list-price">$50</span></div><div class="list-row"><span class="list-title">飾品 / 素材 / 鏈條</span><span class="list-price">$20 up</span></div><div class="list-row"><span class="list-title">立體造型設計</span><span class="list-price">$50 up</span></div><div class="list-row"><span class="list-title">立體鑽飾</span><span class="list-price">$20-120</span></div><div class="list-row"><span class="list-title">施華洛鑽</span><span class="list-price">$30-120</span></div><div class="list-row"><span class="list-title">滿鑽設計 / 指</span><span class="list-price">$250 up</span></div>
-                <div class="section-title">水晶指甲 (僅手部)</div><div class="list-row"><span class="list-title">透明延甲 / 咬甲矯正</span><span class="list-price">$1200</span></div><div class="list-row"><span class="list-title">璀璨漸層</span><span class="list-price">$1400</span></div><div class="list-row"><span class="list-title">法式</span><span class="list-price">$1500</span></div>
-                <div class="section-title">矯正系列</div><div class="list-row"><span class="list-title">手部卷甲</span><span class="list-price">$300</span></div><div class="list-row"><span class="list-title">足部崁甲 / 指</span><span class="list-price">$150</span></div><div class="list-row"><span class="list-title">水晶足部崁甲 / 指</span><span class="list-price">$250</span></div>
-                <div class="section-title">保養護理</div><div class="skin-item"><div class="skin-header"><span>手部基礎</span><span>$600</span></div><div class="skin-flow">舒緩淨手浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 護甲油 - 指緣油</div></div><div class="skin-item"><div class="skin-header"><span>手部嫩白</span><span>$900</span></div><div class="skin-flow">舒緩淨手浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 去角質(至手腕) - 滋潤修護 - 護甲油 - 指緣油</div></div><div class="skin-item"><div class="skin-header"><span>手部深層</span><span>$1200</span></div><div class="skin-flow">舒緩淨手浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 去角質(至手肘) - 按摩舒壓 - 滋潤修護 - 護甲油 - 指緣油</div></div><div class="skin-item"><div class="skin-header"><span>足部基礎</span><span>$800</span></div><div class="skin-flow">舒緩淨足浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 護甲油 - 指緣油</div></div><div class="skin-item"><div class="skin-header"><span>足底修護</span><span>$1200</span></div><div class="skin-flow">舒緩淨足浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 足底去繭 - 去角質(至腳踝) - 滋潤修護 - 護甲油 - 指緣油</div></div><div class="skin-item"><div class="skin-header"><span>足部深層</span><span>$1500</span></div><div class="skin-flow">舒緩淨足浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 足底去繭 - 去角質(至膝蓋) - 按摩舒壓 - 滋潤修護 - 護甲油 - 指緣油</div></div><div class="list-row" style="background:#FDFBF9;"><span class="list-title">加購嫩白保濕敷膜</span><span class="list-price">$200</span></div>
-            </div>
-            <div id="skin" class="tab-content">
-                <div class="section-title">一般課程</div><div class="skin-item"><div class="skin-header"><span>臉部清潔 (體驗價)</span><span>$999</span></div><div class="skin-flow">卸妝 - 洗臉 - 清粉刺 - 照光 - 軟膜舒緩鎮定 - 基本保養 - 防曬</div></div><div class="skin-item"><div class="skin-header"><span>韓國小氣泡深層清潔</span><span>$1200</span></div><span class="note-red">搭配儀器加強清潔</span><div class="skin-flow">卸妝 - 洗臉 - 清粉刺 - 小氣泡 - 照光 - 軟膜 - 基本保養 - 防曬</div></div><div class="skin-item"><div class="skin-header"><span>一般客製化肌膚管理</span><span>$1400</span></div><span class="note-red">依照膚況搭配 保濕舒緩</span><div class="skin-flow">卸妝 - 洗臉 - 清粉刺 - 音波去角質/小氣泡 -照光 - 導入 - 軟膜 - 基本保養 - 防曬</div></div><div class="skin-item"><div class="skin-header"><span>MTS客製化安瓶課程</span><span>$1800</span></div><span class="note-red">依照膚況搭配安瓶 MTS加強安瓶滲透吸收</span><div class="skin-flow">卸妝 - 洗臉 - 清粉刺 - 音波去角質/小氣泡 - MTS客製化安瓶導入 - 照光 - 安瓶導入 - 軟膜 - 基本保養 - 防曬</div></div><div class="list-row" style="background:#FDFBF9;"><span class="list-title">升級雪花補水面膜</span><span class="list-price">$50</span></div>
-                <div class="section-title">高階課程</div><div class="skin-item"><div class="skin-header"><span>黃金24K金箔課程</span><span>$2300</span></div><div class="skin-flow">嫩白 淡化細紋黑斑 刺激膠原蛋白增生 排除面部毒素化妝品殘留</div></div><div class="skin-item"><div class="skin-header"><span>木乃伊緊緻小臉</span><span>$2100</span></div><div class="skin-flow">嫩白保濕 調理暗沉蠟黃膚色不均 緊緻拉提縮小毛孔</div></div><div class="skin-item"><div class="skin-header"><span>葉綠素抗痘</span><span>$2000</span></div><div class="skin-flow">清潔毛孔髒污 調理粉刺內胞痘痘問題 減少黑色素產生</div></div><div class="skin-item"><div class="skin-header"><span>水光炸彈</span><span>$2000</span></div><div class="skin-flow">小分子精華 強效補水 調節缺水性油水不平衡 生成水分保護膜彈潤透亮</div></div><div class="skin-item"><div class="skin-header"><span>韓國海藻矽針煥膚</span><span>$2300</span></div><div class="skin-flow">調理痘痘、痘疤凹疤問題 緊緻肌膚 加速老廢角質代謝</div></div><div class="skin-item"><div class="skin-header"><span>R2海綿藻針</span><span>$2000</span></div><div class="skin-flow">調理粉刺痘痘、痘疤凹疤問題 緊緻肌膚 緩解毛孔阻塞</div></div>
-            </div>
-            <div id="wax" class="tab-content">
-                <div class="grid-3 grid-header"><div class="col-left">部位</div><div class="col-center">女</div><div class="col-center">男</div></div><div class="grid-3"><div class="col-left">腋下</div><div class="col-center">$500</div><div class="col-center">$600</div></div><div class="grid-3"><div class="col-left">小手臂</div><div class="col-center">$800</div><div class="col-center">$1000</div></div><div class="grid-3"><div class="col-left">全手</div><div class="col-center">$1200</div><div class="col-center">$1400</div></div><div class="grid-3"><div class="col-left">小腿</div><div class="col-center">$1000</div><div class="col-center">$1300</div></div><div class="grid-3"><div class="col-left">全腿</div><div class="col-center">$1500</div><div class="col-center">$1700</div></div><div class="grid-3"><div class="col-left">手指/腳指</div><div class="col-center">$200</div><div class="col-center">$250</div></div><div class="grid-3"><div class="col-left">手/腳背+指頭</div><div class="col-center">$300</div><div class="col-center">$400</div></div><div class="grid-3"><div class="col-left">比基尼線</div><div class="col-center">$1500</div><div class="col-center">-</div></div><div class="grid-3"><div class="col-left">巴西全除(含膜)</div><div class="col-center">$2000</div><div class="col-center">-</div></div><div class="grid-3"><div class="col-left">加購私密膜</div><div class="col-center">$350</div><div class="col-center">-</div></div>
-                <div class="section-title">優惠套組</div><div class="grid-3 grid-header"><div class="col-left">套組內容</div><div class="col-center">女</div><div class="col-center">男</div></div><div class="grid-3"><div class="col-left">腋下+私密處全除</div><div class="col-center">$2300</div><div class="col-center">-</div></div><div class="grid-3"><div class="col-left">小手臂+小腿</div><div class="col-center">$1600</div><div class="col-center">$2100</div></div><div class="grid-3"><div class="col-left">全身全除</div><div class="col-center">$4900</div><div class="col-center">-</div></div><div class="removal-note" style="margin-top:10px;">全身全除包含：腋下+全手+全腿+私密處</div>
-            </div>
-            <div id="promo" class="tab-content">
-                <div class="skin-item"><div class="skin-header"><span>打卡/評論/分享/回饋</span></div><div class="skin-flow">按讚追蹤打卡評論+分享 / 拍照回傳分享反饋，皆可折抵消費 <span class="promo-highlight">$50</span></div></div><div class="skin-item"><div class="skin-header"><span>介紹親友</span></div><div class="skin-flow">介紹親友來店消費，折抵消費 <span class="promo-highlight">$150</span></div></div><div class="skin-item"><div class="skin-header"><span>新客獨享</span></div><div class="skin-flow">新客預約享 <span class="promo-highlight">9折</span> 優惠<br>高階肌膚管理課程體驗價 <span class="promo-highlight">$1680</span></div></div><div class="skin-item"><div class="skin-header"><span>壽星禮遇</span></div><div class="skin-flow">壽星生日月出示身分證+現場打卡分享<br>享有 <span class="promo-highlight">8折</span><br><span style="font-size:0.8rem; color:#999;">(不與其他活動併用、不限當月使用次數、僅限當月壽星本人使用)</span></div></div>
-            </div>
-            <div id="member-card" class="tab-content">
-                <div class="skin-item" style="border-left: 4px solid gold; padding-left: 10px;"><div class="skin-header"><span>黃金會員 $8000</span></div><div class="skin-flow">• 贈送黃金卡會員禮一份<br>• 消費美甲、肌膚管理、除毛課程均 95折</div></div><div class="skin-item" style="border-left: 4px solid silver; padding-left: 10px;"><div class="skin-header"><span>白金會員 $17000</span></div><div class="skin-flow">• 贈送白金卡會員禮一份<br>• 購買產品均打 9折<br>• 消費美甲、肌膚管理、除毛課程均打 9折</div></div><div class="skin-item" style="border-left: 4px solid #b9f2ff; padding-left: 10px;"><div class="skin-header"><span>鑽石會員 $30000</span></div><div class="skin-flow">• 贈送鑽石卡會員禮一份 + 好禮課程三選一<br>(手部深層保養 / 韓國小氣泡課程 / 小腿除毛)<br>• 購買產品均打 9折<br>• 消費美甲、肌膚管理、除毛課程均打 85折</div></div><div class="removal-note" style="line-height:1.6;">* 會員卡不限本人使用，經本人同意後可與他人共享<br>* 美甲項目可併用當月優惠活動<br>* 體驗價不得使用儲值優惠<br>* 儲值會員可提供無卡分期</div>
-            </div>
-        </section>
+    </div>
 
-        <section id="member" class="card">
-            <h2>會員中心</h2>
-            <div id="loginSection"><div style="display:flex; gap:10px;"><input type="text" id="mName" placeholder="姓名" class="form-input" style="margin-bottom:0;"><input type="tel" id="mPhone" placeholder="電話" class="form-input" style="margin-bottom:0;"><button onclick="login()" style="padding:0 20px; background:var(--accent-color); color:#fff; border:none; border-radius:8px; cursor:pointer;">登入</button></div></div>
-            <div id="dashboardSection" style="display:none; margin-top:20px;">
-                <p style="margin-bottom:15px;">歡迎回來，<span id="welcomeName" style="font-weight:bold;"></span></p>
-                <div class="member-btn-grid"><div class="mem-btn" onclick="showAsset('balance', this)">剩餘儲值金</div><div class="mem-btn" onclick="showAsset('courses', this)">剩餘課程</div></div>
-                <div id="info-balance" class="asset-info-box"><p>會員等級：<strong id="mLevel" style="color:var(--accent-dark); font-size:1.2rem;">-</strong></p><p style="margin:10px 0;">剩餘儲值金：<strong id="mBalance" style="font-size:1.5rem; color:#333;">-</strong></p><p>目前折扣：<span id="mDiscount" style="background:#eee; padding:2px 8px; border-radius:4px;">-</span></p></div>
-                <div id="info-courses" class="asset-info-box"><p style="font-weight:bold; margin-bottom:10px;">您的剩餘課程：</p><ul id="courseList" style="list-style:none; padding:0;"></ul></div>
-                <div style="margin-top:30px;"><div class="history-tabs"><div class="h-tab active" onclick="switchHistoryTab('booking', this)">預約資訊</div><div class="h-tab" onclick="switchHistoryTab('history', this)">消費紀錄</div></div>
-                <div id="tab-booking" class="history-list"></div>
-                <div id="tab-history" class="history-list" style="display:none;"><div id="tx-list-content"></div><div id="tx-pagination" class="pagination"></div></div></div>
-                <button onclick="logout()" style="margin-top:20px; width:100%; padding:10px; background:#eee; border:none; border-radius:6px; cursor:pointer;">登出</button>
+    <header>
+        <div class="nav-scroller">
+            <button class="nav-btn active" onclick="switchPage('dashboard')"><svg class="icon" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>首頁</button>
+            <button class="nav-btn" onclick="switchPage('members')"><svg class="icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>會員</button>
+            <button class="nav-btn" onclick="switchPage('transactions')"><svg class="icon" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>消費</button>
+            <button class="nav-btn" onclick="switchPage('appointments')"><svg class="icon" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>預約</button>
+            <button class="nav-btn" onclick="switchPage('settings')"><svg class="icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>設定</button>
+        </div>
+        <a href="index.html" class="btn-home">回前台</a>
+    </header>
+
+    <main>
+        <div id="dashboard" class="page-section active">
+            <h2 id="todayDateStr">今日預約</h2>
+            <div id="today-list" class="card-container"></div>
+        </div>
+
+        <div id="members" class="page-section">
+            <button class="btn btn-primary" onclick="openMemberModal()">+ 新增會員</button>
+            <input type="text" class="login-input" style="width:100%; text-align:left; margin-bottom:15px;" id="memSearch" placeholder="搜尋姓名或電話..." oninput="renderMembers()">
+            <div id="member-list" class="card-container"></div>
+        </div>
+
+        <div id="transactions" class="page-section">
+            <button class="btn btn-primary" onclick="openTxModal()">+ 新增消費 / 儲值 / 購課</button>
+            <div id="tx-list" class="card-container"></div>
+        </div>
+
+        <div id="appointments" class="page-section">
+            <div class="calendar-header">
+                <button class="btn btn-secondary" onclick="changeMonth(-1)">◀</button>
+                <span id="cal-month-title"></span>
+                <button class="btn btn-secondary" onclick="changeMonth(1)">▶</button>
             </div>
-        </section>
+            <div class="calendar-grid" id="calendar-view"></div>
+            <div style="margin-top:20px;">
+                <button class="btn btn-primary" onclick="openBlockTimeModal()" style="background:#757575;">新增保留 / 不開放時段</button>
+            </div>
+        </div>
 
-        <section id="booking" class="card">
-            <h2>快速預約</h2>
-            <form id="bookingForm" data-blacklist="false">
-                <input type="text" id="custName" placeholder="真實姓名 (舊客輸入電話後自動帶入)" class="form-input">
-                <input type="tel" id="custPhone" placeholder="聯絡電話 (輸入完畢自動檢查會員)" class="form-input" onblur="checkMemberStatus()">
-                <div id="newGuestSection"><p style="color:var(--accent-dark); font-size:0.9rem; margin-bottom:10px; font-weight:bold;">✨ 歡迎新朋友！請完善資料</p><label style="font-size:0.9rem; font-weight:bold;">性別</label><div class="gender-group"><label class="gender-label"><input type="radio" name="custGender" value="女" checked onchange="updateWaxingOptions()"> 女</label><label class="gender-label"><input type="radio" name="custGender" value="男" onchange="updateWaxingOptions()"> 男</label></div><label style="font-size:0.9rem; font-weight:bold;">生日 (享壽星優惠)</label><input type="date" id="custBday" class="form-input"></div>
-                <label style="font-weight:bold; margin-top:10px; display:block;">預約日期</label><span class="date-hint">（僅開放2週）</span><input type="date" id="bookDate" class="form-input">
-                <label style="font-weight:bold;">預約時間</label>
-                <select id="bookTime" class="form-input" onchange="toggleCustomTime()"><option value="">請選擇時段</option><option value="10:00">10:00</option><option value="13:00">13:00</option><option value="15:30">15:30</option><option value="18:00">18:00</option><option value="其他">其他 備注可微調時間</option></select>
-                <div id="customTimeBox" style="display:none; margin-top:-10px; margin-bottom:10px;"><label style="font-size:0.9rem; color:#666;">請選擇確切時間：</label><input type="time" id="customTimeInput" class="form-input" onchange="checkAvailability()"></div>
+        <div id="settings" class="page-section">
+            <div class="data-card" style="margin-bottom:20px;">
+                <h3>🔒 管理員密碼</h3>
+                <p>目前密碼固定為：<strong>1229</strong></p>
+            </div>
+            <div class="data-card" style="margin-bottom:20px; background:#e8f5e9;">
+                <h3>🛠️ 系統初始化</h3>
+                <p style="margin-bottom:10px; color:#555;">一鍵匯入預設服務項目</p>
+                <button class="btn btn-primary" onclick="initServices()">匯入預設項目</button>
+            </div>
+            <h3>⚙️ 預約項目管理</h3>
+            <div class="settings-tab-nav">
+                <button class="settings-tab-btn active" onclick="renderSettings('nail', this)">美甲</button>
+                <button class="settings-tab-btn" onclick="renderSettings('skin', this)">肌膚</button>
+                <button class="settings-tab-btn" onclick="renderSettings('wax', this)">除毛</button>
+                <button class="settings-tab-btn" onclick="renderSettings('nail-event', this)">美甲活動</button>
+                <button class="settings-tab-btn" onclick="renderSettings('skin-event', this)">肌膚活動</button>
+                <button class="settings-tab-btn" onclick="renderSettings('wax-event', this)">除毛活動</button>
+            </div>
+            <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+                 <button class="btn btn-primary" style="width:auto; margin:0;" onclick="openAddServiceModal()">+ 新增項目</button>
+            </div>
+            <div id="service-settings-list"></div>
+        </div>
+    </main>
 
-                <p style="font-weight:bold; margin-bottom:10px; margin-top:20px;">預約項目 (點第二次可取消)</p>
-                <div class="cat-group">
-                    <button type="button" class="cat-btn active" id="btn-nail" onclick="setServiceCat('nail')"><svg class="cat-icon" viewBox="0 0 24 24"><path d="M19 12H16V8C16 6.34 14.66 5 13 5V3H15V1H9V3H11V5C9.34 5 8 6.34 8 8V12H5C3.34 12 2 13.34 2 15V22H22V15C22 13.34 20.66 12 19 12ZM14 8V12H10V8C10 7.45 10.45 7 11 7H13C13.55 7 14 7.45 14 8Z" /></svg>美甲服務</button>
-                    <button type="button" class="cat-btn" id="btn-skin" onclick="setServiceCat('skin')"><svg class="cat-icon" viewBox="0 0 24 24"><path d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M9,13H15V14.5C15,14.5 13.5,16 12,16C10.5,16 9,14.5 9,14.5V13M9,10C9.83,10 10.5,9.33 10.5,8.5C10.5,7.67 9.83,7 9,7C8.17,7 7.5,7.67 7.5,8.5C7.5,9.33 8.17,10 9,10M15,10C15.83,10 16.5,9.33 16.5,8.5C16.5,7.67 15.83,7 15,7C14.17,7 13.5,7.67 13.5,8.5C13.5,9.33 14.17,10 15,10Z"/></svg>肌膚管理</button>
-                    <button type="button" class="cat-btn" id="btn-wax" onclick="setServiceCat('wax')"><svg class="cat-icon" viewBox="0 0 24 24"><path d="M7 2H17V4H7V2M15 5V7H9V5H15M6 8V22H18V8H6M13.5 17H10.5V12H13.5V17Z" /></svg>熱蠟除毛</button>
+    <div id="commonModal" class="modal"><div class="modal-content" id="modalBody"></div></div>
+
+    <div id="appModal" class="modal">
+        <div class="modal-content">
+            <h3>預約資訊</h3>
+            <input type="hidden" id="app-id"><input type="hidden" id="app-date-hidden">
+            <div class="form-group"><label>狀態</label><select id="app-status"><option value="待確認">待確認 (前台送來)</option><option value="已確認">已確認 (正式預約)</option><option value="已取消">已取消</option></select></div>
+            <div class="form-group"><label>日期</label><input type="text" id="app-date-display" disabled style="background:#eee;"></div>
+            <div class="form-group"><label>時間</label><input type="time" id="app-time"></div>
+            <div class="form-group"><label>姓名</label><input type="text" id="app-name"></div>
+            <div class="form-group"><label>電話</label><input type="text" id="app-phone"></div>
+            <div class="form-group"><label>項目</label><textarea id="app-item" rows="3"></textarea></div>
+            <div class="form-group"><label>備註</label><input type="text" id="app-note"></div>
+            <div class="modal-footer" style="justify-content: space-between;">
+                <button class="btn btn-del" onclick="deleteCurrentApp()">刪除預約</button>
+                <div style="display:flex; gap:10px;"><button class="btn btn-secondary" onclick="closeModal('appModal')">取消</button><button class="btn btn-primary" style="width:auto; margin:0;" onclick="saveCurrentApp()">儲存</button></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="memberModal" class="modal">
+        <div class="modal-content">
+            <h3 id="memModalTitle">新增/修改會員</h3>
+            <input type="hidden" id="mem-id">
+            <div class="form-group"><label>姓名</label><input id="mem-name"></div>
+            <div class="form-group"><label>電話 (例：0912345678)</label><input id="mem-phone"></div>
+            <div class="form-group"><label>性別</label><select id="mem-gender"><option>女</option><option>男</option></select></div>
+            <div class="form-group"><label>生日 (文字，例: 2005/1/1)</label><input type="text" id="mem-bday" placeholder="請輸入生日"></div>
+            <div class="form-group"><label>等級 (對應折扣)</label><select id="mem-level"><option>一般會員</option><option>黃金會員</option><option>白金會員</option><option>鑽石會員</option></select></div>
+            <div class="form-group"><label>剩餘課程</label><textarea id="mem-courses" rows="3" placeholder="例如：臉部保養 3 堂"></textarea></div>
+            <div class="form-group" style="background:#ffebee; padding:15px; border-radius:8px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <label style="margin:0; color:#d32f2f;">⛔ 加入黑名單</label>
+                    <label class="switch"><input type="checkbox" id="mem-blacklist"><span class="slider"></span></label>
                 </div>
-
-                <div id="srv-nail" class="srv-group">
-                    <div id="nail-event-container" class="event-section" style="display:none;"><h3 style="color:#d32f2f; margin-bottom:10px;">🔥 當月活動</h3><div class="radio-group" id="nailEventOptions"></div></div>
-                    
-                    <div class="nail-sub-tabs"><div class="nail-sub-btn active" id="sub-hand" onclick="switchNailSub('hand')">手部</div><div class="nail-sub-btn" id="sub-foot" onclick="switchNailSub('foot')">足部</div></div>
-                    <div id="nail-hand-options">
-                        <div class="radio-group"><label class="sub-label">1. 卸甲 (必選)</label><label class="radio-item"><input type="radio" name="hand_state" value="手-不需卸甲"> 不需卸甲</label><label class="radio-item"><input type="radio" name="hand_state" value="手-卸甲續作"> 卸甲續作</label><label class="radio-item"><input type="radio" name="hand_state" value="手-卸甲不續作"> 卸甲不續作</label></div>
-                        <div style="margin-top:15px;" class="radio-group"><label class="sub-label">2. 手部延甲</label><label class="radio-item"><input type="checkbox" class="nail-opt hand-opt" value="手-延甲"> 延甲(請備註幾指)</label><label class="radio-item"><input type="checkbox" class="nail-opt hand-opt" value="手-十指全延"> 十指全延</label><label class="radio-item"><input type="checkbox" class="nail-opt hand-opt" value="手-水晶延甲"> 水晶延甲</label></div>
-                        <div style="margin-top:15px;" class="radio-group"><label class="sub-label">3. 手部款式</label><label class="radio-item"><input type="radio" name="hand_style" value="手-透明"> 透明</label><label class="radio-item"><input type="radio" name="hand_style" value="手-單色"> 單色</label><label class="radio-item"><input type="radio" name="hand_style" value="手-跳色"> 單色跳色</label><label class="radio-item"><input type="radio" name="hand_style" value="手-貓眼"> 貓眼</label><label class="radio-item"><input type="radio" name="hand_style" value="手-鏡面"> 鏡面</label><label class="radio-item"><input type="radio" name="hand_style" value="手-漸層"> 漸層</label><label class="radio-item"><input type="radio" name="hand_style" value="手-法式"> 法式</label><label class="radio-item"><input type="radio" name="hand_style" value="手-造型"> 造型/優惠款</label></div>
-                        <div style="margin-top:15px;" class="radio-group"><label class="sub-label">4. 手部保養</label><label class="radio-item"><input type="checkbox" class="nail-opt hand-opt" value="手-基礎保養"> 基礎保養</label><label class="radio-item"><input type="checkbox" class="nail-opt hand-opt" value="手-嫩白保養"> 嫩白保養</label><label class="radio-item"><input type="checkbox" class="nail-opt hand-opt" value="手-深層保養"> 深層保養</label></div>
-                    </div>
-                    <div id="nail-foot-options" style="display:none;">
-                        <div class="radio-group"><label class="sub-label">1. 卸甲 (必選)</label><label class="radio-item"><input type="radio" name="foot_state" value="足-不需卸甲"> 不需卸甲</label><label class="radio-item"><input type="radio" name="foot_state" value="足-卸甲續作"> 卸甲續作</label><label class="radio-item"><input type="radio" name="foot_state" value="足-卸甲不續作"> 卸甲不續作</label></div>
-                        <div style="margin-top:15px;" class="radio-group"><label class="sub-label">2. 足部延甲</label><label class="radio-item"><input type="checkbox" class="nail-opt foot-opt" value="足-延甲"> 延甲(請備註幾指)</label></div>
-                        <div style="margin-top:15px;" class="radio-group"><label class="sub-label">3. 足部款式</label><label class="radio-item"><input type="radio" name="foot_style" value="足-透明"> 透明</label><label class="radio-item"><input type="radio" name="foot_style" value="足-單色"> 單色</label><label class="radio-item"><input type="radio" name="foot_style" value="足-跳色"> 單色跳色</label><label class="radio-item"><input type="radio" name="foot_style" value="足-貓眼"> 貓眼</label><label class="radio-item"><input type="radio" name="foot_style" value="足-鏡面"> 鏡面</label><label class="radio-item"><input type="radio" name="foot_style" value="足-漸層"> 漸層</label><label class="radio-item"><input type="radio" name="foot_style" value="足-法式"> 法式</label><label class="radio-item"><input type="radio" name="foot_style" value="足-造型"> 造型/優惠款</label></div>
-                        <div style="margin-top:15px;" class="radio-group"><label class="sub-label">4. 足部保養</label><label class="radio-item"><input type="checkbox" class="nail-opt foot-opt" value="足-基礎保養"> 基礎保養</label><label class="radio-item"><input type="checkbox" class="nail-opt foot-opt" value="足-足底修護"> 足底修護</label><label class="radio-item"><input type="checkbox" class="nail-opt foot-opt" value="足-深層保養"> 深層保養</label></div>
-                    </div>
-                </div>
-
-                <div id="srv-skin" class="srv-group" style="display:none;">
-                    <div id="skin-event-container" class="event-section" style="display:none;"><h3 style="color:#d32f2f; margin-bottom:10px;">🔥 當月活動</h3><div class="radio-group" id="skinEventOptions"></div></div>
-                    <div class="radio-group"><label class="radio-item"><input type="radio" name="skin_course" value="臉部清潔(新客體驗價)"> 臉部清潔 (新客體驗價)</label><label class="radio-item"><input type="radio" name="skin_course" value="韓國小氣泡深層清潔"> 韓國小氣泡深層清潔</label><label class="radio-item"><input type="radio" name="skin_course" value="一般客製化肌膚管理"> 一般客製化肌膚管理</label><label class="radio-item"><input type="radio" name="skin_course" value="MTS客製化安瓶課程"> MTS客製化安瓶課程</label><label class="radio-item"><input type="radio" name="skin_course" value="黃金24K金箔課程"> 黃金24K金箔課程</label><label class="radio-item disabled-opt" style="background:#eee;"><input type="radio" name="skin_course" value="木乃伊緊緻小臉" disabled> 木乃伊緊緻小臉 (缺貨)</label><label class="radio-item"><input type="radio" name="skin_course" value="葉綠素抗痘"> 葉綠素抗痘</label><label class="radio-item"><input type="radio" name="skin_course" value="水光炸彈"> 水光炸彈</label><label class="radio-item"><input type="radio" name="skin_course" value="韓國海藻矽針煥膚"> 韓國海藻矽針煥膚</label><label class="radio-item"><input type="radio" name="skin_course" value="R2海綿藻針"> R2海綿藻針</label></div>
-                </div>
-                
-                <div id="srv-wax" class="srv-group" style="display:none;">
-                    <div id="wax-event-container" class="event-section" style="display:none;"><h3 style="color:#d32f2f; margin-bottom:10px;">🔥 當月活動</h3><div class="radio-group" id="waxEventOptions"></div></div>
-                    <div class="radio-group" id="waxOptions"><label class="radio-item"><input type="radio" name="wax_area" value="腋下"> 腋下</label><label class="radio-item"><input type="radio" name="wax_area" value="小手臂"> 小手臂</label><label class="radio-item"><input type="radio" name="wax_area" value="全手"> 全手</label><label class="radio-item"><input type="radio" name="wax_area" value="小腿"> 小腿</label><label class="radio-item"><input type="radio" name="wax_area" value="全腿"> 全腿</label><label class="radio-item"><input type="radio" name="wax_area" value="手(腳)指頭"> 手(腳)指頭</label><label class="radio-item"><input type="radio" name="wax_area" value="手(腳)背+指頭"> 手(腳)背+指頭</label><label class="radio-item"><input type="radio" name="wax_area" value="比基尼線"> 比基尼線</label><label class="radio-item"><input type="radio" name="wax_area" value="巴西式全除"> 巴西式全除</label><label class="radio-item"><input type="radio" name="wax_area" value="腋下+私密處全除"> 腋下+私密處全除</label><label class="radio-item"><input type="radio" name="wax_area" value="小手臂+小腿"> 小手臂+小腿</label><label class="radio-item"><input type="radio" name="wax_area" value="全身全除"> 全身全除 (腋下+全手+全腿+私密處)</label></div>
-                </div>
-
-                <div class="selected-summary" id="bookingSummary" style="display:none;"><div class="summary-title">目前已選擇預約項目：</div><ul id="summaryList" style="padding-left:20px; margin-top:5px;"></ul></div>
-                <textarea id="custNote" rows="2" placeholder="備註 (如：時間微調、其他需求)" style="width:100%; padding:10px; margin-top:15px; border:1px solid #ddd; border-radius:8px;"></textarea>
-                <button type="button" class="btn-submit" onclick="submitBooking()">確認預約並跳轉官方LINE</button>
-            </form>
-        </section>
-        
-        <section id="contact" class="card">
-            <h2>聯絡方式</h2>
-            <div class="contact-grid">
-                <a href="https://www.facebook.com/share/18LuFgiUqx" class="contact-btn">
-                    <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7h-2.54v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02z"/></svg><span>Facebook</span>
-                </a>
-                <a href="https://www.instagram.com/lina__.nail" class="contact-btn">
-                    <svg class="svg-icon" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg><span>Instagram</span>
-                </a>
-                <a href="https://lin.ee/8eSVhBH" class="contact-btn">
-                    <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10s10-4.48 10-10C22 6.48 17.52 2 12 2zm4.64 13.91c-.13.38-.49.59-.88.48l-1.07-.31c-.39-.11-.62-.51-.5-1.06l.32-1.39c-.93.56-2.15.93-3.48 1.01l-.25 1.25c-.09.43-.51.7-.93.6l-1.07-.22c-.42-.09-.69-.51-.6-.93l1.1-5.46c.09-.43.51-.7.93-.6l1.07.22c.42.09.69.51.6.93l-.26 1.29c1.4-.04 2.69-.47 3.73-1.15l-.36-1.5c-.11-.47.16-.95.62-1.09l1.07-.31c.46-.13.94.14 1.05.61l1.32 5.63z"/></svg><span>官方 Line</span>
-                </a>
-                <a href="tel:034831890" class="contact-btn">
-                    <svg class="svg-icon" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg><span>撥打電話</span><span class="contact-sub">03-483-1890</span>
-                </a>
             </div>
-            <a href="https://maps.app.goo.gl/e3jjS3mCBjc5YgAq9?g_st=ipc" target="_blank" class="address-box">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>桃園市觀音區莊敬路100-1號1樓
-            </a>
-        </section>
+            <div class="modal-footer" style="justify-content: space-between;">
+                <button class="btn btn-del" id="btn-del-mem" onclick="deleteMember()" style="display:none;">刪除會員</button>
+                <div style="display:flex; gap:10px;"><button class="btn btn-secondary" onclick="closeModal('memberModal')">取消</button><button class="btn btn-primary" style="width:auto;" onclick="saveMember()">儲存</button></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="txModal" class="modal">
+        <div class="modal-content">
+            <h3 id="txModalTitle">消費紀錄</h3>
+            <input type="hidden" id="tx-id">
+            <div class="form-group"><label>日期</label><input type="date" id="tx-date-edit"></div>
+            <div class="form-group"><label>類型</label><select id="tx-type-edit"><option>消費</option><option>儲值</option><option>購買課程</option><option>使用課程</option><option>產品</option></select></div>
+            <div class="form-group"><label>項目</label><input id="tx-item-edit"></div>
+            <div class="form-group"><label>金額</label><input type="number" id="tx-amt-edit"></div>
+            <div class="form-group"><label>備註</label><input id="tx-note-edit"></div>
+            <div class="modal-footer" style="justify-content: space-between;">
+                <button class="btn btn-del" onclick="deleteTxById()">刪除 (自動回補)</button>
+                <div style="display:flex; gap:10px;"><button class="btn btn-secondary" onclick="closeModal('txModal')">取消</button><button class="btn btn-primary" style="width:auto;" onclick="saveTxEdit()">儲存</button></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="addServiceModal" class="modal">
+        <div class="modal-content">
+            <h3>新增服務項目</h3>
+            <div class="form-group"><label>分類</label><select id="new-svc-cat" disabled style="background:#eee;"><option value="nail">美甲</option><option value="skin">肌膚</option><option value="wax">除毛</option><option value="nail-event">美甲活動</option><option value="skin-event">肌膚活動</option><option value="wax-event">除毛活動</option></select></div>
+            <div class="form-group"><label>項目名稱</label><input type="text" id="new-svc-name"></div>
+            <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('addServiceModal')">取消</button><button class="btn btn-primary" style="width:auto; margin:0;" onclick="saveNewService()">確認新增</button></div>
+        </div>
+    </div>
+
+    <div id="blockModal" class="modal">
+        <div class="modal-content">
+            <h3>新增不開放時段</h3>
+            <div class="form-group"><label>日期</label><input type="date" id="block-date"></div>
+            
+            <div class="form-group" style="background:#e3f2fd; padding:10px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+                <label style="margin:0; font-weight:bold; color:#1565c0;">全天公休 (00:00-23:59)</label>
+                <label class="switch"><input type="checkbox" id="block-allday" onchange="toggleBlockTime()"><span class="slider"></span></label>
+            </div>
+
+            <div class="form-group" id="block-time-group"><label>時間 (起-迄)</label><div style="display:flex; gap:5px;"><input type="time" id="block-start"><input type="time" id="block-end"></div></div>
+            <div class="form-group"><label>事由</label><input type="text" id="block-title" placeholder="例如：外出"></div>
+            <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('blockModal')">取消</button><button class="btn btn-primary" style="width:auto; margin:0;" onclick="saveBlockTime()">儲存</button></div>
+        </div>
     </div>
 
     <script>
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbzDwyByp3GSfOE8w14yHhXiFI-jjD2tjN_xYmjD7YR1ADfAN1Mcg_esb55bKBCm27HhJA/exec'; //
-        let db = { members: [], appointments: [], blockedSlots: [], services: [] };
-        let currentMember = null;
-        let txHistory = [];
-        let currentPage = 1;
-        const itemsPerPage = 20;
 
-        // ★ 定義 showLoading (確保它在最外面，不會找不到) ★
-        function showLoading(show) {
-            const overlay = document.getElementById('loadingOverlay');
-            if(overlay) overlay.style.display = show ? 'flex' : 'none';
+        const defaultServices = [
+            {cat:"nail", name:"手-不需卸甲", active:true}, {cat:"nail", name:"手-卸甲續作", active:true}, {cat:"nail", name:"手-卸甲不續作", active:true},
+            {cat:"nail", name:"足-不需卸甲", active:true}, {cat:"nail", name:"足-卸甲續作", active:true}, {cat:"nail", name:"足-卸甲不續作", active:true},
+            {cat:"nail", name:"手-延甲", active:true}, {cat:"nail", name:"手-十指全延", active:true}, {cat:"nail", name:"手-水晶延甲", active:true}, {cat:"nail", name:"足-延甲", active:true},
+            {cat:"nail", name:"手-透明", active:true}, {cat:"nail", name:"手-單色", active:true}, {cat:"nail", name:"手-跳色", active:true}, {cat:"nail", name:"手-貓眼", active:true}, {cat:"nail", name:"手-鏡面", active:true}, {cat:"nail", name:"手-漸層", active:true}, {cat:"nail", name:"手-法式", active:true}, {cat:"nail", name:"手-造型", active:true},
+            {cat:"nail", name:"足-透明", active:true}, {cat:"nail", name:"足-單色", active:true}, {cat:"nail", name:"足-跳色", active:true}, {cat:"nail", name:"足-貓眼", active:true}, {cat:"nail", name:"足-鏡面", active:true}, {cat:"nail", name:"足-漸層", active:true}, {cat:"nail", name:"足-法式", active:true}, {cat:"nail", name:"足-造型", active:true},
+            {cat:"nail", name:"手-基礎保養", active:true}, {cat:"nail", name:"手-嫩白保養", active:true}, {cat:"nail", name:"手-深層保養", active:true},
+            {cat:"nail", name:"足-基礎保養", active:true}, {cat:"nail", name:"足-足底修護", active:true}, {cat:"nail", name:"足-深層保養", active:true},
+            {cat:"skin", name:"臉部清潔(新客體驗價)", active:true}, {cat:"skin", name:"韓國小氣泡深層清潔", active:true}, {cat:"skin", name:"一般客製化肌膚管理", active:true}, {cat:"skin", name:"MTS客製化安瓶課程", active:true}, {cat:"skin", name:"黃金24K金箔課程", active:true}, {cat:"skin", name:"木乃伊緊緻小臉", active:false}, 
+            {cat:"skin", name:"葉綠素抗痘", active:true}, {cat:"skin", name:"水光炸彈", active:true}, {cat:"skin", name:"韓國海藻矽針煥膚", active:true}, {cat:"skin", name:"R2海綿藻針", active:true},
+            {cat:"wax", name:"腋下", active:true}, {cat:"wax", name:"小手臂", active:true}, {cat:"wax", name:"全手", active:true}, {cat:"wax", name:"小腿", active:true}, {cat:"wax", name:"全腿", active:true}, {cat:"wax", name:"手(腳)指頭", active:true}, {cat:"wax", name:"手(腳)背+指頭", active:true}, {cat:"wax", name:"比基尼線", active:true}, {cat:"wax", name:"巴西式全除", active:true}, {cat:"wax", name:"腋下+私密處全除", active:true}, {cat:"wax", name:"小手臂+小腿", active:true}, {cat:"wax", name:"全身全除", active:true}
+        ];
+
+        let db = { members: [], transactions: [], appointments: [], services: [], blockedSlots: [], settings: [] };
+        let currentSettingsCat = 'nail';
+
+        function showLoading(show) { document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none'; }
+
+        async function fetchData() {
+            showLoading(true);
+            try {
+                const res = await fetch(GAS_URL + '?action=getAll');
+                db = await res.json();
+                init();
+            } catch(e) { alert("連線失敗"); }
+            showLoading(false);
         }
 
-        async function initDB() {
-            try { 
-                const res = await fetch(GAS_URL + '?action=getAll'); 
-                db = await res.json(); 
-            } catch(e) { console.error(e); }
+        async function postData(action, sheet, dataObj, id = null, extraParams = {}) {
+            showLoading(true);
+            const payload = { action: action, sheet: sheet, data: dataObj, id: id, ...extraParams };
+            try {
+                await fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) });
+                await fetchData(); 
+            } catch(e) { alert("儲存失敗"); }
+            showLoading(false);
         }
 
-        window.onload = async function() { 
-            await initDB(); 
-            
-            document.getElementById('shopTitle').addEventListener('click', ()=>{ window.location.href='admin.html'; });
-            
-            // 載入後自動開啟美甲頁籤
-            setServiceCat('nail'); 
+        function getTodayString() {
+            return new Intl.DateTimeFormat('zh-TW', { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()).replace(/\//g, '-');
+        }
 
-            const dateInput = document.getElementById('bookDate');
-            const tzOffset = new Date().getTimezoneOffset() * 60000;
-            const today = new Date(Date.now() - tzOffset);
-            const maxDate = new Date(Date.now() - tzOffset);
-            maxDate.setDate(today.getDate() + 14); 
-            const formatDate = (date) => date.toISOString().split('T')[0];
+        function clean(val) {
+            return String(val || '').replace(/[^0-9a-zA-Z]/g, '').toLowerCase();
+        }
+
+        function checkLogin() {
+            if(document.getElementById('adminPassInput').value === '1229') {
+                document.getElementById('loginOverlay').style.display = 'none';
+                fetchData();
+            } else alert('密碼錯誤');
+        }
+
+        function switchPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            if(pageId === 'dashboard') renderDashboard();
+            if(pageId === 'members') renderMembers();
+            if(pageId === 'transactions') renderTransactions();
+            if(pageId === 'appointments') renderCalendar();
+            if(pageId === 'settings') renderSettings(currentSettingsCat);
+        }
+        function init() { renderDashboard(); }
+
+        // Dashboard
+        function renderDashboard() {
+            const today = getTodayString();
+            document.getElementById('todayDateStr').innerText = `今日預約 (${today.replace(/-/g,'/')})`;
+            const list = document.getElementById('today-list');
+            list.innerHTML = "";
+            const apps = db.appointments.filter(a => a.date === today && a.status !== '已取消').sort((a,b) => a.time.localeCompare(b.time));
             
-            dateInput.min = formatDate(today);
-            dateInput.max = formatDate(maxDate);
-
-            // ★ 修正黑名單檢查：只在「選完日期後」且「有值」才檢查，避免未選先跳
-            dateInput.addEventListener('change', function() {
-                if(!this.value) return; 
-
-                if (document.getElementById('bookingForm').dataset.blacklist === "true") { 
-                    alert("已額滿"); 
-                    this.value = ""; 
-                    return; 
-                }
+            if(apps.length === 0) { list.innerHTML = `<div style="text-align:center; color:#999; padding:20px;">今日無預約</div>`; return; }
+            
+            apps.forEach(app => {
+                let badgeClass = (app.status === '待確認') ? 'status-pending' : 'status-confirmed';
+                let statusBadge = `<span class="status-badge ${badgeClass}">${app.status || '已確認'}</span>`;
                 
-                if(this.value > this.max) { alert('更多時間請至官方賴訊問'); this.value = ''; return; }
-                
-                // 公休檢查
-                const blocks = db.blockedSlots.filter(b => b.date.startsWith(this.value));
-                if (blocks.some(b => b.start === "00:00" && b.end === "23:59")) { 
-                    alert("今日公休"); this.value = ""; 
-                    return;
-                }
-                checkAvailability(); 
+                list.innerHTML += `<div class="data-card" onclick="openEditAppModal('${app.id}')"><div class="app-card-header"><span>${app.time} ${statusBadge}</span><span>${app.name}</span></div><div class="app-card-body">項目：${app.item}<br>電話：${app.phone}<br><span class="app-card-note">備註：${app.note||'無'}</span></div><div class="app-card-actions"><button class="btn btn-edit" onclick="event.stopPropagation(); openEditAppModal('${app.id}')">修改/確認</button><button class="btn btn-del" onclick="event.stopPropagation(); deleteCurrentApp('${app.id}')">刪除</button></div></div>`;
             });
-        };
-
-        function showTab(id, btn) { 
-            document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active')); 
-            document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-            document.getElementById(id).classList.add('active'); 
-            btn.classList.add('active'); 
         }
-        function switchNailSub(part) { document.getElementById('sub-hand').classList.remove('active'); document.getElementById('sub-foot').classList.remove('active'); document.getElementById('sub-'+part).classList.add('active'); document.getElementById('nail-hand-options').style.display = (part==='hand')?'block':'none'; document.getElementById('nail-foot-options').style.display = (part==='foot')?'block':'none'; }
-        
-        function setServiceCat(cat) { 
-            document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active')); 
-            document.getElementById('btn-'+cat).classList.add('active'); 
-            document.querySelectorAll('.srv-group').forEach(g=>g.style.display='none'); 
-            document.getElementById('srv-'+cat).style.display='block'; 
-            
-            if(['nail', 'skin', 'wax'].includes(cat)) {
-                const containerId = cat + '-event-container';
-                const optionsId = cat + 'EventOptions';
-                const eventCatName = cat + '-event';
-                
-                const container = document.getElementById(containerId);
-                const optionsDiv = document.getElementById(optionsId);
-                
-                if(container && optionsDiv) {
-                    optionsDiv.innerHTML = '';
-                    const events = db.services.filter(s => s.cat === eventCatName && String(s.active) === "true");
 
-                    if (events.length > 0) {
-                        container.style.display = 'block';
-                        events.forEach(ev => {
-                            optionsDiv.innerHTML += `<label class="radio-item"><input type="checkbox" class="event-opt" value="${ev.name}" data-cat="${eventCatName}"> ${ev.name}</label>`;
-                        });
-                        bindRadioEvents();
-                    } else {
-                        container.style.display = 'none';
-                    }
+        // Members
+        function renderMembers() {
+            const search = document.getElementById('memSearch').value.toLowerCase();
+            const list = document.getElementById('member-list');
+            list.innerHTML = "";
+            db.members.forEach(m => {
+                if(m.name.includes(search) || m.phone.includes(search)) {
+                    list.innerHTML += `<div class="data-card"><div class="mem-header"><div><span class="mem-name">${m.name}</span><span class="mem-phone">${m.phone}</span></div><button class="btn btn-edit" style="width:auto;" onclick="openMemberModal('${m.id}')">修改</button></div><div class="mem-sub">${m.gender} / ${m.bday}</div><div class="mem-detail">等級：${m.level}<br>餘額：$${m.balance}<br>剩餘課程：${m.courses||'無'}<br>${(String(m.isblacklisted)==="true" || String(m.isblacklisted)==="TRUE")?'<span style="color:#D32F2F; font-weight:bold;">⛔ 黑名單</span>':''}</div></div>`;
                 }
-            }
-            checkAvailability();
+            });
         }
+        function openMemberModal(id = null) {
+            const modal = document.getElementById('memberModal');
+            let m = id ? db.members.find(x => String(x.id) === String(id)) : {name:'', phone:'', gender:'女', bday:'', level:'一般會員', courses:'', isblacklisted: false};
+            document.getElementById('mem-id').value = id || '';
+            document.getElementById('mem-name').value = m.name;
+            document.getElementById('mem-phone').value = m.phone;
+            document.getElementById('mem-gender').value = m.gender;
+            document.getElementById('mem-bday').value = m.bday; 
+            document.getElementById('mem-level').value = m.level;
+            document.getElementById('mem-courses').value = m.courses || '';
+            const isB = String(m.isblacklisted).toLowerCase() === "true";
+            document.getElementById('mem-blacklist').checked = isB;
+            document.getElementById('memModalTitle').innerText = id ? '修改會員' : '新增會員';
+            document.getElementById('btn-del-mem').style.display = id ? 'inline-flex' : 'none';
+            modal.classList.add('open');
+        }
+        function saveMember() {
+            const id = document.getElementById('mem-id').value;
+            const isBlack = document.getElementById('mem-blacklist').checked;
+            const newId = 'm' + Date.now().toString();
+            const finalId = id || newId;
 
-        function toggleCustomTime() {
-            const timeSelect = document.getElementById('bookTime').value;
-            const customBox = document.getElementById('customTimeBox');
-            if (timeSelect === '其他') { 
-                customBox.style.display = 'block';
+            const data = [ 
+                finalId, 
+                document.getElementById('mem-name').value, 
+                document.getElementById('mem-phone').value, 
+                document.getElementById('mem-gender').value, 
+                document.getElementById('mem-bday').value, 
+                document.getElementById('mem-level').value, 
+                0, 
+                document.getElementById('mem-courses').value, 
+                "", 
+                isBlack ? "TRUE" : "FALSE" 
+            ];
+            if (id) postData('update', 'members', data, id).then(()=>closeModal('memberModal'));
+            else postData('add', 'members', data).then(()=>closeModal('memberModal'));
+        }
+        function deleteMember() { const id = document.getElementById('mem-id').value; if(confirm("確定刪除此會員？")) postData('delete', 'members', null, id).then(()=>closeModal('memberModal')); }
+
+        // Transactions
+        function renderTransactions() {
+            const list = document.getElementById('tx-list');
+            list.innerHTML = "";
+            [...db.transactions].sort((a,b)=>new Date(b.date)-new Date(a.date)).forEach(t => {
+                const tKey = clean(t.memberid);
+                let m = db.members.find(m => {
+                    const mId = clean(m.id);
+                    const mPhone = clean(m.phone);
+                    if (mId === tKey) return true;
+                    if (mPhone.length > 5 && (mPhone.includes(tKey) || tKey.includes(mPhone))) return true;
+                    if (m.name === t.memberid) return true;
+                    return false;
+                });
+                const mName = m ? m.name : '未知';
+                list.innerHTML += `<div class="data-card"><div style="display:flex;justify-content:space-between;font-weight:bold;margin-bottom:5px;"><span>${t.date.replace(/-/g,'/')}</span><span>$${t.amount}</span></div><div style="font-size:1.1rem;color:var(--text-main);">${mName} - ${t.type}</div><div style="color:var(--text-sub);">${t.item} ${t.note?`(${t.note})`:''}</div><div style="text-align:right; margin-top:10px;"><button class="btn btn-edit" style="width:auto; padding:5px 10px; margin-right:5px;" onclick="openTxEdit('${t.id}')">修改</button><button class="btn btn-del" style="width:auto; padding:5px 10px;" onclick="deleteTx('${t.id}')">刪除</button></div></div>`;
+            });
+        }
+        function openTxModal() {
+            const modal = document.getElementById('commonModal');
+            // ★ 手機搜尋優化：把電話和姓名都放進 value，讓手機鍵盤可以搜尋
+            const opts = db.members.map(m => `<option value="${m.phone} ${m.name}">`).join('');
+            document.getElementById('modalBody').innerHTML = `
+                <h3>新增消費</h3>
+                <div class="form-group">
+                    <label>搜尋會員 (輸入電話或姓名)</label>
+                    <input list="mem-list" id="tx-search" oninput="autoFillMember()" placeholder="請輸入電話">
+                    <datalist id="mem-list">${opts}</datalist>
+                    <div id="tx-mem-name-display" style="color:green; font-weight:bold; margin-top:5px;"></div>
+                    <input type="hidden" id="tx-mem-val"> 
+                </div>
+                <div class="form-group"><label>日期</label><input type="date" id="tx-date" value="${getTodayString()}"></div>
+                <div class="form-group"><label>類型</label><select id="tx-type" onchange="toggleBalanceOption()"><option>消費</option><option>儲值</option><option>購買課程</option><option value="使用課程">使用課程</option><option>產品</option></select></div>
+                <div class="form-group"><label>項目</label><input id="tx-item"></div>
+                <div class="form-group"><label>金額</label><input type="number" id="tx-amt" value="0"></div>
+                <div class="form-group" style="background:#e3f2fd; padding:15px; border-radius:8px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <label style="margin:0; color:#1565c0; font-weight:bold;">💰 連動會員儲值金</label>
+                        <label class="switch"><input type="checkbox" id="tx-update-balance" checked><span class="slider"></span></label>
+                    </div>
+                    <p style="font-size:0.8rem; color:#666; margin-top:5px;">開啟：自動扣款或儲值<br>關閉：僅記錄，不影響餘額 (付現)</p>
+                </div>
+                <div class="form-group"><label>備註</label><input id="tx-note"></div>
+                <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('commonModal')">取消</button><button class="btn btn-primary" style="width:auto;" onclick="saveTx()">確認</button></div>`;
+            modal.classList.add('open');
+            toggleBalanceOption();
+        }
+        function toggleBalanceOption() {
+            const type = document.getElementById('tx-type').value;
+            const toggle = document.getElementById('tx-update-balance');
+            if(type === '使用課程') toggle.checked = false;
+            else toggle.checked = true; 
+        }
+        function autoFillMember() {
+            // ★ 手機搜尋優化：比對字串，不只比對電話
+            const val = document.getElementById('tx-search').value;
+            const m = db.members.find(x => val.includes(x.phone));
+            if (m) {
+                document.getElementById('tx-mem-val').value = m.id; 
+                document.getElementById('tx-mem-name-display').innerText = "已選取： " + m.name;
             } else {
-                customBox.style.display = 'none';
-            }
-            checkAvailability();
-        }
-
-        function checkAvailability() {
-            const date = document.getElementById('bookDate').value;
-            let time = document.getElementById('bookTime').value;
-            
-            if (time === '其他') {
-                time = document.getElementById('customTimeInput').value;
-            }
-
-            if (!date || !time) return;
-
-            let duration = 2.5; 
-            const data = getSelectedData();
-            if (data.totalDuration > 0) duration = data.totalDuration;
-
-            const startHour = parseInt(time.split(':')[0]);
-            const startMin = parseInt(time.split(':')[1]);
-            const endTotalMin = (startHour * 60 + startMin) + (duration * 60);
-            
-            const apps = db.appointments.filter(a => a.date === date && a.status !== '已取消');
-            const blocks = db.blockedSlots.filter(b => b.date === date);
-            
-            const isOverlap = (s1, e1, s2, e2) => {
-                return (s1 < e2 && s2 < e1);
-            };
-
-            const userStartMin = startHour * 60 + startMin;
-            const userEndMin = endTotalMin;
-
-            let conflict = false;
-
-            apps.forEach(a => {
-                const aStart = parseInt(a.time.split(':')[0]) * 60 + parseInt(a.time.split(':')[1]);
-                const aEnd = aStart + (2.5 * 60); 
-                if (isOverlap(userStartMin, userEndMin, aStart, aEnd)) conflict = true;
-            });
-
-            blocks.forEach(b => {
-                const bStart = parseInt(b.start.split(':')[0]) * 60 + parseInt(b.start.split(':')[1]);
-                const bEnd = parseInt(b.end.split(':')[0]) * 60 + parseInt(b.end.split(':')[1]);
-                if (isOverlap(userStartMin, userEndMin, bStart, bEnd)) conflict = true;
-            });
-
-            if (conflict) {
-                alert("該時段已被預約或為公休時段，請選擇其他時間。");
-                if(document.getElementById('bookTime').value !== '其他') document.getElementById('bookTime').value = "";
-                document.getElementById('customTimeInput').value = "";
+                document.getElementById('tx-mem-val').value = "";
+                document.getElementById('tx-mem-name-display').innerText = "尚未選取會員";
             }
         }
-
-        function login() {
-            initDB();
-            const phoneInput = document.getElementById('mPhone').value.trim();
-            const nameInput = document.getElementById('mName').value.trim();
-            
-            const member = db.members.find(m => {
-                let p1 = String(m.phone).replace(/\D/g,''); 
-                let p2 = String(phoneInput).replace(/\D/g,'');
-                return m.name === nameInput && (p1.includes(p2) || p2.includes(p1));
-            });
-
-            if (member) {
-                currentMember = member;
-                document.getElementById('loginSection').style.display = 'none';
-                document.getElementById('dashboardSection').style.display = 'block';
-                document.getElementById('welcomeName').innerText = member.name;
-                document.getElementById('mLevel').innerText = member.level;
-                document.getElementById('mBalance').innerText = "$" + member.balance;
-                document.getElementById('mDiscount').innerText = getDiscountText(member.level);
-                document.getElementById('custName').value = member.name;
-                document.getElementById('custPhone').value = member.phone;
-                
-                if (member.courses) {
-                   document.getElementById('courseList').innerHTML = `<li>${member.courses}</li>`;
-                } else {
-                   document.getElementById('courseList').innerHTML = `<li style="color:#999;">無剩餘課程</li>`;
-                }
-
-                checkMemberStatus(); 
-                
-                const today = new Date().toISOString().split('T')[0];
-                const myApps = db.appointments.filter(a => String(a.phone).includes(member.phone) && a.date >= today && a.status !== '已取消').sort((a,b)=> new Date(a.date)-new Date(b.date));
-                const appList = document.getElementById('tab-booking');
-                
-                if(myApps.length === 0) appList.innerHTML = "<p style='padding:10px; color:#999;'>目前無預約</p>";
-                else appList.innerHTML = myApps.map(a => `<div class="history-card"><div class="h-row-top"><span>${a.date} ${a.time}</span><span>${a.status || '已預約'}</span></div><div class="h-row-btm">${a.item}</div></div>`).join('');
-                
-                renderHistory();
-            } else { alert("登入失敗：請確認姓名與電話是否與後台資料一致"); }
+        function saveTx() { 
+            const memVal = document.getElementById('tx-mem-val').value; 
+            if(!memVal) return alert("請輸入正確電話以選擇會員"); 
+            const updateBalance = document.getElementById('tx-update-balance').checked;
+            const data = [ Date.now().toString(), document.getElementById('tx-date').value, memVal, document.getElementById('tx-type').value, document.getElementById('tx-item').value, document.getElementById('tx-amt').value, document.getElementById('tx-note').value ]; 
+            postData('add', 'transactions', data, null, { updateBalance: updateBalance }).then(()=>closeModal('commonModal')); 
         }
+        function openTxEdit(id) { const t = db.transactions.find(x => x.id == id); document.getElementById('tx-id').value = id; document.getElementById('tx-date-edit').value = t.date; document.getElementById('tx-type-edit').value = t.type; document.getElementById('tx-item-edit').value = t.item; document.getElementById('tx-amt-edit').value = t.amount; document.getElementById('tx-note-edit').value = t.note; document.getElementById('txModal').classList.add('open'); }
+        function saveTxEdit() { const id = document.getElementById('tx-id').value; const t = db.transactions.find(x => x.id == id); const data = [ id, document.getElementById('tx-date-edit').value, t.memberid, document.getElementById('tx-type-edit').value, document.getElementById('tx-item-edit').value, document.getElementById('tx-amt-edit').value, document.getElementById('tx-note-edit').value ]; postData('update', 'transactions', data, id).then(()=>closeModal('txModal')); }
+        function deleteTxById() { deleteTx(document.getElementById('tx-id').value); closeModal('txModal'); }
+        function deleteTx(id) { if(confirm("確定刪除此交易？(若當初有連動餘額，系統將自動回補/扣除款項)")) postData('delete', 'transactions', null, id, { sheet: 'transactions' }); }
 
-        function getDiscountText(level) {
-            if(level.includes('黃金')) return '95折';
-            if(level.includes('白金')) return '9折';
-            if(level.includes('鑽石')) return '85折';
-            return '無';
-        }
-
-        function renderHistory() {
-            txHistory = db.transactions.filter(t => {
-                const tVal = String(t.memberid || '').replace(/\D/g, ''); 
-                const mId = String(currentMember.id || '').replace(/\D/g, '');
-                const mPhone = String(currentMember.phone || '').replace(/\D/g, '');
-                
-                if (tVal === mId && mId.length > 3) return true;
-                if (tVal === mPhone && mPhone.length > 5) return true;
-                if (String(t.memberid) === currentMember.name) return true;
-
-                return false;
-            }).sort((a,b) => new Date(b.date) - new Date(a.date));
-
-            currentPage = 1;
-            displayHistoryPage();
-        }
-
-        function displayHistoryPage() {
-            const listContent = document.getElementById('tx-list-content');
-            const pagination = document.getElementById('tx-pagination');
-            
-            if(txHistory.length === 0) {
-                listContent.innerHTML = "<p style='padding:10px; color:#999;'>無消費紀錄</p>";
-                pagination.innerHTML = "";
-                return;
+        // Calendar
+        let currentMonth = new Date();
+        function changeMonth(n) { currentMonth.setMonth(currentMonth.getMonth()+n); renderCalendar(); }
+        function renderCalendar() {
+            const y=currentMonth.getFullYear(), m=currentMonth.getMonth();
+            document.getElementById('cal-month-title').innerText = `${y}年 ${m+1}月`;
+            const grid=document.getElementById('calendar-view'); grid.innerHTML="";
+            const days = new Date(y, m+1, 0).getDate();
+            const first = new Date(y, m, 1).getDay();
+            for(let i=0;i<first;i++) grid.innerHTML+=`<div class="cal-day" style="background:transparent;border:none;"></div>`;
+            for(let d=1;d<=days;d++) {
+                const monthStr = String(m+1).padStart(2, '0');
+                const dayStr = String(d).padStart(2, '0');
+                const dateStr = `${y}-${monthStr}-${dayStr}`;
+                const apps = db.appointments.filter(a=>a.date === dateStr && a.status !== '已取消');
+                const blocks = db.blockedSlots.filter(b=>b.date === dateStr);
+                let html=`<div class="cal-day" onclick="openDayView('${dateStr}')"><span style="font-weight:bold;">${d}</span>`;
+                blocks.forEach(b=>html+=`<div class="cal-badge blocked">${b.start}</div>`);
+                apps.forEach(a=> {
+                    let className = (a.status === '待確認') ? 'cal-badge pending' : 'cal-badge';
+                    html+=`<div class="${className}">${a.time}</div>`;
+                });
+                grid.innerHTML+=html+`</div>`;
             }
+        }
+        function openDayView(date) {
+            const apps = db.appointments.filter(a=>a.date === date && a.status !== '已取消').sort((a,b)=>a.time.localeCompare(b.time));
+            const blocks = db.blockedSlots.filter(b=>b.date === date).sort((a,b)=>a.start.localeCompare(b.start));
+            
+            const editIcon = `<svg class="icon" style="margin:0; width:18px; height:18px;" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`;
+            const delIcon = `<svg class="icon" style="margin:0; width:18px; height:18px;" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`;
 
-            const start = (currentPage - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
-            const pageItems = txHistory.slice(start, end);
-
-            listContent.innerHTML = pageItems.map(h => 
-                `<div class="history-card">
-                    <div class="h-row-top">
-                        <span>${formatDateSimple(h.date)}</span>
-                        <span>$${h.amount}</span>
+            let html = `<h3>${date} 行程</h3>`;
+            if(blocks.length > 0) {
+                html += `<h4>保留時段</h4><ul>`;
+                blocks.forEach((b) => html+=`<li style="margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;"><span>🚫 ${b.start}-${b.end} : ${b.title}</span><button class="btn-del" style="padding:8px 12px;" onclick="deleteBlock('${b.id}', '${date}')">${delIcon}</button></li>`);
+                html+=`</ul>`;
+            }
+            if(apps.length > 0) {
+                html += `<h4>預約列表</h4><ul>`;
+                apps.forEach(a=> html+=`<li style="margin-bottom:15px;border-bottom:1px dashed #eee;padding-bottom:5px;display:flex;justify-content:space-between;align-items:center;">
+                    <span style="font-size:1.1rem;">${a.time} <span style="font-size:0.8rem; background:${a.status==='待確認'?'#FBC02D':'#388E3C'}; color:#fff; padding:2px 5px; border-radius:4px;">${a.status||'已確認'}</span> ${a.name} <br><small style="color:#999">${a.item}</small></span>
+                    <div style="display:flex;">
+                        <button class="btn-edit" style="padding:8px 12px; margin-right:5px;" onclick="openEditAppModal('${a.id}')">${editIcon}</button>
+                        <button class="btn-del" style="padding:8px 12px;" onclick="deleteCurrentApp('${a.id}')">${delIcon}</button>
                     </div>
-                    <div class="h-row-btm">
-                        <span>${h.item} <span style="font-size:0.8rem; color:#888;">${h.note ? '('+h.note+')' : ''}</span></span>
-                        <span class="h-balance">${h.type}</span>
-                    </div>
-                </div>`
-            ).join('');
-
-            const totalPages = Math.ceil(txHistory.length / itemsPerPage);
-            let btns = "";
-            if (totalPages > 1) {
-                btns += `<button class="page-btn ${currentPage===1?'disabled':''}" onclick="changePage(-1)">上一頁</button>`;
-                btns += `<span style="padding:5px;">${currentPage} / ${totalPages}</span>`;
-                btns += `<button class="page-btn ${currentPage===totalPages?'disabled':''}" onclick="changePage(1)">下一頁</button>`;
-            }
-            pagination.innerHTML = btns;
-        }
-
-        function changePage(delta) { currentPage += delta; displayHistoryPage(); }
-
-        function checkMemberStatus() {
-            const phone = document.getElementById('custPhone').value;
-            const member = db.members.find(m => m.phone == phone);
-            if (member) {
-                document.getElementById('bookingForm').dataset.blacklist = (String(member.isblacklisted)==="true" || String(member.isblacklisted)==="TRUE") ? "true" : "false";
-                document.getElementById('newGuestSection').classList.remove('open');
-                document.getElementById('custName').value = member.name;
-                enableWaxOptions();
-            } else { 
-                document.getElementById('bookingForm').dataset.blacklist = "false"; 
-                document.getElementById('newGuestSection').classList.add('open');
-                updateWaxingOptions();
-            }
-        }
-
-        function bindRadioEvents() {
-             document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
-                if (input.dataset.bound === "true") return; // 如果綁定過就跳過
-                input.dataset.bound = "true"; // 標記已綁定
-
-                input.addEventListener('click', function() {
-                    // Radio Toggle Logic
-                    if (this.type === 'radio') {
-                        if (this.dataset.wasChecked === 'true') {
-                            this.checked = false;
-                            this.dataset.wasChecked = 'false';
-                            this.closest('.radio-item').classList.remove('checked');
-                        } else {
-                            // Clear others in same name
-                            document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => {
-                                r.dataset.wasChecked = 'false';
-                                r.closest('.radio-item').classList.remove('checked');
-                            });
-                            this.dataset.wasChecked = 'true';
-                            this.closest('.radio-item').classList.add('checked');
-                        }
-                    }
-                    // Checkbox Logic (Visual only)
-                    if (this.type === 'checkbox') {
-                         if(this.checked) this.closest('.radio-item').classList.add('checked');
-                         else this.closest('.radio-item').classList.remove('checked');
-                    }
-                    
-                    updateBookingSummary();
-                    checkAvailability();
-                });
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            bindRadioEvents();
-            document.querySelectorAll('input[type="checkbox"]').forEach(chk => {
-                chk.addEventListener('change', function() {
-                    if(this.checked) this.closest('.radio-item').classList.add('checked');
-                    else this.closest('.radio-item').classList.remove('checked');
-                    updateBookingSummary();
-                    checkAvailability();
-                });
-            });
-        });
-        
-        function getSelectedData() {
-            let items = [];
-            let totalDuration = 0;
+                </li>`);
+                html+=`</ul>`;
+            } else if(blocks.length===0) html+=`<p style="color:#999; text-align:center;">無行程</p>`;
             
-            const eventExtras = Array.from(document.querySelectorAll('.event-opt:checked')).map(e=>e.value);
-            if (eventExtras.length > 0) { 
-                items.push(`[活動] ${eventExtras.join(' ')}`); 
-                totalDuration += (2 * eventExtras.length); 
-            }
-
-            const handState = document.querySelector('input[name="hand_state"]:checked')?.value;
-            const handStyle = document.querySelector('input[name="hand_style"]:checked')?.value;
-            const handExtras = Array.from(document.querySelectorAll('.hand-opt:checked')).map(e=>e.value);
-            const footState = document.querySelector('input[name="foot_state"]:checked')?.value;
-            const footStyle = document.querySelector('input[name="foot_style"]:checked')?.value;
-            const footExtras = Array.from(document.querySelectorAll('.foot-opt:checked')).map(e=>e.value);
-
-            if(handState || handStyle || handExtras.length > 0) document.getElementById('sub-hand').classList.add('filled'); else document.getElementById('sub-hand').classList.remove('filled');
-            if(footState || footStyle || footExtras.length > 0) document.getElementById('sub-foot').classList.add('filled'); else document.getElementById('sub-foot').classList.remove('filled');
-
-            if (handState || handStyle || handExtras.length > 0 || footState || footStyle || footExtras.length > 0) {
-                let nailTime = 0;
-                const calcPartDuration = (state, style, extras) => {
-                    let partTime = 0;
-                    if (style) {
-                        if (style.includes('單色') || style.includes('貓眼') || style.includes('跳色')) partTime = 2;
-                        else partTime = 2.5; 
-                    } else {
-                        if (state && state.includes('不續作')) partTime = 1;
-                        if (extras.length > 0) {
-                            extras.forEach(ex => {
-                                if(ex.includes('基礎')) partTime += 1;
-                                else if(ex.includes('嫩白') || ex.includes('足底')) partTime += 1.5;
-                                else if(ex.includes('深層')) partTime += 2;
-                            });
-                        }
-                    }
-                    if(extras.some(e=>e.includes('全延'))) partTime += 1;
-                    return partTime;
-                };
-                nailTime += calcPartDuration(handState, handStyle, handExtras);
-                nailTime += calcPartDuration(footState, footStyle, footExtras);
-                if(handState || handStyle || handExtras.length > 0) items.push(`[手部] ${handState||''} ${handStyle||''} ${handExtras.join(' ')}`);
-                if(footState || footStyle || footExtras.length > 0) items.push(`[足部] ${footState||''} ${footStyle||''} ${footExtras.join(' ')}`);
-                totalDuration += nailTime;
-                document.getElementById('btn-nail').classList.add('has-selection');
-            } else { document.getElementById('btn-nail').classList.remove('has-selection'); }
-
-            const skinCourse = document.querySelector('input[name="skin_course"]:checked')?.value;
-            if (skinCourse) { items.push(`[肌膚] ${skinCourse}`); totalDuration += 2.5; document.getElementById('btn-skin').classList.add('has-selection'); } 
-            else { document.getElementById('btn-skin').classList.remove('has-selection'); }
-
-            const waxArea = document.querySelector('input[name="wax_area"]:checked')?.value;
-            if (waxArea) { items.push(`[除毛] ${waxArea}`); totalDuration += 1; document.getElementById('btn-wax').classList.add('has-selection'); } 
-            else { document.getElementById('btn-wax').classList.remove('has-selection'); }
+            // ★ 手機搜尋優化：手動預約也改為 value 含姓名
+            const opts = db.members.map(m => `<option value="${m.phone} ${m.name}">`).join('');
+            html+=`<hr style="margin:20px 0;"><h4 style="margin-bottom:10px">手動新增預約</h4>
+            <div class="form-group"><input type="time" id="new-app-time"></div>
+            <div class="form-group"><label>搜尋會員 (選填，自動帶入)</label><input list="app-mem-list" id="app-search" oninput="autoFillApp()" style="width:100%"><datalist id="app-mem-list">${opts}</datalist></div>
+            <div class="form-group"><input type="text" id="new-app-name" placeholder="姓名"></div>
+            <div class="form-group"><input type="tel" id="new-app-phone" placeholder="電話"></div>
+            <div class="form-group"><input type="text" id="new-app-item" placeholder="項目"></div>
+            <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('commonModal')">關閉</button><button class="btn btn-primary" style="width:auto;" onclick="addManualApp('${date}')">新增</button></div>`;
             
-            return { items, totalDuration };
+            document.getElementById('modalBody').innerHTML = html;
+            document.getElementById('commonModal').classList.add('open');
         }
-
-        function updateBookingSummary() {
-            const data = getSelectedData();
-            const summaryBox = document.getElementById('bookingSummary');
-            const summaryList = document.getElementById('summaryList');
-            summaryList.innerHTML = '';
-            if (data.items.length > 0) {
-                summaryBox.style.display = 'block';
-                data.items.forEach(item => { let li = document.createElement('li'); li.innerText = item; summaryList.appendChild(li); });
-            } else { summaryBox.style.display = 'none'; }
-        }
-
-        // ★ 萬能複製與送出邏輯 ★
-        async function copyText(text) {
-            try {
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    await navigator.clipboard.writeText(text);
-                } else { throw new Error('Clipboard API unavailable'); }
-            } catch (err) {
-                // Fallback: 傳統隱藏文字框複製法 (最穩)
-                const textArea = document.createElement("textarea");
-                textArea.value = text;
-                textArea.style.position = "fixed";  // 避免頁面滾動
-                textArea.style.opacity = "0";
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                try {
-                    document.execCommand('copy');
-                } catch (err) {
-                    console.error('Fallback copy failed', err);
-                }
-                document.body.removeChild(textArea);
+        function autoFillApp() {
+            // ★ 手機搜尋優化：比對 input 字串是否包含電話
+            const val = document.getElementById('app-search').value;
+            const m = db.members.find(x => val.includes(x.phone));
+            if (m) {
+                document.getElementById('new-app-name').value = m.name;
+                document.getElementById('new-app-phone').value = m.phone;
             }
         }
 
-        function submitBooking() {
-            try {
-                if (GAS_URL === 'YOUR_GAS_URL_HERE' || GAS_URL.length < 10) {
-                    alert("⚠️ 系統錯誤：請聯繫店家 (後端網址未設定)");
-                    return;
-                }
-
-                if (document.getElementById('bookingForm').dataset.blacklist === "true") { alert("已額滿"); return; }
-                const name = document.getElementById('custName').value;
-                const phone = document.getElementById('custPhone').value;
-                const date = document.getElementById('bookDate').value;
-                let time = document.getElementById('bookTime').value;
-                if (time === '其他') time = document.getElementById('customTimeInput').value;
-                const note = document.getElementById('custNote').value;
-                
-                if(!name || !phone || !date || !time) { alert("請填寫完整預約資料"); return; }
-                const data = getSelectedData();
-                if(data.items.length === 0) { alert("請至少選擇一項服務"); return; }
-
-                checkAvailability();
-                if(document.getElementById('bookTime').value === "") return; 
-
-                // 卸甲檢查
-                const nailEvents = Array.from(document.querySelectorAll('.event-opt:checked')).filter(e => e.dataset.cat === 'nail-event');
-                const isNailService = nailEvents.length > 0 || document.querySelector('input[name="hand_style"]:checked') || document.querySelectorAll('.hand-opt:checked').length > 0 || document.querySelector('input[name="foot_style"]:checked') || document.querySelectorAll('.foot-opt:checked').length > 0;
-                if (isNailService) {
-                    const hasRemoval = document.querySelector('input[name="hand_state"]:checked') || document.querySelector('input[name="foot_state"]:checked');
-                    if (!hasRemoval) { alert("⚠️ 預約美甲項目 (含活動) 必須選擇【卸甲/不需卸甲】狀態 (手部或足部)"); return; }
-                }
-
-                // 1. 先複製文字 (最優先)
-                let genderText = "", bday = "";
-                const isNewGuest = document.getElementById('newGuestSection').classList.contains('open');
-                if(isNewGuest) {
-                    const gender = document.querySelector('input[name="custGender"]:checked')?.value;
-                    genderText = gender ? `(${gender})` : "";
-                    bday = document.getElementById('custBday').value;
-                }
-                const duration = data.totalDuration;
-                const maxDuration = duration + 0.5;
-                let msg = `【預約資訊】\n姓名：${name} ${isNewGuest ? genderText + '(新客)' : '(會員)'}\n電話：${phone}`;
-                if(isNewGuest && bday) msg += `\n生日：${bday}`;
-                msg += `\n日期：${date}\n時間：${time}\n\n${data.items.join('\n')}\n\n備註：${note}`;
-                
-                // 去除工時顯示
-                // msg += `\n----------------\n(系統預估工時: ${duration} - ${maxDuration} 小時)`;
-
-                copyText(msg); 
-
-                // 2. 顯示 Loading 並送出
-                showLoading(true);
-                const bookingData = [Date.now().toString(), date, time, name, phone, data.items.join(', '), "前台預約(待確認)", "待確認"];
-                
-                // 不管資料庫成功失敗，最後都跳轉 LINE
-                fetch(GAS_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'add', sheet: 'appointments', data: bookingData })
-                }).then(() => {
-                    showLoading(false);
-                    alert("預約內容已複製！即將跳轉官方LINE，請貼上送出。");
-                    window.location.href = "https://lin.ee/8eSVhBH";
-                }).catch(e => {
-                    showLoading(false);
-                    alert("預約內容已複製！即將跳轉官方LINE (請直接貼上)");
-                    window.location.href = "https://lin.ee/8eSVhBH";
-                });
-
-            } catch (err) {
-                alert("發生未預期的錯誤：" + err.message);
-            }
-        }
+        function openEditAppModal(id) { const app = db.appointments.find(a => String(a.id) === String(id)); if(!app) return; closeModal('commonModal'); document.getElementById('app-id').value = app.id; document.getElementById('app-status').value = app.status || '已確認'; document.getElementById('app-date-display').value = app.date; document.getElementById('app-date-hidden').value = app.date; document.getElementById('app-time').value = app.time; document.getElementById('app-name').value = app.name; document.getElementById('app-phone').value = app.phone; document.getElementById('app-item').value = app.item; document.getElementById('app-note').value = app.note || ''; document.getElementById('appModal').classList.add('open'); }
+        function saveCurrentApp() { const id = document.getElementById('app-id').value; const data = [ id, document.getElementById('app-date-hidden').value, document.getElementById('app-time').value, document.getElementById('app-name').value, document.getElementById('app-phone').value, document.getElementById('app-item').value, document.getElementById('app-note').value, document.getElementById('app-status').value ]; postData('update', 'appointments', data, id).then(()=>closeModal('appModal')); }
+        function deleteCurrentApp(id) { const targetId = id || document.getElementById('app-id').value; if(confirm("確定刪除此預約？")) postData('delete', 'appointments', null, targetId).then(() => { closeModal('appModal'); closeModal('commonModal'); }); }
+        function addManualApp(date) { const phone = document.getElementById('new-app-phone').value; if(!phone) { alert("請填寫電話"); return; } const data = [ Date.now().toString(), date, document.getElementById('new-app-time').value, document.getElementById('new-app-name').value, phone, document.getElementById('new-app-item').value, "後台手動", "已確認" ]; postData('add', 'appointments', data).then(()=>openDayView(date)); }
         
-        function formatDateSimple(dateStr) {
-            if(!dateStr || dateStr === '-') return '-';
-            const parts = dateStr.split('-');
-            if(parts.length < 3) return dateStr;
-            return `${parseInt(parts[0])}/${parseInt(parts[1])}/${parseInt(parts[2])}`;
+        function openBlockTimeModal() { document.getElementById('blockModal').classList.add('open'); toggleBlockTime(); }
+        function toggleBlockTime() {
+             const isAllDay = document.getElementById('block-allday').checked;
+             const timeGroup = document.getElementById('block-time-group');
+             if(isAllDay) {
+                 timeGroup.style.display = 'none';
+                 document.getElementById('block-start').value = '00:00';
+                 document.getElementById('block-end').value = '23:59';
+                 document.getElementById('block-title').value = '公休';
+             } else {
+                 timeGroup.style.display = 'block';
+             }
         }
-        function logout() { document.getElementById('loginSection').style.display = 'block'; document.getElementById('dashboardSection').style.display = 'none'; }
-        function showAsset(type, btn) { document.querySelectorAll('.mem-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); document.querySelectorAll('.asset-info-box').forEach(b => b.classList.remove('show')); document.getElementById('info-' + type).classList.add('show'); }
-        function switchHistoryTab(tab, btn) { 
-            document.querySelectorAll('.h-tab').forEach(t => t.classList.remove('active')); 
-            document.querySelectorAll('.history-list').forEach(l => l.style.display = 'none'); 
-            btn.classList.add('active'); 
-            document.getElementById('tab-' + tab).style.display = 'block'; 
-        }
-        function updateWaxingOptions() { /* ... (Same as prev) */ }
-        function enableWaxOptions() { /* ... (Same as prev) */ }
+        function saveBlockTime() { const data = [ Date.now().toString(), document.getElementById('block-date').value, document.getElementById('block-start').value, document.getElementById('block-end').value, document.getElementById('block-title').value ]; postData('add', 'blocked', data).then(()=>closeModal('blockModal')); }
+        function deleteBlock(id, date) { if(confirm("刪除此時段？")) postData('delete', 'blocked', null, id).then(()=>openDayView(date)); }
+
+        // Settings (Same as before)
+        function renderSettings(cat, btn) { currentSettingsCat = cat; if(btn) { document.querySelectorAll('.settings-tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); } const list = document.getElementById('service-settings-list'); list.innerHTML = ""; db.services.filter(s => s.cat === cat).forEach(s => { list.innerHTML += `<div class="switch-row"><input type="text" value="${s.name}" readonly><label class="switch"><input type="checkbox" ${s.active?'checked':''} onchange="toggleService('${s.name}', this.checked)"><span class="slider"></span></label></div>`; }); }
+        function toggleService(name, isActive) { showLoading(true); const payload = { action: 'updateService', name: name, active: isActive }; fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) }).then(()=>fetchData()); }
+        function openAddServiceModal() { document.getElementById('new-svc-cat').value = currentSettingsCat; document.getElementById('addServiceModal').classList.add('open'); }
+        function saveNewService() { const data = [ document.getElementById('new-svc-cat').value, document.getElementById('new-svc-name').value, true ]; postData('add', 'services', data).then(()=>closeModal('addServiceModal')); }
+        function initServices() { if(confirm("確定匯入？")) { const rows = defaultServices.map(s => [s.cat, s.name, s.active]); postData('initServices', 'services', rows).then(()=>alert("匯入完成")); } }
+        function closeModal(id) { document.getElementById(id||'commonModal').classList.remove('open'); }
     </script>
 </body>
 </html>
