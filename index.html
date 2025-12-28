@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lina nail 莉娜時尚館</title>
     <style>
-        /* CSS 樣式區域 */
+        /* CSS 樣式區域 (保持不變) */
         :root { --bg-color: #F9F7F2; --card-bg: #FFFFFF; --primary-text: #5D4037; --secondary-text: #8D6E63; --accent-color: #BCAAA4; --accent-light: #EFEBE9; --accent-dark: #8D6E63; --border-color: #E0E0E0; --promo-highlight: #D32F2F; --nav-height: 60px; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "PingFang TC", sans-serif; }
         body { background-color: var(--bg-color); color: var(--primary-text); padding-top: var(--nav-height); line-height: 1.6; padding-bottom: 80px; }
@@ -495,28 +495,35 @@
         }
 
         function bindRadioEvents() {
-             document.querySelectorAll('input[type="radio"]').forEach(radio => {
-                radio.addEventListener('click', function() {
-                    if (this.dataset.wasChecked === 'true') {
-                        this.checked = false; this.dataset.wasChecked = 'false';
-                        this.closest('.radio-item').classList.remove('checked');
-                    } else {
-                        document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => {
-                            r.dataset.wasChecked = 'false'; 
-                            r.closest('.radio-item').classList.remove('checked');
-                        });
-                        this.dataset.wasChecked = 'true';
-                        this.closest('.radio-item').classList.add('checked');
+             document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
+                if (input.dataset.bound === "true") return; // 如果綁定過就跳過
+                input.dataset.bound = "true"; // 標記已綁定
+
+                input.addEventListener('click', function() {
+                    // Radio Toggle Logic
+                    if (this.type === 'radio') {
+                        if (this.dataset.wasChecked === 'true') {
+                            this.checked = false;
+                            this.dataset.wasChecked = 'false';
+                            this.closest('.radio-item').classList.remove('checked');
+                        } else {
+                            // Clear others in same name
+                            document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => {
+                                r.dataset.wasChecked = 'false';
+                                r.closest('.radio-item').classList.remove('checked');
+                            });
+                            this.dataset.wasChecked = 'true';
+                            this.closest('.radio-item').classList.add('checked');
+                        }
                     }
+                    // Checkbox Logic (Visual only, state handles itself)
+                    if (this.type === 'checkbox') {
+                         if(this.checked) this.closest('.radio-item').classList.add('checked');
+                         else this.closest('.radio-item').classList.remove('checked');
+                    }
+                    
                     updateBookingSummary();
                     checkAvailability();
-                });
-            });
-             document.querySelectorAll('.event-opt').forEach(chk => {
-                chk.addEventListener('change', function() {
-                    if(this.checked) this.closest('.radio-item').classList.add('checked');
-                    else this.closest('.radio-item').classList.remove('checked');
-                    updateBookingSummary();
                 });
             });
         }
