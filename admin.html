@@ -39,7 +39,6 @@
         .cal-day { background: #fff; border: 1px solid #eee; min-height: 80px; padding: 5px; cursor: pointer; border-radius: 6px; position: relative; }
         .cal-day.today { background: #FFF8E1; border: 2px solid #FFD54F; }
         .cal-badge { display: block; font-size: 0.75rem; background: var(--accent-color); color: #fff; padding: 2px; border-radius: 3px; margin-top: 2px; text-align: center; overflow: hidden; white-space: nowrap; }
-        .cal-badge.blocked { background: #BDBDBD; } 
         /* 時段按鈕 */
         .slot-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
         .slot-btn { padding: 10px 2px; border-radius: 6px; text-align: center; font-size: 0.85rem; font-weight: bold; cursor: pointer; border: 1px solid #ddd; }
@@ -102,7 +101,7 @@
         <div id="booking_settings" class="page-section">
             <div class="data-card" style="margin-bottom:20px; background:#e8f5e9;">
                 <h3>🛠️ 系統初始化</h3>
-                <p style="margin-bottom:10px; color:#555;">一鍵匯入預設服務項目 (含正確ID與價格)</p>
+                <p style="margin-bottom:10px; color:#555;">一鍵匯入預設服務項目 (資料不見請按此)</p>
                 <button class="btn btn-primary" onclick="initServices()">匯入預設項目</button>
             </div>
             <h3>⚙️ 預約項目管理 (工時/開關)</h3>
@@ -155,25 +154,25 @@
     <div id="txModal" class="modal"><div class="modal-content"><h3>消費紀錄</h3><input type="hidden" id="tx-id"><div class="form-group"><label>日期</label><input type="date" id="tx-date-edit"></div><div class="form-group"><label>類型</label><select id="tx-type-edit"><option>消費</option><option>儲值</option><option>購買課程</option><option>使用課程</option><option>產品</option></select></div><div class="form-group"><label>項目</label><input id="tx-item-edit"></div><div class="form-group"><label>金額</label><input type="number" id="tx-amt-edit"></div><div class="form-group"><label>備註</label><input id="tx-note-edit"></div><div class="modal-footer"><button class="btn btn-del" onclick="deleteTxById()">刪除</button><button class="btn btn-primary" onclick="saveTxEdit()">儲存</button></div></div></div>
 
     <script>
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzDwyByp3GSfOE8w14yHhXiFI-jjD2tjN_xYmjD7YR1ADfAN1Mcg_esb55bKBCm27HhJA/exec'; 
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzDwyByp3GSfOE8w14yHhXiFI-jjD2tjN_xYmjD7YR1ADfAN1Mcg_esb55bKBCm27HhJA/exec'; //
 
-        // ★★★ 關鍵：預設服務 (含 ID、正確名稱、價格) ★★★
+        // ★★★ 完整預設服務 (含您指定的名稱修正) ★★★
         const defaultServices = [
             {id:'n1', cat:'nail', name:'手-不需卸甲', price:'', duration:0, active:true},
             {id:'n2', cat:'nail', name:'手-卸甲續作', price:'$200', duration:0.5, active:true},
             {id:'n3', cat:'nail', name:'手-卸甲不續作', price:'$500', duration:1, active:true},
             {id:'n4', cat:'nail', name:'足-不需卸甲', price:'', duration:0, active:true},
             {id:'n5', cat:'nail', name:'足-卸甲續作', price:'$300', duration:0.5, active:true},
-            {id:'n6', cat:'nail', name:'水晶卸甲', price:'$600', duration:1, active:true}, // 修正為水晶
+            {id:'n6', cat:'nail', name:'水晶卸甲', price:'$600', duration:1, active:true}, // ★ 修正：水晶卸甲
             
-            {id:'n7', cat:'nail', name:'手-透明', price:'$800', duration:2, active:true},
-            {id:'n8', cat:'nail', name:'足-透明', price:'$1000', duration:2, active:true},
-            {id:'n9', cat:'nail', name:'手-單色', price:'$1000', duration:2, active:true},
-            {id:'n10', cat:'nail', name:'足-單色', price:'$1200', duration:2, active:true},
-            {id:'n11', cat:'nail', name:'手-漸層', price:'$1200', duration:2.5, active:true},
-            {id:'n12', cat:'nail', name:'足-漸層', price:'$1400', duration:2.5, active:true},
-            {id:'n13', cat:'nail', name:'手-法式', price:'$1400', duration:2.5, active:true},
-            {id:'n14', cat:'nail', name:'足-法式', price:'$1600', duration:2.5, active:true},
+            {id:'n7', cat:'nail', name:'透明', price:'$800', duration:2, active:true}, // ★ 修正：只顯示透明 (手/足在HTML分欄)
+            {id:'n8', cat:'nail', name:'透明(足)', price:'$1000', duration:2, active:true},
+            {id:'n9', cat:'nail', name:'單色', price:'$1000', duration:2, active:true},
+            {id:'n10', cat:'nail', name:'單色(足)', price:'$1200', duration:2, active:true},
+            {id:'n11', cat:'nail', name:'漸層', price:'$1200', duration:2.5, active:true},
+            {id:'n12', cat:'nail', name:'漸層(足)', price:'$1400', duration:2.5, active:true},
+            {id:'n13', cat:'nail', name:'法式', price:'$1400', duration:2.5, active:true},
+            {id:'n14', cat:'nail', name:'法式(足)', price:'$1600', duration:2.5, active:true},
             {id:'n15', cat:'nail', name:'延甲(指模)', price:'$100/指', duration:0.5, active:true},
             {id:'n16', cat:'nail', name:'足-延甲', price:'$120/指', duration:0.5, active:true},
             {id:'n17', cat:'nail', name:'手-甲片延甲', price:'$80', duration:0.5, active:true},
@@ -197,24 +196,24 @@
             {id:'n32', cat:'nail', name:'足部崁甲', price:'$150', duration:0.5, active:true},
             {id:'n33', cat:'nail', name:'水晶足崁甲', price:'$250', duration:1, active:true},
             
-            {id:'n34', cat:'nail', name:'手-基礎保養', price:'$600', duration:1, active:true},
-            {id:'n35', cat:'nail', name:'手-嫩白保養', price:'$900', duration:1.5, active:true},
-            {id:'n36', cat:'nail', name:'手-深層保養', price:'$1200', duration:2, active:true},
-            {id:'n37', cat:'nail', name:'足-基礎保養', price:'$800', duration:1, active:true},
-            {id:'n38', cat:'nail', name:'足-足底修護', price:'$1200', duration:1.5, active:true},
-            {id:'n39', cat:'nail', name:'足-深層保養', price:'$1500', duration:2, active:true},
+            {id:'n34', cat:'nail', name:'手部基礎', price:'$600', duration:1, active:true},
+            {id:'n35', cat:'nail', name:'手部嫩白', price:'$900', duration:1.5, active:true},
+            {id:'n36', cat:'nail', name:'手部深層', price:'$1200', duration:2, active:true},
+            {id:'n37', cat:'nail', name:'足部基礎', price:'$800', duration:1, active:true},
+            {id:'n38', cat:'nail', name:'足底修護', price:'$1200', duration:1.5, active:true},
+            {id:'n39', cat:'nail', name:'足部深層', price:'$1500', duration:2, active:true},
             {id:'n40', cat:'nail', name:'加購敷膜', price:'$200', duration:0.5, active:true},
 
-            {id:'s1', cat:'skin', name:'臉部清潔(新客)', price:'$999', duration:1.5, active:true},
-            {id:'s2', cat:'skin', name:'韓國小氣泡', price:'$1200', duration:1.5, active:true},
-            {id:'s3', cat:'skin', name:'客製化肌膚', price:'$1400', duration:2, active:true},
-            {id:'s4', cat:'skin', name:'MTS安瓶課程', price:'$1800', duration:2, active:true},
-            {id:'s5', cat:'skin', name:'升級雪花面膜', price:'$50', duration:0, active:true},
-            {id:'s6', cat:'skin', name:'黃金24K金箔', price:'$2300', duration:2, active:true},
-            {id:'s7', cat:'skin', name:'木乃伊緊緻', price:'$2100', duration:2, active:true},
+            {id:'s1', cat:'skin', name:'臉部清潔(體驗價)', price:'$999', duration:1.5, active:true},
+            {id:'s2', cat:'skin', name:'韓國小氣泡深層清潔', price:'$1200', duration:1.5, active:true},
+            {id:'s3', cat:'skin', name:'一般客製化肌膚管理', price:'$1400', duration:2, active:true},
+            {id:'s4', cat:'skin', name:'MTS客製化安瓶課程', price:'$1800', duration:2, active:true},
+            {id:'s5', cat:'skin', name:'升級雪花補水面膜', price:'$50', duration:0, active:true},
+            {id:'s6', cat:'skin', name:'黃金24K金箔課程', price:'$2300', duration:2, active:true},
+            {id:'s7', cat:'skin', name:'木乃伊緊緻小臉', price:'$2100', duration:2, active:true}, // ★ 修正：小臉
             {id:'s8', cat:'skin', name:'葉綠素抗痘', price:'$2000', duration:2, active:true},
             {id:'s9', cat:'skin', name:'水光炸彈', price:'$2000', duration:2, active:true},
-            {id:'s10', cat:'skin', name:'海藻矽針', price:'$2300', duration:2, active:true},
+            {id:'s10', cat:'skin', name:'韓國海藻矽針煥膚', price:'$2300', duration:2, active:true},
             {id:'s11', cat:'skin', name:'R2海綿藻針', price:'$2000', duration:2, active:true},
 
             {id:'w1', cat:'wax', name:'腋下', price:'$500', duration:0.5, active:true},
@@ -222,17 +221,18 @@
             {id:'w3', cat:'wax', name:'全手', price:'$1200', duration:1.5, active:true},
             {id:'w4', cat:'wax', name:'小腿', price:'$1000', duration:1, active:true},
             {id:'w5', cat:'wax', name:'全腿', price:'$1500', duration:2, active:true},
-            {id:'w6', cat:'wax', name:'手/腳指', price:'$200', duration:0.5, active:true},
-            {id:'w7', cat:'wax', name:'手/腳背+指', price:'$300', duration:0.5, active:true},
+            {id:'w6', cat:'wax', name:'手指/腳指', price:'$200', duration:0.5, active:true},
+            {id:'w7', cat:'wax', name:'手/腳背+指頭', price:'$300', duration:0.5, active:true},
             {id:'w8', cat:'wax', name:'比基尼線', price:'$1500', duration:1, active:true},
-            {id:'w9', cat:'wax', name:'巴西全除', price:'$2000', duration:2, active:true},
+            {id:'w9', cat:'wax', name:'巴西式全除', price:'$2000', duration:2, active:true},
             {id:'w10', cat:'wax', name:'私密膜', price:'$350', duration:0, active:true},
-            {id:'w11', cat:'wax', name:'腋下+私密', price:'$2300', duration:2, active:true},
-            {id:'w12', cat:'wax', name:'手+腿', price:'$1600', duration:2, active:true},
+            {id:'w11', cat:'wax', name:'腋下+私密處全除', price:'$2300', duration:2, active:true},
+            {id:'w12', cat:'wax', name:'小手臂+小腿', price:'$1600', duration:2, active:true},
             {id:'w13', cat:'wax', name:'全身全除', price:'$4900', duration:4, active:true},
             
+            // Events
             {id:'e1', cat:'event', name:'打卡優惠', price:'-$50', duration:0, active:true},
-            {id:'e2', cat:'event', name:'當月特惠款', price:'$1000', duration:2.5, active:true}
+            {id:'e2', cat:'event', name:'本月特惠款', price:'$1000', duration:2.5, active:true}
         ];
 
         let db = { members: [], transactions: [], appointments: [], services: [], blockedSlots: [], dailySettings: [] };
@@ -250,6 +250,7 @@
         function switchPage(pageId) { document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active')); document.getElementById(pageId).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active')); event.currentTarget.classList.add('active'); if(pageId === 'dashboard') renderDashboard(); if(pageId === 'members') renderMembers(); if(pageId === 'transactions') renderTransactions(); if(pageId === 'appointments') renderCalendar(); if(pageId === 'booking_settings' || pageId === 'price_settings') renderSettings(currentSettingsCat, pageId === 'booking_settings' ? 'booking' : 'price'); }
         function init() { renderDashboard(); }
 
+        // Dashboard
         function renderDashboard() {
             const today = getTodayString();
             document.getElementById('todayDateStr').innerText = `今日預約 (${formatDisplayDate(today)})`;
@@ -285,23 +286,13 @@
             const bookedApps = db.appointments.filter(a => a.date === date && a.status !== '已取消');
             const daily = db.dailySettings.find(s => s.date === date);
 
-            // 1. 顯示該日預約列表 (List View)
-            let html = `<h3>${formatDisplayDate(date)} 預約列表</h3>`;
-            if(bookedApps.length > 0) {
-                 html += `<div style="max-height:200px; overflow-y:auto; margin-bottom:15px;">`;
-                 bookedApps.forEach(a => {
-                     html += `<div class="data-card" style="padding:10px; margin-bottom:5px;">${a.time} - ${a.name} (${a.item})</div>`;
-                 });
-                 html += `</div>`;
-            } else {
-                 html += `<p style="text-align:center; color:#999; margin-bottom:15px;">本日尚無預約</p>`;
-            }
-
-            // 2. 時段控制 (Slot Control)
-            html += `<h3>時段開關</h3><p style="color:#666;font-size:0.8rem;">(綠=開/灰=關/紅=已約)</p><div class="slot-grid">
+            let html = `<h3>${formatDisplayDate(date)} 時段管理</h3>
+            <div class="slot-grid">
                 ${renderSlotButton(date, '08:00', blocks, bookedApps, daily?.open800)}
                 ${renderSlotButton(date, '20:30', blocks, bookedApps, daily?.open2030)}
-            </div><hr><div class="slot-grid">`;
+            </div>
+            <hr>
+            <div class="slot-grid">`;
             
             let time = 10 * 60; // 10:00
             const endTime = 18 * 60; // 18:00
@@ -313,10 +304,12 @@
                 time += 30;
             }
             html += `</div>`;
+            
+            // ★ 新增返回鍵
             html += `<hr style="margin:20px 0;">
             <div style="display:flex; justify-content:space-between;">
-                <button class="btn btn-secondary" onclick="closeModal()">關閉</button>
-                <button class="btn btn-primary" onclick="showManualAdd('${date}')">手動新增</button>
+                <button class="btn btn-secondary" onclick="closeModal()">返回</button>
+                <button class="btn btn-primary" onclick="showManualAdd('${date}')">手動新增預約</button>
             </div>`;
             
             document.getElementById('modalBody').innerHTML = html;
@@ -430,16 +423,17 @@
             fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) }).then(() => { closeModal('editServiceModal'); fetchData(); });
         }
         function toggleService(id, isActive) { fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'updateService', id: id, active: isActive }) }); }
+        
+        // ★ 一鍵匯入修正：包含正確的預設資料
         function initServices() { if(confirm("確定匯入？")) { const rows = defaultServices.map(s => [s.id, s.cat, s.name, s.price, s.duration, s.active]); postData('initServices', 'services', rows).then(()=>alert("匯入完成")); } }
 
-        // Standard Helpers
+        // Standard Helpers (Copied from previous working version, slightly adjusted for data format)
         function openTxModal() { 
              const modal = document.getElementById('commonModal'); 
              const opts = db.members.map(m => `<option value="${m.phone} ${m.name}">`).join('');
              document.getElementById('modalBody').innerHTML = `<h3>新增消費</h3><div class="form-group"><label>搜尋會員</label><input list="mem-list" id="tx-search" oninput="autoFillMember()" placeholder="電話/姓名"><datalist id="mem-list">${opts}</datalist><input type="hidden" id="tx-mem-val"></div><div class="form-group"><label>日期</label><input type="date" id="tx-date" value="${getTodayString()}"></div><div class="form-group"><label>類型</label><select id="tx-type"><option>消費</option><option>儲值</option><option>購買課程</option><option value="使用課程">使用課程</option><option>產品</option></select></div><div class="form-group"><label>項目</label><input id="tx-item"></div><div class="form-group"><label>金額</label><input type="number" id="tx-amt" value="0"></div><div class="form-group" style="background:#e3f2fd; padding:10px;"><label>💰 連動儲值金 <input type="checkbox" id="tx-update-balance" checked></label></div><div class="form-group"><label>備註</label><input id="tx-note"></div><div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveTx()">確認</button></div>`;
              document.getElementById('tx-mem-val').value = ''; 
              modal.classList.add('open');
-             // Add toggle logic specifically for this modal
              document.getElementById('tx-type').onchange = function() { document.getElementById('tx-update-balance').checked = (this.value !== '使用課程'); };
         }
         function autoFillMember() { const val = document.getElementById('tx-search').value; const m = db.members.find(x => val.includes(x.phone)); if(m) document.getElementById('tx-mem-val').value = m.id; }
@@ -448,7 +442,6 @@
         function saveCurrentApp() { const id = document.getElementById('app-id').value; const data = [ id, document.getElementById('app-date-hidden').value, document.getElementById('app-time').value, document.getElementById('app-name').value, document.getElementById('app-phone').value, document.getElementById('app-item').value, document.getElementById('app-note').value, document.getElementById('app-status').value ]; postData('update', 'appointments', data, id).then(()=>closeModal('appModal')); }
         function deleteCurrentApp(id) { if(confirm("刪除？")) postData('delete', 'appointments', null, id).then(() => { closeModal('appModal'); closeModal('commonModal'); }); }
         function addManualApp(date) { const phone = document.getElementById('new-app-phone').value; if(!phone) { alert("請填寫電話"); return; } const data = [ Date.now().toString(), date, document.getElementById('new-app-time').value, document.getElementById('new-app-name').value, phone, document.getElementById('new-app-item').value, "後台手動", "已確認" ]; postData('add', 'appointments', data).then(()=>openDayView(date)); }
-        function renderMembers() { /* same */ }
         function deleteTxById() { deleteTx(document.getElementById('tx-id').value); closeModal('txModal'); }
         function deleteTx(id) { if(confirm("刪除？")) postData('delete', 'transactions', null, id, { sheet: 'transactions' }); }
         function openTxEdit(id) { const t = db.transactions.find(x => x.id == id); document.getElementById('tx-id').value = id; document.getElementById('tx-date-edit').value = t.date; document.getElementById('tx-type-edit').value = t.type; document.getElementById('tx-item-edit').value = t.item; document.getElementById('tx-amt-edit').value = t.amount; document.getElementById('tx-note-edit').value = t.note; document.getElementById('txModal').classList.add('open'); }
