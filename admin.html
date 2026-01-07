@@ -8,7 +8,6 @@
         :root { --bg-color: #FFFBF0; --header-bg: #EFEBE9; --text-main: #4E342E; --text-sub: #8D6E63; --card-bg: #FFFFFF; --accent-color: #A1887F; --success: #4CAF50; --booked: #E57373; --closed: #9E9E9E; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "PingFang TC", sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-main); font-size: 16px; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
-        .icon { width: 22px; height: 22px; fill: currentColor; vertical-align: middle; margin-right: 5px; }
         #loadingOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.7); z-index: 10000; justify-content: center; align-items: center; flex-direction: column; }
         .spinner { border: 5px solid #f3f3f3; border-top: 5px solid var(--accent-color); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -25,9 +24,9 @@
         .page-section.active { display: block; }
         .card-container { display: flex; flex-direction: column; gap: 15px; }
         .data-card { background: var(--card-bg); border-radius: 12px; padding: 15px; border: 1px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.03); position: relative; }
+        h2 { font-size: 1.3rem; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
         .app-card-header { display: flex; justify-content: space-between; font-weight: 900; font-size: 1.1rem; color: var(--text-main); margin-bottom: 8px; border-bottom: 1px dashed #eee; padding-bottom: 8px; }
         .app-card-body { font-size: 0.95rem; line-height: 1.5; color: #555; }
-        .mem-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; border-bottom: 1px dashed #eee; padding-bottom: 10px; }
         .btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; justify-content: center; }
         .btn-primary { background: var(--text-main); color: #fff; width: 100%; margin-bottom: 15px; padding: 12px; font-weight: bold; }
         .btn-edit { background: #fff; border: 1px solid var(--accent-color); color: var(--accent-color); }
@@ -37,19 +36,15 @@
         .cal-day { background: #fff; border: 1px solid #eee; min-height: 80px; padding: 5px; cursor: pointer; border-radius: 6px; position: relative; }
         .cal-day.today { background: #FFF8E1; border: 2px solid #FFD54F; }
         .cal-badge { display: block; font-size: 0.75rem; background: var(--accent-color); color: #fff; padding: 2px; border-radius: 3px; margin-top: 2px; text-align: center; overflow: hidden; white-space: nowrap; }
-        .cal-badge.blocked { background: #BDBDBD; } 
-        /* 時段按鈕 */
         .slot-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
         .slot-btn { padding: 10px 2px; border-radius: 6px; text-align: center; font-size: 0.85rem; font-weight: bold; cursor: pointer; border: 1px solid #ddd; }
         .slot-btn.open { background: var(--success); color: white; border-color: var(--success); }
         .slot-btn.closed { background: var(--closed); color: white; border-color: var(--closed); }
         .slot-btn.booked { background: var(--booked); color: white; cursor: not-allowed; opacity: 0.6; }
-        
         .settings-tab-nav { display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px; overflow-x: auto; }
         .settings-tab-btn { background: none; border: none; padding: 5px 10px; cursor: pointer; font-size: 0.95rem; color: #888; white-space: nowrap; }
         .settings-tab-btn.active { color: var(--text-main); font-weight: bold; border-bottom: 3px solid var(--text-main); }
         .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #fff; border-radius: 8px; margin-bottom: 8px; border: 1px solid #eee; }
-        .switch-row input[type="text"] { font-size: 1.2rem; font-weight: bold; color: var(--text-main); border: none; background: transparent; width: 60%; cursor: pointer; text-decoration: underline; text-decoration-style: dotted; }
         .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
@@ -63,6 +58,7 @@
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--text-sub); }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; outline:none; }
         .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+        .mem-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; border-bottom: 1px dashed #eee; padding-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -82,109 +78,33 @@
     </header>
 
     <main>
-        <div id="dashboard" class="page-section active">
-            <h2 id="todayDateStr">今日預約</h2>
-            <div id="today-list" class="card-container"></div>
-        </div>
-
-        <div id="appointments" class="page-section">
-            <div class="calendar-header">
-                <button class="btn btn-secondary" onclick="changeMonth(-1)">◀</button>
-                <span id="cal-month-title"></span>
-                <button class="btn btn-secondary" onclick="changeMonth(1)">▶</button>
-            </div>
-            <div class="calendar-grid" id="calendar-view"></div>
-            <p style="text-align:center; color:#888; font-size:0.9rem; margin-top:10px;">點擊日期管理時段</p>
-        </div>
-
-        <div id="booking_settings" class="page-section">
-            <div class="data-card" style="margin-bottom:20px; background:#e8f5e9;">
-                <h3>🛠️ 系統初始化</h3>
-                <p style="margin-bottom:10px; color:#555;">一鍵匯入預設服務項目 (資料不見請按此)</p>
-                <button class="btn btn-primary" onclick="initServices()">匯入預設項目</button>
-            </div>
-            <h3>⚙️ 預約項目管理 (工時/開關)</h3>
-            <div class="settings-tab-nav">
-                <button class="settings-tab-btn active" onclick="renderSettings('nail', 'booking', this)">美甲</button>
-                <button class="settings-tab-btn" onclick="renderSettings('skin', 'booking', this)">肌膚</button>
-                <button class="settings-tab-btn" onclick="renderSettings('wax', 'booking', this)">除毛</button>
-                <button class="settings-tab-btn" onclick="renderSettings('nail-event', 'booking', this)">美甲活動</button>
-                <button class="settings-tab-btn" onclick="renderSettings('skin-event', 'booking', this)">肌膚活動</button>
-                <button class="settings-tab-btn" onclick="renderSettings('wax-event', 'booking', this)">除毛活動</button>
-            </div>
-            <button class="btn btn-primary" style="width:100%; margin-bottom:15px;" onclick="openAddServiceModal()">+ 新增項目</button>
-            <div id="booking-settings-list"></div>
-        </div>
-
-        <div id="price_settings" class="page-section">
-            <h3>💰 價目表管理 (名稱/價格)</h3>
-            <div class="settings-tab-nav">
-                <button class="settings-tab-btn active" onclick="renderSettings('nail', 'price', this)">美甲</button>
-                <button class="settings-tab-btn" onclick="renderSettings('skin', 'price', this)">肌膚</button>
-                <button class="settings-tab-btn" onclick="renderSettings('wax', 'price', this)">除毛</button>
-                <button class="settings-tab-btn" onclick="renderSettings('nail-event', 'price', this)">美甲活動</button>
-                <button class="settings-tab-btn" onclick="renderSettings('skin-event', 'price', this)">肌膚活動</button>
-                <button class="settings-tab-btn" onclick="renderSettings('wax-event', 'price', this)">除毛活動</button>
-            </div>
-            <button class="btn btn-primary" style="width:100%; margin-bottom:15px;" onclick="openAddServiceModal()">+ 新增項目</button>
-            <div id="price-settings-list"></div>
-        </div>
-
-        <div id="members" class="page-section">
-            <button class="btn btn-primary" onclick="openMemberModal()">+ 新增會員</button>
-            <input type="text" class="login-input" style="width:100%; text-align:left; margin-bottom:15px;" id="memSearch" placeholder="搜尋..." oninput="renderMembers()">
-            <div id="member-list" class="card-container"></div>
-        </div>
-
-        <div id="transactions" class="page-section">
-            <button class="btn btn-primary" onclick="openTxModal()">+ 新增消費</button>
-            <div id="tx-list" class="card-container"></div>
-        </div>
+        <div id="dashboard" class="page-section active"><h2 id="todayDateStr">今日預約</h2><div id="today-list" class="card-container"></div></div>
+        <div id="appointments" class="page-section"><div class="calendar-header"><button class="btn btn-secondary" onclick="changeMonth(-1)">◀</button><span id="cal-month-title"></span><button class="btn btn-secondary" onclick="changeMonth(1)">▶</button></div><div class="calendar-grid" id="calendar-view"></div><p style="text-align:center; color:#888; font-size:0.9rem; margin-top:10px;">點擊日期管理時段</p></div>
+        <div id="booking_settings" class="page-section"><div class="data-card" style="margin-bottom:20px; background:#e8f5e9;"><h3>🛠️ 系統初始化</h3><p style="margin-bottom:10px; color:#555;">一鍵匯入預設服務項目 (資料不見請按此)</p><button class="btn btn-primary" onclick="initServices()">匯入預設項目</button></div><h3>⚙️ 預約項目管理 (工時/開關)</h3><div class="settings-tab-nav"><button class="settings-tab-btn active" onclick="renderSettings('nail', 'booking', this)">美甲</button><button class="settings-tab-btn" onclick="renderSettings('skin', 'booking', this)">肌膚</button><button class="settings-tab-btn" onclick="renderSettings('wax', 'booking', this)">除毛</button><button class="settings-tab-btn" onclick="renderSettings('event', 'booking', this)">活動</button></div><button class="btn btn-primary" style="width:100%; margin-bottom:15px;" onclick="openAddServiceModal()">+ 新增項目</button><div id="booking-settings-list"></div></div>
+        <div id="price_settings" class="page-section"><h3>💰 價目表管理 (名稱/價格)</h3><div class="settings-tab-nav"><button class="settings-tab-btn active" onclick="renderSettings('nail', 'price', this)">美甲</button><button class="settings-tab-btn" onclick="renderSettings('skin', 'price', this)">肌膚</button><button class="settings-tab-btn" onclick="renderSettings('wax', 'price', this)">除毛</button><button class="settings-tab-btn" onclick="renderSettings('event', 'price', this)">活動</button></div><button class="btn btn-primary" style="width:100%; margin-bottom:15px;" onclick="openAddServiceModal()">+ 新增項目</button><div id="price-settings-list"></div></div>
+        <div id="members" class="page-section"><button class="btn btn-primary" onclick="openMemberModal()">+ 新增會員</button><input type="text" class="login-input" style="width:100%; text-align:left; margin-bottom:15px;" id="memSearch" placeholder="搜尋..." oninput="renderMembers()"><div id="member-list" class="card-container"></div></div>
+        <div id="transactions" class="page-section"><button class="btn btn-primary" onclick="openTxModal()">+ 新增消費</button><div id="tx-list" class="card-container"></div></div>
     </main>
 
     <div id="commonModal" class="modal"><div class="modal-content" id="modalBody"></div></div>
-
-    <div id="addServiceModal" class="modal">
-        <div class="modal-content">
-            <h3>新增項目</h3>
-            <div class="form-group"><label>分類</label><select id="new-svc-cat"><option value="nail">美甲</option><option value="skin">肌膚</option><option value="wax">除毛</option><option value="nail-event">美甲活動</option><option value="skin-event">肌膚活動</option><option value="wax-event">除毛活動</option></select></div>
-            <div class="form-group"><label>群組 (前台分類)</label><select id="new-svc-group"><option value="nail-basic">美甲-基礎</option><option value="nail-ext">美甲-延甲</option><option value="nail-style">美甲-款式</option><option value="nail-care">美甲-保養</option><option value="skin-basic">肌膚-一般</option><option value="skin-high">肌膚-高階</option><option value="wax-body">除毛-身體</option><option value="wax-private">除毛-私密</option><option value="event">活動</option></select></div>
-            <div class="form-group"><label>名稱</label><input type="text" id="new-svc-name"></div>
-            <div class="form-group"><label>價格</label><input type="text" id="new-svc-price"></div>
-            <div class="form-group"><label>工時 (小時)</label><input type="number" step="0.5" id="new-svc-duration" value="2"></div>
-            <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('addServiceModal')">取消</button><button class="btn btn-primary" onclick="saveNewService()">新增</button></div>
-        </div>
-    </div>
-
-    <div id="editServiceModal" class="modal">
-        <div class="modal-content">
-            <h3>編輯項目</h3>
-            <input type="hidden" id="edit-id">
-            <div class="form-group"><label>名稱</label><input type="text" id="edit-name"></div>
-            <div class="form-group" id="grp-price"><label>價格</label><input type="text" id="edit-price"></div>
-            <div class="form-group" id="grp-duration"><label>工時 (小時)</label><input type="number" step="0.5" id="edit-duration"></div>
-            <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('editServiceModal')">取消</button><button class="btn btn-primary" onclick="saveServiceEdit()">儲存</button></div>
-        </div>
-    </div>
-    
+    <div id="addServiceModal" class="modal"><div class="modal-content"><h3>新增項目</h3><div class="form-group"><label>分類</label><select id="new-svc-cat"><option value="nail">美甲</option><option value="skin">肌膚</option><option value="wax">除毛</option><option value="nail-event">美甲活動</option><option value="skin-event">肌膚活動</option><option value="wax-event">除毛活動</option></select></div><div class="form-group"><label>群組 (前台分類)</label><select id="new-svc-group"><option value="nail-basic">美甲-基礎</option><option value="nail-ext">美甲-延甲</option><option value="nail-style">美甲-款式</option><option value="nail-removal">美甲-卸甲</option><option value="nail-design">美甲-造型</option><option value="nail-crystal">美甲-水晶</option><option value="nail-correct">美甲-矯正</option><option value="nail-care">美甲-保養</option><option value="skin-basic">肌膚-一般</option><option value="skin-high">肌膚-高階</option><option value="wax-body">除毛-身體</option><option value="wax-private">除毛-私密</option><option value="wax-set">除毛-套組</option><option value="event">活動</option></select></div><div class="form-group"><label>名稱</label><input type="text" id="new-svc-name"></div><div class="form-group"><label>價格</label><input type="text" id="new-svc-price"></div><div class="form-group"><label>工時 (小時)</label><input type="number" step="0.5" id="new-svc-duration" value="2"></div><div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('addServiceModal')">取消</button><button class="btn btn-primary" onclick="saveNewService()">新增</button></div></div></div>
+    <div id="editServiceModal" class="modal"><div class="modal-content"><h3>編輯項目</h3><input type="hidden" id="edit-id"><div class="form-group"><label>名稱</label><input type="text" id="edit-name"></div><div class="form-group" id="grp-price"><label>價格</label><input type="text" id="edit-price"></div><div class="form-group" id="grp-duration"><label>工時 (小時)</label><input type="number" step="0.5" id="edit-duration"></div><div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('editServiceModal')">取消</button><button class="btn btn-primary" onclick="saveServiceEdit()">儲存</button></div></div></div>
     <div id="appModal" class="modal"><div class="modal-content"><h3>預約資訊</h3><input type="hidden" id="app-id"><input type="hidden" id="app-date-hidden"><div class="form-group"><label>狀態</label><select id="app-status"><option value="待確認">待確認</option><option value="已確認">已確認</option><option value="已取消">已取消</option></select></div><div class="form-group"><label>日期</label><input type="text" id="app-date-display" disabled></div><div class="form-group"><label>時間</label><input type="time" id="app-time"></div><div class="form-group"><label>姓名</label><input type="text" id="app-name"></div><div class="form-group"><label>電話</label><input type="text" id="app-phone"></div><div class="form-group"><label>項目</label><textarea id="app-item" rows="3"></textarea></div><div class="form-group"><label>備註</label><input type="text" id="app-note"></div><div class="modal-footer"><button class="btn btn-del" onclick="deleteCurrentApp()">刪除</button><div style="display:flex; gap:10px;"><button class="btn btn-secondary" onclick="closeModal('appModal')">取消</button><button class="btn btn-primary" onclick="saveCurrentApp()">儲存</button></div></div></div></div>
-    
     <div id="memberModal" class="modal"><div class="modal-content"><h3>會員</h3><input type="hidden" id="mem-id"><div class="form-group"><label>姓名</label><input id="mem-name"></div><div class="form-group"><label>電話</label><input id="mem-phone"></div><div class="form-group"><label>性別</label><select id="mem-gender"><option>女</option><option>男</option></select></div><div class="form-group"><label>生日 (例 2025/2/1)</label><input type="text" id="mem-bday"></div><div class="form-group"><label>等級</label><select id="mem-level"><option>一般會員</option><option>黃金會員</option><option>白金會員</option><option>鑽石會員</option></select></div><div class="form-group"><label>剩餘課程</label><textarea id="mem-courses"></textarea></div><div class="form-group"><label>黑名單</label><label class="switch"><input type="checkbox" id="mem-blacklist"><span class="slider"></span></label></div><div class="modal-footer"><button class="btn btn-del" onclick="deleteMember()">刪除</button><button class="btn btn-primary" onclick="saveMember()">儲存</button></div></div></div>
-    
-    <div id="txModal" class="modal"><div class="modal-content"><h3>消費紀錄</h3><input type="hidden" id="tx-id"><div class="form-group"><label>日期</label><input type="date" id="tx-date-edit"></div><div class="form-group"><label>類型</label><select id="tx-type-edit"><option>消費</option><option>儲值</option><option>購買課程</option><option>使用課程</option><option>產品</option></select></div><div class="form-group"><label>項目</label><input id="tx-item-edit"></div><div class="form-group"><label>金額</label><input type="number" id="tx-amt-edit"></div><div class="form-group"><label>備註</label><input id="tx-note-edit"></div><div class="modal-footer"><button class="btn btn-del" onclick="deleteTxById()">刪除</button><button class="btn btn-primary" onclick="saveTxEdit()">儲存</button></div></div></div>
+    <div id="txModal" class="modal"><div class="modal-content"><h3>消費紀錄</h3><input type="hidden" id="tx-id"><div class="form-group"><label>日期</label><input type="date" id="tx-date-edit"></div><div class="form-group"><label>類型</label><select id="tx-type-edit"><option>消費</option><option>儲值</option><option>購買課程</option><option>使用課程</option><option>產品</option></select></div><div class="form-group"><label>項目</label><input id="tx-item-edit"></div><div class="form-group"><label>金額</label><input type="tel" id="tx-amt-edit"></div><div class="form-group"><label>備註</label><input id="tx-note-edit"></div><div class="modal-footer"><button class="btn btn-del" onclick="deleteTxById()">刪除</button><button class="btn btn-primary" onclick="saveTxEdit()">儲存</button></div></div></div>
 
     <script>
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbzDwyByp3GSfOE8w14yHhXiFI-jjD2tjN_xYmjD7YR1ADfAN1Mcg_esb55bKBCm27HhJA/exec'; //
 
-        // ★★★ 完整預設服務 (含 Group 欄位 & 價格修正) ★★★
+        // ★ 核心預設資料 (對應前台 ID)
         const defaultServices = [
             {id:'n1', cat:'nail', group:'nail-basic', name:'透明凝膠', price:'$800', duration:2, active:true},
             {id:'n2', cat:'nail', group:'nail-basic', name:'單色凝膠', price:'$1000', duration:2, active:true},
             {id:'n3', cat:'nail', group:'nail-basic', name:'漸層凝膠', price:'$1200', duration:2.5, active:true},
             {id:'n4', cat:'nail', group:'nail-basic', name:'法式凝膠', price:'$1400', duration:2.5, active:true},
             {id:'n5', cat:'nail', group:'nail-basic', name:'延甲(指模)/指', price:'$100', duration:0.5, active:true},
-            {id:'n6', cat:'nail', group:'nail-basic', name:'延甲(甲片)/指', price:'$90', duration:0.5, active:true}, // ★ 修正價格 $90
-
+            {id:'n6', cat:'nail', group:'nail-basic', name:'延甲(甲片)/指', price:'$90', duration:0.5, active:true}, // 已修正為 $90
+            
             {id:'n7', cat:'nail', group:'nail-removal', name:'卸甲續作(凝膠)', price:'$200', duration:0.5, active:true},
             {id:'n8', cat:'nail', group:'nail-removal', name:'卸甲不續作(凝膠)', price:'$500', duration:1, active:true},
             {id:'n9', cat:'nail', group:'nail-removal', name:'卸甲續作(水晶)', price:'$300', duration:0.5, active:true},
@@ -210,7 +130,7 @@
             {id:'n26', cat:'nail', group:'nail-correct', name:'手部卷甲', price:'$300', duration:1, active:true},
             {id:'n27', cat:'nail', group:'nail-correct', name:'足部崁甲/指', price:'$150', duration:0.5, active:true},
             {id:'n28', cat:'nail', group:'nail-correct', name:'水晶足部崁甲/指', price:'$250', duration:1, active:true},
-            
+
             {id:'n29', cat:'nail', group:'nail-care', name:'手部基礎', price:'$600', duration:1, active:true},
             {id:'n30', cat:'nail', group:'nail-care', name:'手部嫩白', price:'$900', duration:1.5, active:true},
             {id:'n31', cat:'nail', group:'nail-care', name:'手部深層', price:'$1200', duration:2, active:true},
@@ -244,14 +164,12 @@
             {id:'w11', cat:'wax', group:'wax-set', name:'腋下+私密處全除', price:'$2300', duration:2, active:true},
             {id:'w12', cat:'wax', group:'wax-set', name:'小手臂+小腿', price:'$1600', duration:2, active:true},
             {id:'w13', cat:'wax', group:'wax-set', name:'全身全除', price:'$4900', duration:4, active:true},
-            
-            // Events
+
             {id:'e1', cat:'nail-event', group:'event', name:'打卡優惠', price:'-$50', duration:0, active:true},
             {id:'e2', cat:'nail-event', group:'event', name:'本月特惠款', price:'$1000', duration:2.5, active:true},
             {id:'e3', cat:'skin-event', group:'event', name:'肌膚活動', price:'$1000', duration:2, active:true},
             {id:'e4', cat:'wax-event', group:'event', name:'除毛活動', price:'$1000', duration:1, active:true},
 
-            // Booking Placeholders (For options)
             {id:'b1', cat:'nail', group:'booking', name:'手-不需卸甲', price:'', duration:0, active:true},
             {id:'b2', cat:'nail', group:'booking', name:'手-卸甲續作', price:'', duration:0.5, active:true},
             {id:'b3', cat:'nail', group:'booking', name:'手-卸甲不續作', price:'', duration:1, active:true},
@@ -260,11 +178,11 @@
             {id:'b6', cat:'nail', group:'booking', name:'足-卸甲不續作', price:'', duration:1, active:true}
         ];
 
-        let db = { members: [], transactions: [], appointments: [], services: [], blockedSlots: [], dailySettings: [] };
+        let db = { members: [], appointments: [], blockedSlots: [], services: [], dailySettings: [] };
         let currentSettingsCat = 'nail';
         let currentSettingsMode = 'booking';
 
-        // ★★★ 全部函式提升到全域 (解決按鈕沒反應問題) ★★★
+        // ★★★ 全部函式提升到 window (解決按鈕沒反應) ★★★
         window.showLoading = function(show) { document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none'; }
         
         window.fetchData = async function() {
@@ -304,7 +222,6 @@
             if(pageId === 'booking_settings' || pageId === 'price_settings') renderSettings(currentSettingsCat, pageId === 'booking_settings' ? 'booking' : 'price');
         }
 
-        // Dashboard
         window.renderDashboard = function() {
             const today = getTodayString();
             document.getElementById('todayDateStr').innerText = `今日預約 (${formatDisplayDate(today)})`;
@@ -318,7 +235,6 @@
             });
         }
 
-        // Calendar
         let currentMonth = new Date();
         window.changeMonth = function(n) { currentMonth.setMonth(currentMonth.getMonth()+n); renderCalendar(); }
         window.renderCalendar = function() {
@@ -443,7 +359,6 @@
              document.getElementById('modalBody').innerHTML = html;
         }
 
-        // Settings Render
         window.renderSettings = function(cat, mode, btn) {
             currentSettingsMode = mode;
             if(btn) { document.querySelectorAll('.settings-tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
@@ -514,7 +429,7 @@
         window.openTxModal = function() { 
              const modal = document.getElementById('commonModal'); 
              const opts = db.members.map(m => `<option value="${m.phone} ${m.name}">`).join('');
-             document.getElementById('modalBody').innerHTML = `<h3>新增消費</h3><div class="form-group"><label>搜尋會員</label><input list="mem-list" id="tx-search" oninput="autoFillMember()" placeholder="電話/姓名"><datalist id="mem-list">${opts}</datalist><input type="hidden" id="tx-mem-val"></div><div class="form-group"><label>日期</label><input type="date" id="tx-date" value="${getTodayString()}"></div><div class="form-group"><label>類型</label><select id="tx-type"><option>消費</option><option>儲值</option><option>購買課程</option><option value="使用課程">使用課程</option><option>產品</option></select></div><div class="form-group"><label>項目</label><input id="tx-item"></div><div class="form-group"><label>金額</label><input type="number" id="tx-amt" value="0"></div><div class="form-group" style="background:#e3f2fd; padding:10px;"><div style="display:flex; justify-content:space-between;"><label style="margin:0; color:#1565c0; font-weight:bold;">💰 連動儲值金</label><label class="switch"><input type="checkbox" id="tx-update-balance" checked><span class="slider"></span></label></div></div><div class="form-group"><label>備註</label><input id="tx-note"></div><div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveTx()">確認</button></div>`;
+             document.getElementById('modalBody').innerHTML = `<h3>新增消費</h3><div class="form-group"><label>搜尋會員</label><input list="mem-list" id="tx-search" oninput="autoFillMember()" placeholder="電話/姓名"><datalist id="mem-list">${opts}</datalist><input type="hidden" id="tx-mem-val"></div><div class="form-group"><label>日期</label><input type="date" id="tx-date" value="${getTodayString()}"></div><div class="form-group"><label>類型</label><select id="tx-type"><option>消費</option><option>儲值</option><option>購買課程</option><option value="使用課程">使用課程</option><option>產品</option></select></div><div class="form-group"><label>項目</label><input id="tx-item"></div><div class="form-group"><label>金額</label><input type="tel" id="tx-amt" value="0"></div><div class="form-group" style="background:#e3f2fd; padding:10px;"><div style="display:flex; justify-content:space-between;"><label style="margin:0; color:#1565c0; font-weight:bold;">💰 連動儲值金</label><label class="switch"><input type="checkbox" id="tx-update-balance" checked><span class="slider"></span></label></div></div><div class="form-group"><label>備註</label><input id="tx-note"></div><div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveTx()">確認</button></div>`;
              document.getElementById('tx-mem-val').value = ''; 
              modal.classList.add('open');
              document.getElementById('tx-type').onchange = function() { document.getElementById('tx-update-balance').checked = (this.value !== '使用課程'); };
