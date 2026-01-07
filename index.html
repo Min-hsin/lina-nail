@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lina nail 莉娜時尚館</title>
     <style>
+        /* CSS 樣式 (保持您最喜歡的那版) */
         :root { --bg-color: #F9F7F2; --card-bg: #FFFFFF; --primary-text: #5D4037; --secondary-text: #8D6E63; --accent-color: #BCAAA4; --accent-light: #EFEBE9; --accent-dark: #8D6E63; --border-color: #E0E0E0; --promo-highlight: #D32F2F; --nav-height: 60px; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "PingFang TC", sans-serif; }
         body { background-color: var(--bg-color); color: var(--primary-text); padding-top: var(--nav-height); line-height: 1.6; padding-bottom: 80px; }
@@ -112,50 +113,53 @@
         <section id="pricing" class="card">
             <h2>服務價目表</h2>
             <div class="tab-nav">
-                <button class="tab-btn active" onclick="switchTab('nail', this)">美甲</button>
-                <button class="tab-btn" onclick="switchTab('skin', this)">肌膚管理</button>
-                <button class="tab-btn" onclick="switchTab('wax', this)">熱蠟除毛</button>
-                <button class="tab-btn" onclick="switchTab('promo', this)">優惠活動</button>
-                <button class="tab-btn" onclick="switchTab('member-card', this)">儲值會員</button>
+                <button class="tab-btn active" onclick="showTab('nail', this)">美甲</button>
+                <button class="tab-btn" onclick="showTab('skin', this)">肌膚管理</button>
+                <button class="tab-btn" onclick="showTab('wax', this)">熱蠟除毛</button>
+                <button class="tab-btn" onclick="showTab('promo', this)">優惠活動</button>
+                <button class="tab-btn" onclick="showTab('member-card', this)">儲值會員</button>
             </div>
             
             <div id="nail" class="tab-content active">
                 <div class="section-title">凝膠指甲 (含基礎保養/建構)</div>
                 <div class="grid-3 grid-header"><div class="col-left">項目</div><div class="col-center">手</div><div class="col-center">足</div></div>
-                <div class="grid-3"><div class="col-left">透明凝膠</div><div class="col-center" data-bind="n1-price">$800</div><div class="col-center" data-bind="n8-price">$1000</div></div>
-                <div class="grid-3"><div class="col-left">單色凝膠</div><div class="col-center" data-bind="n2-price">$1000</div><div class="col-center" data-bind="n10-price">$1200</div></div>
-                <div class="grid-3"><div class="col-left">漸層凝膠</div><div class="col-center" data-bind="n3-price">$1200</div><div class="col-center" data-bind="n12-price">$1400</div></div>
-                <div class="grid-3"><div class="col-left">法式凝膠</div><div class="col-center" data-bind="n4-price">$1400</div><div class="col-center" data-bind="n14-price">$1600</div></div>
-                <div class="grid-3"><div class="col-left">延甲(指模)</div><div class="col-center" data-bind="n5-price">$100</div><div class="col-center" data-bind="n16-price">$120</div></div>
-                <div class="grid-3"><div class="col-left">延甲(甲片)</div><div class="col-center" data-bind="n6-price">$90</div><div class="col-center">-</div></div>
+                <div class="grid-3"><div class="col-left" data-bind="n1-name">透明凝膠</div><div class="col-center" data-bind="n1-price">$800</div><div class="col-center" data-bind="n8-price">$1000</div></div>
+                <div class="grid-3"><div class="col-left" data-bind="n2-name">單色凝膠</div><div class="col-center" data-bind="n2-price">$1000</div><div class="col-center" data-bind="n10-price">$1200</div></div>
+                <div class="grid-3"><div class="col-left" data-bind="n3-name">漸層凝膠</div><div class="col-center" data-bind="n3-price">$1200</div><div class="col-center" data-bind="n12-price">$1400</div></div>
+                <div class="grid-3"><div class="col-left" data-bind="n4-name">法式凝膠</div><div class="col-center" data-bind="n4-price">$1400</div><div class="col-center" data-bind="n14-price">$1600</div></div>
+                
+                <div class="section-title">延甲</div>
+                <div class="grid-3 grid-header"><div class="col-left">項目</div><div class="col-center">價格</div></div>
+                <div class="grid-3"><div class="col-left" data-bind="n5-name">延甲(指模)/指</div><div class="col-center" data-bind="n5-price">$100</div></div>
+                <div class="grid-3"><div class="col-left" data-bind="n6-name">延甲(甲片)/指</div><div class="col-center" data-bind="n6-price">$90</div></div>
                 
                 <div class="section-title">卸甲 / 修補</div>
-                <div class="removal-box"><div class="removal-title">凝膠卸甲</div><div class="removal-row"><span>續作</span><span data-bind="n7-price">$200</span></div><div class="removal-row"><span>不續作</span><span data-bind="n8-price">$500</span></div><div class="removal-note">(含簡易保養)</div></div>
-                <div class="removal-box"><div class="removal-title">水晶卸甲</div><div class="removal-row"><span>續作</span><span data-bind="n9-price">$300</span></div><div class="removal-row"><span>不續作</span><span data-bind="n10-price">$600</span></div><div class="removal-note">(含簡易保養)</div></div>
+                <div class="removal-box"><div class="removal-title" data-bind="n1-name">凝膠卸甲</div><div class="removal-row"><span data-bind="n7-name">續作</span><span data-bind="n7-price">$200</span></div><div class="removal-row"><span data-bind="n8-name">不續作</span><span data-bind="n8-price">$500</span></div><div class="removal-note">(含簡易保養)</div></div>
+                <div class="removal-box"><div class="removal-title">水晶卸甲</div><div class="removal-row"><span data-bind="n9-name">續作</span><span data-bind="n9-price">$300</span></div><div class="removal-row"><span data-bind="n10-name">不續作</span><span data-bind="n10-price">$600</span></div><div class="removal-note">(含簡易保養)</div></div>
                 <div class="list-row"><span class="list-title">水晶修補/指</span><span class="list-price" data-bind="n11-price">$80</span></div>
                 <div class="list-row"><span class="list-title">絲綢補甲/指</span><span class="list-price" data-bind="n12-price">$50</span></div>
                 
                 <div class="section-title">造型設計</div>
-                <div class="list-row"><span class="list-title">跳一色</span><span class="list-price" data-bind="n13-price">$100</span></div>
-                <div class="list-row"><span class="list-title">貓眼/鏡面</span><span class="list-price" data-bind="n14-price">$200</span></div>
-                <div class="list-row"><span class="list-title">暈染/指</span><span class="list-price" data-bind="n15-price">$100 up</span></div>
-                <div class="list-row"><span class="list-title">手繪/指</span><span class="list-price" data-bind="n16-price">$50 up</span></div>
-                <div class="list-row"><span class="list-title">亮片/指</span><span class="list-price" data-bind="n17-price">$50</span></div>
-                <div class="list-row"><span class="list-title">飾品/素材</span><span class="list-price" data-bind="n18-price">$20 up</span></div>
-                <div class="list-row"><span class="list-title">立體造型</span><span class="list-price" data-bind="n19-price">$50 up</span></div>
-                <div class="list-row"><span class="list-title">立體鑽飾</span><span class="list-price" data-bind="n20-price">$20-120</span></div>
-                <div class="list-row"><span class="list-title">施華洛鑽</span><span class="list-price" data-bind="n21-price">$30-120</span></div>
-                <div class="list-row"><span class="list-title">滿鑽設計/指</span><span class="list-price" data-bind="n22-price">$250 up</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n13-name">跳一色</span><span class="list-price" data-bind="n13-price">$100</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n14-name">貓眼/鏡面</span><span class="list-price" data-bind="n14-price">$200</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n15-name">暈染/指</span><span class="list-price" data-bind="n15-price">$100 up</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n16-name">手繪/指</span><span class="list-price" data-bind="n16-price">$50 up</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n17-name">亮片/指</span><span class="list-price" data-bind="n17-price">$50</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n18-name">飾品/素材/鏈條</span><span class="list-price" data-bind="n18-price">$20 up</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n19-name">立體造型設計</span><span class="list-price" data-bind="n19-price">$50 up</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n20-name">立體鑽飾</span><span class="list-price" data-bind="n20-price">$20-120</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n21-name">施華洛鑽</span><span class="list-price" data-bind="n21-price">$30-120</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n22-name">滿鑽設計/指</span><span class="list-price" data-bind="n22-price">$250 up</span></div>
                 
                 <div class="section-title">水晶指甲 (僅手部)</div>
-                <div class="list-row"><span class="list-title">透明延甲/咬甲矯正</span><span class="list-price" data-bind="n23-price">$1200</span></div>
-                <div class="list-row"><span class="list-title">璀璨漸層</span><span class="list-price" data-bind="n24-price">$1400</span></div>
-                <div class="list-row"><span class="list-title">法式</span><span class="list-price" data-bind="n25-price">$1500</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n23-name">透明延甲/咬甲矯正</span><span class="list-price" data-bind="n23-price">$1200</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n24-name">璀璨漸層</span><span class="list-price" data-bind="n24-price">$1400</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n25-name">法式</span><span class="list-price" data-bind="n25-price">$1500</span></div>
                 
                 <div class="section-title">矯正系列</div>
-                <div class="list-row"><span class="list-title">手部卷甲</span><span class="list-price" data-bind="n26-price">$300</span></div>
-                <div class="list-row"><span class="list-title">足部崁甲/指</span><span class="list-price" data-bind="n27-price">$150</span></div>
-                <div class="list-row"><span class="list-title">水晶足部崁甲/指</span><span class="list-price" data-bind="n28-price">$250</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n26-name">手部卷甲</span><span class="list-price" data-bind="n26-price">$300</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n27-name">足部崁甲/指</span><span class="list-price" data-bind="n27-price">$150</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n28-name">水晶足部崁甲/指</span><span class="list-price" data-bind="n28-price">$250</span></div>
                 
                 <div class="section-title">保養護理</div>
                 <div class="skin-item"><div class="skin-header"><span data-bind="n29-name">手部基礎</span><span data-bind="n29-price">$600</span></div><div class="skin-flow">舒緩淨手浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 護甲油 - 指緣油</div></div>
@@ -197,7 +201,7 @@
                 <div class="grid-3"><div class="col-left" data-bind="w9-name">巴西全除</div><div class="col-center" data-bind="w9-price">$2000</div><div class="col-center">-</div></div>
                 <div class="grid-3"><div class="col-left" data-bind="w10-name">私密膜</div><div class="col-center" data-bind="w10-price">$350</div><div class="col-center">-</div></div>
                 <div class="section-title">優惠套組</div>
-                <div class="grid-3 grid-header"><div class="col-left">套組</div><div class="col-center">女</div><div class="col-center">男</div></div>
+                <div class="grid-3 grid-header"><div class="col-left">套組內容</div><div class="col-center">女</div><div class="col-center">男</div></div>
                 <div class="grid-3"><div class="col-left" data-bind="w11-name">腋下+私密處全除</div><div class="col-center" data-bind="w11-price">$2300</div><div class="col-center">-</div></div>
                 <div class="grid-3"><div class="col-left" data-bind="w12-name">小手臂+小腿</div><div class="col-center" data-bind="w12-price">$1600</div><div class="col-center">$2100</div></div>
                 <div class="grid-3"><div class="col-left" data-bind="w13-name">全身全除</div><div class="col-center" data-bind="w13-price">$4900</div><div class="col-center">-</div></div>
@@ -339,15 +343,10 @@
                 const html = `<label class="radio-item"><input type="checkbox" class="event-opt" value="${s.name}" data-cat="${s.cat}"> ${s.name}</label>`;
                 
                 if(s.cat === 'nail') {
-                    if(s.group === 'nail-basic' || s.group === 'nail-ext' || s.group === 'nail-design' || s.group === 'nail-care' || s.name.includes('手')) {
-                         if(s.name.includes('足')) footOpts.innerHTML += html; // 特例
-                         else handOpts.innerHTML += html;
-                    }
-                    if(s.group === 'nail-basic' && s.name.includes('足')) footOpts.innerHTML += html;
+                    // 根據名稱判斷歸類到手或足
+                    if(s.name.includes('手') || s.name.includes('指模') || s.name.includes('卷甲')) handOpts.innerHTML += html;
                     else if(s.name.includes('足') || s.name.includes('崁甲')) footOpts.innerHTML += html;
-                    
-                    // 通用項目兩邊都加 (卸甲)
-                    if(s.group.includes('removal')) { handOpts.innerHTML += html; footOpts.innerHTML += html; }
+                    else { handOpts.innerHTML += html; footOpts.innerHTML += html; } // 兩邊都放 (如卸甲通用)
                 } else if(s.cat === 'skin') {
                     document.getElementById('skinOptions').innerHTML += html;
                 } else if(s.cat === 'wax') {
@@ -361,13 +360,15 @@
             bindRadioEvents();
         }
         
-        window.checkMemberStatus = function() {
-            const phone = document.getElementById('custPhone').value.replace(/\D/g, ''); 
+        // ★ 會員狀態修正 (去除非數字符號比對)
+        function checkMemberStatus() {
+            const phone = document.getElementById('custPhone').value.replace(/\D/g, ''); // 只留數字
             const member = db.members.find(m => String(m.phone).replace(/\D/g, '') === phone);
+            
             if (member) {
                 document.getElementById('bookingForm').dataset.blacklist = (String(member.isblacklisted)==="TRUE" || String(member.isblacklisted)==="true") ? "true" : "false";
                 document.getElementById('newGuestSection').classList.remove('open');
-                document.getElementById('custName').value = member.name; 
+                document.getElementById('custName').value = member.name; // 自動帶入姓名
                 enableWaxOptions();
             } else { 
                 document.getElementById('bookingForm').dataset.blacklist = "false"; 
@@ -376,12 +377,7 @@
             }
         }
 
-        // ... (TimeButtons, Submit, Login, History functions - use standard from previous working version)
-        // (為了節省篇幅，請保留您上一個版本中關於 "renderTimeButtons", "submitBooking" 等函式的正確實作)
-        
-        // (Login, SubmitBooking, RenderHistory logic is identical to Step 3 of previous response)
-        // ... (Please copy those functions here) ...
-        
+        // ... (TimeButtons, Submit, Login, History functions copied from previous successful version)
         document.getElementById('shopTitle').addEventListener('click', ()=>{ window.location.href='admin.html'; });
         const dateInput = document.getElementById('bookDate');
         const customTimeInput = document.getElementById('customTimeInput');
@@ -436,6 +432,7 @@
             const ec = document.getElementById(cat+'-event-container'); if(ec) ec.style.display = db.services.some(s=>s.cat===cat+'-event'&&String(s.active)==='true')?'block':'none';
             const dateVal = document.getElementById('bookDate').value; if(dateVal) renderTimeButtons(dateVal);
         }
+        function switchNailSub(part) { document.getElementById('nail-hand-options').style.display = (part==='hand')?'block':'none'; document.getElementById('nail-foot-options').style.display = (part==='foot')?'block':'none'; document.querySelectorAll('.nail-sub-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); }
         function getSelectedData() { let items=[]; let totalDuration=0; document.querySelectorAll('input.event-opt:checked').forEach(i => { items.push(i.value); const s = db.services.find(s=>s.name===i.value); if(s) totalDuration+=parseFloat(s.duration); }); return {items, totalDuration}; }
         function bindRadioEvents() { document.querySelectorAll('.event-opt').forEach(i => i.addEventListener('click', ()=>{ if(i.checked) i.closest('.radio-item').classList.add('checked'); else i.closest('.radio-item').classList.remove('checked'); updateBookingSummary(); })); }
         function updateBookingSummary() { const d = getSelectedData(); const list = document.getElementById('summaryList'); list.innerHTML=''; if(d.items.length>0) { document.getElementById('bookingSummary').style.display='block'; d.items.forEach(i=>{ list.innerHTML+=`<li>${i}</li>`; }); const date=document.getElementById('bookDate').value; if(date) renderTimeButtons(date); } else document.getElementById('bookingSummary').style.display='none'; }
