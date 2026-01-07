@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lina nail 莉娜時尚館</title>
     <style>
-        /* CSS 樣式 (保持您最喜歡的那版) */
+        /* 原汁原味的 CSS (含 Grid/Flex 修正) */
         :root { --bg-color: #F9F7F2; --card-bg: #FFFFFF; --primary-text: #5D4037; --secondary-text: #8D6E63; --accent-color: #BCAAA4; --accent-light: #EFEBE9; --accent-dark: #8D6E63; --border-color: #E0E0E0; --promo-highlight: #D32F2F; --nav-height: 60px; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "PingFang TC", sans-serif; }
         body { background-color: var(--bg-color); color: var(--primary-text); padding-top: var(--nav-height); line-height: 1.6; padding-bottom: 80px; }
@@ -21,7 +21,7 @@
         .tab-content { display: none; animation: fadeIn 0.3s; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        /* 表格樣式 */
+        /* 原始表格樣式 */
         .grid-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 5px; padding: 10px 0; border-bottom: 1px dashed var(--border-color); font-size: 0.95rem; align-items: center; }
         .grid-header { font-weight: bold; background: var(--accent-light); border-radius: 6px; text-align: center; padding: 8px 0; border-bottom: none; }
         .col-left { text-align: left; padding-left: 8px; } .col-center { text-align: center; }
@@ -201,7 +201,7 @@
                 <div class="grid-3"><div class="col-left" data-bind="w9-name">巴西全除</div><div class="col-center" data-bind="w9-price">$2000</div><div class="col-center">-</div></div>
                 <div class="grid-3"><div class="col-left" data-bind="w10-name">私密膜</div><div class="col-center" data-bind="w10-price">$350</div><div class="col-center">-</div></div>
                 <div class="section-title">優惠套組</div>
-                <div class="grid-3 grid-header"><div class="col-left">套組內容</div><div class="col-center">女</div><div class="col-center">男</div></div>
+                <div class="grid-3 grid-header"><div class="col-left">套組</div><div class="col-center">女</div><div class="col-center">男</div></div>
                 <div class="grid-3"><div class="col-left" data-bind="w11-name">腋下+私密處全除</div><div class="col-center" data-bind="w11-price">$2300</div><div class="col-center">-</div></div>
                 <div class="grid-3"><div class="col-left" data-bind="w12-name">小手臂+小腿</div><div class="col-center" data-bind="w12-price">$1600</div><div class="col-center">$2100</div></div>
                 <div class="grid-3"><div class="col-left" data-bind="w13-name">全身全除</div><div class="col-center" data-bind="w13-price">$4900</div><div class="col-center">-</div></div>
@@ -290,7 +290,7 @@
             </form>
         </section>
         
-        <section id="contact" class="card"><h2>聯絡方式</h2><div class="contact-grid"><a href="https://www.facebook.com/share/18LuFgiUqx" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7h-2.54v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02z"/></svg><span>Facebook</span></a><a href="https://www.instagram.com/lina__.nail" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0-3-3z"/></svg><span>Instagram</span></a><a href="https://lin.ee/8eSVhBH" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>官方 Line</span></a><a href="tel:034831890" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg><span>撥打電話</span><span class="contact-sub">03-483-1890</span></a></div><a href="https://maps.app.goo.gl/e3jjS3mCBjc5YgAq9?g_st=ipc" target="_blank" class="address-box"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>桃園市觀音區莊敬路100-1號1樓</a></section>
+        <section id="contact" class="card"><h2>聯絡方式</h2><div class="contact-grid"><a href="https://www.facebook.com/share/18LuFgiUqx" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7h-2.54v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02z"/></svg><span>Facebook</span></a><a href="https://www.instagram.com/lina__.nail" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg><span>Instagram</span></a><a href="https://lin.ee/8eSVhBH" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>官方 Line</span></a><a href="tel:034831890" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg><span>撥打電話</span><span class="contact-sub">03-483-1890</span></a></div><a href="https://maps.app.goo.gl/e3jjS3mCBjc5YgAq9?g_st=ipc" target="_blank" class="address-box"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>桃園市觀音區莊敬路100-1號1樓</a></section>
     </div>
 
     <script>
