@@ -60,8 +60,8 @@
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--text-sub); }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; outline:none; }
         .modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
-        .mem-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; border-bottom: 1px dashed #eee; padding-bottom: 10px; }
-        /* 移除金額輸入框箭頭 */
+        .mem-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px dashed #eee; padding-bottom: 10px; }
+        /* 移除金額箭頭 */
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
 </head>
@@ -84,7 +84,7 @@
     <main>
         <div id="dashboard" class="page-section active"><h2 id="todayDateStr">今日預約</h2><div id="today-list" class="card-container"></div></div>
         <div id="appointments" class="page-section"><div class="calendar-header"><button class="btn btn-secondary" onclick="changeMonth(-1)">◀</button><span id="cal-month-title"></span><button class="btn btn-secondary" onclick="changeMonth(1)">▶</button></div><div class="calendar-grid" id="calendar-view"></div><p style="text-align:center; color:#888; font-size:0.9rem; margin-top:10px;">點擊日期管理時段</p></div>
-        <div id="booking_settings" class="page-section"><div class="data-card" style="margin-bottom:20px; background:#e8f5e9;"><h3>🛠️ 系統初始化</h3><p style="margin-bottom:10px; color:#555;">一鍵匯入預設服務項目 (資料不見請按此)</p><button class="btn btn-primary" onclick="initServices()">匯入預設項目</button></div><h3>⚙️ 預約項目管理 (工時/開關)</h3><div class="settings-tab-nav"><button class="settings-tab-btn active" onclick="renderSettings('nail', 'booking', this)">美甲</button><button class="settings-tab-btn" onclick="renderSettings('skin', 'booking', this)">肌膚</button><button class="settings-tab-btn" onclick="renderSettings('wax', 'booking', this)">除毛</button><button class="settings-tab-btn" onclick="renderSettings('event', 'booking', this)">活動</button></div><button class="btn btn-primary" style="width:100%; margin-bottom:15px;" onclick="openAddServiceModal()">+ 新增項目</button><div id="booking-settings-list"></div></div>
+        <div id="booking_settings" class="page-section"><div class="data-card" style="margin-bottom:20px; background:#e8f5e9;"><h3>🛠️ 系統初始化</h3><p style="margin-bottom:10px; color:#555;">更新後請按此按鈕重設資料庫，前台才會顯示正確資料。</p><button class="btn btn-primary" onclick="initServices()">匯入預設項目</button></div><h3>⚙️ 預約項目管理 (工時/開關)</h3><div class="settings-tab-nav"><button class="settings-tab-btn active" onclick="renderSettings('nail', 'booking', this)">美甲</button><button class="settings-tab-btn" onclick="renderSettings('skin', 'booking', this)">肌膚</button><button class="settings-tab-btn" onclick="renderSettings('wax', 'booking', this)">除毛</button><button class="settings-tab-btn" onclick="renderSettings('event', 'booking', this)">活動</button></div><button class="btn btn-primary" style="width:100%; margin-bottom:15px;" onclick="openAddServiceModal()">+ 新增項目</button><div id="booking-settings-list"></div></div>
         <div id="price_settings" class="page-section"><h3>💰 價目表管理 (名稱/價格)</h3><div class="settings-tab-nav"><button class="settings-tab-btn active" onclick="renderSettings('nail', 'price', this)">美甲</button><button class="settings-tab-btn" onclick="renderSettings('skin', 'price', this)">肌膚</button><button class="settings-tab-btn" onclick="renderSettings('wax', 'price', this)">除毛</button><button class="settings-tab-btn" onclick="renderSettings('event', 'price', this)">活動</button></div><button class="btn btn-primary" style="width:100%; margin-bottom:15px;" onclick="openAddServiceModal()">+ 新增項目</button><div id="price-settings-list"></div></div>
         <div id="members" class="page-section"><button class="btn btn-primary" onclick="openMemberModal()">+ 新增會員</button><input type="text" class="login-input" style="width:100%; text-align:left; margin-bottom:15px;" id="memSearch" placeholder="搜尋..." oninput="renderMembers()"><div id="member-list" class="card-container"></div></div>
         <div id="transactions" class="page-section"><button class="btn btn-primary" onclick="openTxModal()">+ 新增消費</button><div id="tx-list" class="card-container"></div></div>
@@ -100,7 +100,7 @@
     <script>
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbzDwyByp3GSfOE8w14yHhXiFI-jjD2tjN_xYmjD7YR1ADfAN1Mcg_esb55bKBCm27HhJA/exec'; //
 
-        // ★★★ 核心預設資料 (對應前台 ID)
+        // ★★★ 核心預設資料 (對應前台 HTML ID) ★★★
         const defaultServices = [
             // Nail Basic
             {id:'n1', cat:'nail', group:'nail-basic', name:'透明凝膠', price:'$800', duration:2, active:true},
@@ -108,7 +108,7 @@
             {id:'n3', cat:'nail', group:'nail-basic', name:'漸層凝膠', price:'$1200', duration:2.5, active:true},
             {id:'n4', cat:'nail', group:'nail-basic', name:'法式凝膠', price:'$1400', duration:2.5, active:true},
             {id:'n5', cat:'nail', group:'nail-basic', name:'延甲(指模)/指', price:'$100', duration:0.5, active:true},
-            {id:'n6', cat:'nail', group:'nail-basic', name:'延甲(甲片)/指', price:'$90', duration:0.5, active:true}, // 已修正為 $90
+            {id:'n6', cat:'nail', group:'nail-basic', name:'延甲(甲片)/指', price:'$90', duration:0.5, active:true}, 
 
             // Nail Removal
             {id:'n7', cat:'nail', group:'nail-removal', name:'卸甲續作(凝膠)', price:'$200', duration:0.5, active:true},
@@ -183,7 +183,7 @@
             {id:'e3', cat:'skin-event', group:'event', name:'肌膚活動', price:'$1000', duration:2, active:true},
             {id:'e4', cat:'wax-event', group:'event', name:'除毛活動', price:'$1000', duration:1, active:true},
 
-            // Booking Options (Not displayed in Price List)
+            // Booking Options
             {id:'b1', cat:'nail', group:'booking', name:'手-不需卸甲', price:'', duration:0, active:true},
             {id:'b2', cat:'nail', group:'booking', name:'手-卸甲續作', price:'', duration:0.5, active:true},
             {id:'b3', cat:'nail', group:'booking', name:'手-卸甲不續作', price:'', duration:1, active:true},
@@ -484,7 +484,6 @@
         window.deleteCurrentApp = function(id) { if(confirm("刪除？")) postData('delete', 'appointments', null, id).then(() => { closeModal('appModal'); closeModal('commonModal'); }); }
         window.addManualApp = function(date) { const phone = document.getElementById('new-app-phone').value; if(!phone) { alert("請填寫電話"); return; } const data = [ Date.now().toString(), date, document.getElementById('new-app-time').value, document.getElementById('new-app-name').value, phone, document.getElementById('new-app-item').value, "後台手動", "已確認" ]; postData('add', 'appointments', data).then(()=>openDayView(date)); }
         
-        // Helpers
         window.renderMembers = function() {
             const search = document.getElementById('memSearch').value.toLowerCase();
             const list = document.getElementById('member-list');
