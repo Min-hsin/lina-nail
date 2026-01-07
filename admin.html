@@ -84,7 +84,7 @@
     <main>
         <div id="dashboard" class="page-section active"><h2 id="todayDateStr">今日預約</h2><div id="today-list" class="card-container"></div></div>
         <div id="appointments" class="page-section"><div class="calendar-header"><button class="btn btn-secondary" onclick="changeMonth(-1)">◀</button><span id="cal-month-title"></span><button class="btn btn-secondary" onclick="changeMonth(1)">▶</button></div><div class="calendar-grid" id="calendar-view"></div><p style="text-align:center; color:#888; font-size:0.9rem; margin-top:10px;">點擊日期管理時段</p></div>
-        <div id="booking_settings" class="page-section"><div class="data-card" style="margin-bottom:20px; background:#e8f5e9;"><h3>🛠️ 系統初始化</h3><p style="margin-bottom:10px; color:#555;">匯入包含ID的預設資料 (資料不見請按此)</p><button class="btn btn-primary" onclick="initServices()">匯入預設項目</button></div><h3>⚙️ 預約項目管理 (工時/開關)</h3><div class="settings-tab-nav"><button class="settings-tab-btn active" onclick="renderSettings('nail', 'booking', this)">美甲</button><button class="settings-tab-btn" onclick="renderSettings('skin', 'booking', this)">肌膚</button><button class="settings-tab-btn" onclick="renderSettings('wax', 'booking', this)">除毛</button><button class="settings-tab-btn" onclick="renderSettings('event', 'booking', this)">活動</button></div><button class="btn btn-primary" style="width:100%; margin-bottom:15px;" onclick="openAddServiceModal()">+ 新增項目</button><div id="booking-settings-list"></div></div>
+        <div id="booking_settings" class="page-section"><div class="data-card" style="margin-bottom:20px; background:#e8f5e9;"><h3>🛠️ 系統初始化</h3><p style="margin-bottom:10px; color:#555;">一鍵匯入預設服務項目 (資料不見請按此)</p><button class="btn btn-primary" onclick="initServices()">匯入預設項目</button></div><h3>⚙️ 預約項目管理 (工時/開關)</h3><div class="settings-tab-nav"><button class="settings-tab-btn active" onclick="renderSettings('nail', 'booking', this)">美甲</button><button class="settings-tab-btn" onclick="renderSettings('skin', 'booking', this)">肌膚</button><button class="settings-tab-btn" onclick="renderSettings('wax', 'booking', this)">除毛</button><button class="settings-tab-btn" onclick="renderSettings('event', 'booking', this)">活動</button></div><button class="btn btn-primary" style="width:100%; margin-bottom:15px;" onclick="openAddServiceModal()">+ 新增項目</button><div id="booking-settings-list"></div></div>
         <div id="price_settings" class="page-section"><h3>💰 價目表管理 (名稱/價格)</h3><div class="settings-tab-nav"><button class="settings-tab-btn active" onclick="renderSettings('nail', 'price', this)">美甲</button><button class="settings-tab-btn" onclick="renderSettings('skin', 'price', this)">肌膚</button><button class="settings-tab-btn" onclick="renderSettings('wax', 'price', this)">除毛</button><button class="settings-tab-btn" onclick="renderSettings('event', 'price', this)">活動</button></div><button class="btn btn-primary" style="width:100%; margin-bottom:15px;" onclick="openAddServiceModal()">+ 新增項目</button><div id="price-settings-list"></div></div>
         <div id="members" class="page-section"><button class="btn btn-primary" onclick="openMemberModal()">+ 新增會員</button><input type="text" class="login-input" style="width:100%; text-align:left; margin-bottom:15px;" id="memSearch" placeholder="搜尋..." oninput="renderMembers()"><div id="member-list" class="card-container"></div></div>
         <div id="transactions" class="page-section"><button class="btn btn-primary" onclick="openTxModal()">+ 新增消費</button><div id="tx-list" class="card-container"></div></div>
@@ -100,14 +100,17 @@
     <script>
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbzDwyByp3GSfOE8w14yHhXiFI-jjD2tjN_xYmjD7YR1ADfAN1Mcg_esb55bKBCm27HhJA/exec'; //
 
+        // ★★★ 核心預設資料 (對應前台 ID)
         const defaultServices = [
+            // Nail Basic
             {id:'n1', cat:'nail', group:'nail-basic', name:'透明凝膠', price:'$800', duration:2, active:true},
             {id:'n2', cat:'nail', group:'nail-basic', name:'單色凝膠', price:'$1000', duration:2, active:true},
             {id:'n3', cat:'nail', group:'nail-basic', name:'漸層凝膠', price:'$1200', duration:2.5, active:true},
             {id:'n4', cat:'nail', group:'nail-basic', name:'法式凝膠', price:'$1400', duration:2.5, active:true},
             {id:'n5', cat:'nail', group:'nail-basic', name:'延甲(指模)/指', price:'$100', duration:0.5, active:true},
-            {id:'n6', cat:'nail', group:'nail-basic', name:'延甲(甲片)/指', price:'$90', duration:0.5, active:true},
+            {id:'n6', cat:'nail', group:'nail-basic', name:'延甲(甲片)/指', price:'$90', duration:0.5, active:true}, // 已修正為 $90
 
+            // Nail Removal
             {id:'n7', cat:'nail', group:'nail-removal', name:'卸甲續作(凝膠)', price:'$200', duration:0.5, active:true},
             {id:'n8', cat:'nail', group:'nail-removal', name:'卸甲不續作(凝膠)', price:'$500', duration:1, active:true},
             {id:'n9', cat:'nail', group:'nail-removal', name:'卸甲續作(水晶)', price:'$300', duration:0.5, active:true},
@@ -115,6 +118,7 @@
             {id:'n11', cat:'nail', group:'nail-removal', name:'水晶修補/指', price:'$80', duration:0.5, active:true},
             {id:'n12', cat:'nail', group:'nail-removal', name:'絲綢補甲/指', price:'$50', duration:0.5, active:true},
 
+            // Nail Design
             {id:'n13', cat:'nail', group:'nail-design', name:'跳一色', price:'$100', duration:0.5, active:true},
             {id:'n14', cat:'nail', group:'nail-design', name:'貓眼/鏡面', price:'$200', duration:0.5, active:true},
             {id:'n15', cat:'nail', group:'nail-design', name:'暈染/指', price:'$100 up', duration:0.5, active:true},
@@ -126,14 +130,17 @@
             {id:'n21', cat:'nail', group:'nail-design', name:'施華洛鑽', price:'$30-120', duration:0.5, active:true},
             {id:'n22', cat:'nail', group:'nail-design', name:'滿鑽設計/指', price:'$250 up', duration:1, active:true},
 
+            // Nail Crystal
             {id:'n23', cat:'nail', group:'nail-crystal', name:'透明延甲/咬甲矯正', price:'$1200', duration:2.5, active:true},
             {id:'n24', cat:'nail', group:'nail-crystal', name:'璀璨漸層', price:'$1400', duration:2.5, active:true},
             {id:'n25', cat:'nail', group:'nail-crystal', name:'法式', price:'$1500', duration:2.5, active:true},
 
+            // Nail Correct
             {id:'n26', cat:'nail', group:'nail-correct', name:'手部卷甲', price:'$300', duration:1, active:true},
             {id:'n27', cat:'nail', group:'nail-correct', name:'足部崁甲/指', price:'$150', duration:0.5, active:true},
             {id:'n28', cat:'nail', group:'nail-correct', name:'水晶足部崁甲/指', price:'$250', duration:1, active:true},
             
+            // Nail Care
             {id:'n29', cat:'nail', group:'nail-care', name:'手部基礎', price:'$600', duration:1, active:true},
             {id:'n30', cat:'nail', group:'nail-care', name:'手部嫩白', price:'$900', duration:1.5, active:true},
             {id:'n31', cat:'nail', group:'nail-care', name:'手部深層', price:'$1200', duration:2, active:true},
@@ -142,6 +149,7 @@
             {id:'n34', cat:'nail', group:'nail-care', name:'足部深層', price:'$1500', duration:2, active:true},
             {id:'n35', cat:'nail', group:'nail-care', name:'加購嫩白保濕敷膜', price:'$200', duration:0.5, active:true},
 
+            // Skin
             {id:'s1', cat:'skin', group:'skin-basic', name:'臉部清潔(體驗價)', price:'$999', duration:1.5, active:true},
             {id:'s2', cat:'skin', group:'skin-basic', name:'韓國小氣泡深層清潔', price:'$1200', duration:1.5, active:true},
             {id:'s3', cat:'skin', group:'skin-basic', name:'一般客製化肌膚管理', price:'$1400', duration:2, active:true},
@@ -154,6 +162,7 @@
             {id:'s10', cat:'skin', group:'skin-high', name:'韓國海藻矽針煥膚', price:'$2300', duration:2, active:true},
             {id:'s11', cat:'skin', group:'skin-high', name:'R2海綿藻針', price:'$2000', duration:2, active:true},
 
+            // Wax
             {id:'w1', cat:'wax', group:'wax-body', name:'腋下', price:'$500', duration:0.5, active:true},
             {id:'w2', cat:'wax', group:'wax-body', name:'小手臂', price:'$800', duration:1, active:true},
             {id:'w3', cat:'wax', group:'wax-body', name:'全手', price:'$1200', duration:1.5, active:true},
@@ -168,11 +177,13 @@
             {id:'w12', cat:'wax', group:'wax-set', name:'小手臂+小腿', price:'$1600', duration:2, active:true},
             {id:'w13', cat:'wax', group:'wax-set', name:'全身全除', price:'$4900', duration:4, active:true},
             
+            // Events
             {id:'e1', cat:'nail-event', group:'event', name:'打卡優惠', price:'-$50', duration:0, active:true},
             {id:'e2', cat:'nail-event', group:'event', name:'本月特惠款', price:'$1000', duration:2.5, active:true},
             {id:'e3', cat:'skin-event', group:'event', name:'肌膚活動', price:'$1000', duration:2, active:true},
             {id:'e4', cat:'wax-event', group:'event', name:'除毛活動', price:'$1000', duration:1, active:true},
 
+            // Booking Options (Not displayed in Price List)
             {id:'b1', cat:'nail', group:'booking', name:'手-不需卸甲', price:'', duration:0, active:true},
             {id:'b2', cat:'nail', group:'booking', name:'手-卸甲續作', price:'', duration:0.5, active:true},
             {id:'b3', cat:'nail', group:'booking', name:'手-卸甲不續作', price:'', duration:1, active:true},
@@ -185,7 +196,7 @@
         let currentSettingsCat = 'nail';
         let currentSettingsMode = 'booking';
 
-        // ★★★ 全部函式提升到 window (解決按鈕沒反應) ★★★
+        // ★★★ 全部函式提升到全域 (解決按鈕沒反應問題) ★★★
         window.showLoading = function(show) { document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none'; }
         
         window.fetchData = async function() {
@@ -225,6 +236,7 @@
             if(pageId === 'booking_settings' || pageId === 'price_settings') renderSettings(currentSettingsCat, pageId === 'booking_settings' ? 'booking' : 'price');
         }
 
+        // Dashboard
         window.renderDashboard = function() {
             const today = getTodayString();
             document.getElementById('todayDateStr').innerText = `今日預約 (${formatDisplayDate(today)})`;
@@ -238,6 +250,7 @@
             });
         }
 
+        // Calendar
         let currentMonth = new Date();
         window.changeMonth = function(n) { currentMonth.setMonth(currentMonth.getMonth()+n); renderCalendar(); }
         window.renderCalendar = function() {
@@ -310,12 +323,7 @@
         }
 
         window.renderSlotButton = function(date, time, blocks, apps, isOpenInDaily) {
-            // Check overlaps for bookings based on duration
-            // This is simplified visualisation; real logic is in booking check
-            const isBooked = apps.some(a => {
-                // simple check if start time matches
-                return a.time === time; 
-            });
+            const isBooked = apps.some(a => a.time === time);
             const isBlocked = blocks.some(b => b.start === time);
             const isDailyOpen = (time === '08:00' || time === '20:30') ? (String(isOpenInDaily).toLowerCase()==='true') : true;
 
