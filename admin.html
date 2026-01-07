@@ -23,12 +23,11 @@
         main { flex: 1; padding: 15px; padding-bottom: 80px; }
         .page-section { display: none; animation: fadeIn 0.3s; }
         .page-section.active { display: block; }
-        @keyframes fadeIn { from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)} }
         .card-container { display: flex; flex-direction: column; gap: 15px; }
         .data-card { background: var(--card-bg); border-radius: 12px; padding: 15px; border: 1px solid #ddd; box-shadow: 0 2px 8px rgba(0,0,0,0.03); position: relative; }
-        h2 { font-size: 1.3rem; margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
         .app-card-header { display: flex; justify-content: space-between; font-weight: 900; font-size: 1.1rem; color: var(--text-main); margin-bottom: 8px; border-bottom: 1px dashed #eee; padding-bottom: 8px; }
         .app-card-body { font-size: 0.95rem; line-height: 1.5; color: #555; }
+        .mem-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; border-bottom: 1px dashed #eee; padding-bottom: 10px; }
         .btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; justify-content: center; }
         .btn-primary { background: var(--text-main); color: #fff; width: 100%; margin-bottom: 15px; padding: 12px; font-weight: bold; }
         .btn-edit { background: #fff; border: 1px solid var(--accent-color); color: var(--accent-color); }
@@ -38,6 +37,7 @@
         .cal-day { background: #fff; border: 1px solid #eee; min-height: 80px; padding: 5px; cursor: pointer; border-radius: 6px; position: relative; }
         .cal-day.today { background: #FFF8E1; border: 2px solid #FFD54F; }
         .cal-badge { display: block; font-size: 0.75rem; background: var(--accent-color); color: #fff; padding: 2px; border-radius: 3px; margin-top: 2px; text-align: center; overflow: hidden; white-space: nowrap; }
+        .cal-badge.blocked { background: #BDBDBD; } 
         /* 時段按鈕 */
         .slot-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 15px; }
         .slot-btn { padding: 10px 2px; border-radius: 6px; text-align: center; font-size: 0.85rem; font-weight: bold; cursor: pointer; border: 1px solid #ddd; }
@@ -108,7 +108,9 @@
                 <button class="settings-tab-btn active" onclick="renderSettings('nail', 'booking', this)">美甲</button>
                 <button class="settings-tab-btn" onclick="renderSettings('skin', 'booking', this)">肌膚</button>
                 <button class="settings-tab-btn" onclick="renderSettings('wax', 'booking', this)">除毛</button>
-                <button class="settings-tab-btn" onclick="renderSettings('event', 'booking', this)">活動</button>
+                <button class="settings-tab-btn" onclick="renderSettings('nail-event', 'booking', this)">美甲活動</button>
+                <button class="settings-tab-btn" onclick="renderSettings('skin-event', 'booking', this)">肌膚活動</button>
+                <button class="settings-tab-btn" onclick="renderSettings('wax-event', 'booking', this)">除毛活動</button>
             </div>
             <button class="btn btn-primary" style="width:100%; margin-bottom:15px;" onclick="openAddServiceModal()">+ 新增項目</button>
             <div id="booking-settings-list"></div>
@@ -120,7 +122,9 @@
                 <button class="settings-tab-btn active" onclick="renderSettings('nail', 'price', this)">美甲</button>
                 <button class="settings-tab-btn" onclick="renderSettings('skin', 'price', this)">肌膚</button>
                 <button class="settings-tab-btn" onclick="renderSettings('wax', 'price', this)">除毛</button>
-                <button class="settings-tab-btn" onclick="renderSettings('event', 'price', this)">活動</button>
+                <button class="settings-tab-btn" onclick="renderSettings('nail-event', 'price', this)">美甲活動</button>
+                <button class="settings-tab-btn" onclick="renderSettings('skin-event', 'price', this)">肌膚活動</button>
+                <button class="settings-tab-btn" onclick="renderSettings('wax-event', 'price', this)">除毛活動</button>
             </div>
             <button class="btn btn-primary" style="width:100%; margin-bottom:15px;" onclick="openAddServiceModal()">+ 新增項目</button>
             <div id="price-settings-list"></div>
@@ -167,22 +171,20 @@
     
     <div id="memberModal" class="modal"><div class="modal-content"><h3>會員</h3><input type="hidden" id="mem-id"><div class="form-group"><label>姓名</label><input id="mem-name"></div><div class="form-group"><label>電話</label><input id="mem-phone"></div><div class="form-group"><label>性別</label><select id="mem-gender"><option>女</option><option>男</option></select></div><div class="form-group"><label>生日 (例 2025/2/1)</label><input type="text" id="mem-bday"></div><div class="form-group"><label>等級</label><select id="mem-level"><option>一般會員</option><option>黃金會員</option><option>白金會員</option><option>鑽石會員</option></select></div><div class="form-group"><label>剩餘課程</label><textarea id="mem-courses"></textarea></div><div class="form-group"><label>黑名單</label><label class="switch"><input type="checkbox" id="mem-blacklist"><span class="slider"></span></label></div><div class="modal-footer"><button class="btn btn-del" onclick="deleteMember()">刪除</button><button class="btn btn-primary" onclick="saveMember()">儲存</button></div></div></div>
     
-    <div id="txModal" class="modal"><div class="modal-content"><h3>消費紀錄</h3><input type="hidden" id="tx-id"><div class="form-group"><label>日期</label><input type="date" id="tx-date-edit"></div><div class="form-group"><label>類型</label><select id="tx-type-edit"><option>消費</option><option>儲值</option><option>購買課程</option><option>使用課程</option><option>產品</option></select></div><div class="form-group"><label>項目</label><input id="tx-item-edit"></div><div class="form-group"><label>金額</label><input type="number" id="tx-amt-edit"></div><div class="form-group" style="background:#e3f2fd; padding:10px;"><div style="display:flex; justify-content:space-between;"><label style="margin:0; color:#1565c0; font-weight:bold;">💰 連動儲值金</label><label class="switch"><input type="checkbox" id="tx-update-balance" checked><span class="slider"></span></label></div></div><div class="form-group"><label>備註</label><input id="tx-note-edit"></div><div class="modal-footer"><button class="btn btn-del" onclick="deleteTxById()">刪除</button><button class="btn btn-primary" onclick="saveTxEdit()">儲存</button></div></div></div>
+    <div id="txModal" class="modal"><div class="modal-content"><h3>消費紀錄</h3><input type="hidden" id="tx-id"><div class="form-group"><label>日期</label><input type="date" id="tx-date-edit"></div><div class="form-group"><label>類型</label><select id="tx-type-edit"><option>消費</option><option>儲值</option><option>購買課程</option><option>使用課程</option><option>產品</option></select></div><div class="form-group"><label>項目</label><input id="tx-item-edit"></div><div class="form-group"><label>金額</label><input type="number" id="tx-amt-edit"></div><div class="form-group"><label>備註</label><input id="tx-note-edit"></div><div class="modal-footer"><button class="btn btn-del" onclick="deleteTxById()">刪除</button><button class="btn btn-primary" onclick="saveTxEdit()">儲存</button></div></div></div>
 
     <script>
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbzDwyByp3GSfOE8w14yHhXiFI-jjD2tjN_xYmjD7YR1ADfAN1Mcg_esb55bKBCm27HhJA/exec'; //
 
-        // ★★★ 修正後預設服務 ★★★
+        // ★★★ 完整預設服務 (含 Group 欄位 & 價格修正) ★★★
         const defaultServices = [
-            // Nail
             {id:'n1', cat:'nail', group:'nail-basic', name:'透明凝膠', price:'$800', duration:2, active:true},
             {id:'n2', cat:'nail', group:'nail-basic', name:'單色凝膠', price:'$1000', duration:2, active:true},
             {id:'n3', cat:'nail', group:'nail-basic', name:'漸層凝膠', price:'$1200', duration:2.5, active:true},
             {id:'n4', cat:'nail', group:'nail-basic', name:'法式凝膠', price:'$1400', duration:2.5, active:true},
             {id:'n5', cat:'nail', group:'nail-basic', name:'延甲(指模)/指', price:'$100', duration:0.5, active:true},
-            {id:'n6', cat:'nail', group:'nail-basic', name:'延甲(甲片)/指', price:'$80', duration:0.5, active:true}, // 修正名稱
+            {id:'n6', cat:'nail', group:'nail-basic', name:'延甲(甲片)/指', price:'$90', duration:0.5, active:true}, // ★ 修正價格 $90
 
-            // Removal
             {id:'n7', cat:'nail', group:'nail-removal', name:'卸甲續作(凝膠)', price:'$200', duration:0.5, active:true},
             {id:'n8', cat:'nail', group:'nail-removal', name:'卸甲不續作(凝膠)', price:'$500', duration:1, active:true},
             {id:'n9', cat:'nail', group:'nail-removal', name:'卸甲續作(水晶)', price:'$300', duration:0.5, active:true},
@@ -190,7 +192,6 @@
             {id:'n11', cat:'nail', group:'nail-removal', name:'水晶修補/指', price:'$80', duration:0.5, active:true},
             {id:'n12', cat:'nail', group:'nail-removal', name:'絲綢補甲/指', price:'$50', duration:0.5, active:true},
 
-            // Design
             {id:'n13', cat:'nail', group:'nail-design', name:'跳一色', price:'$100', duration:0.5, active:true},
             {id:'n14', cat:'nail', group:'nail-design', name:'貓眼/鏡面', price:'$200', duration:0.5, active:true},
             {id:'n15', cat:'nail', group:'nail-design', name:'暈染/指', price:'$100 up', duration:0.5, active:true},
@@ -202,17 +203,14 @@
             {id:'n21', cat:'nail', group:'nail-design', name:'施華洛鑽', price:'$30-120', duration:0.5, active:true},
             {id:'n22', cat:'nail', group:'nail-design', name:'滿鑽設計/指', price:'$250 up', duration:1, active:true},
 
-            // Crystal
             {id:'n23', cat:'nail', group:'nail-crystal', name:'透明延甲/咬甲矯正', price:'$1200', duration:2.5, active:true},
             {id:'n24', cat:'nail', group:'nail-crystal', name:'璀璨漸層', price:'$1400', duration:2.5, active:true},
             {id:'n25', cat:'nail', group:'nail-crystal', name:'法式', price:'$1500', duration:2.5, active:true},
 
-            // Correction
             {id:'n26', cat:'nail', group:'nail-correct', name:'手部卷甲', price:'$300', duration:1, active:true},
             {id:'n27', cat:'nail', group:'nail-correct', name:'足部崁甲/指', price:'$150', duration:0.5, active:true},
             {id:'n28', cat:'nail', group:'nail-correct', name:'水晶足部崁甲/指', price:'$250', duration:1, active:true},
             
-            // Care
             {id:'n29', cat:'nail', group:'nail-care', name:'手部基礎', price:'$600', duration:1, active:true},
             {id:'n30', cat:'nail', group:'nail-care', name:'手部嫩白', price:'$900', duration:1.5, active:true},
             {id:'n31', cat:'nail', group:'nail-care', name:'手部深層', price:'$1200', duration:2, active:true},
@@ -221,7 +219,6 @@
             {id:'n34', cat:'nail', group:'nail-care', name:'足部深層', price:'$1500', duration:2, active:true},
             {id:'n35', cat:'nail', group:'nail-care', name:'加購嫩白保濕敷膜', price:'$200', duration:0.5, active:true},
 
-            // Skin
             {id:'s1', cat:'skin', group:'skin-basic', name:'臉部清潔(體驗價)', price:'$999', duration:1.5, active:true},
             {id:'s2', cat:'skin', group:'skin-basic', name:'韓國小氣泡深層清潔', price:'$1200', duration:1.5, active:true},
             {id:'s3', cat:'skin', group:'skin-basic', name:'一般客製化肌膚管理', price:'$1400', duration:2, active:true},
@@ -234,7 +231,6 @@
             {id:'s10', cat:'skin', group:'skin-high', name:'韓國海藻矽針煥膚', price:'$2300', duration:2, active:true},
             {id:'s11', cat:'skin', group:'skin-high', name:'R2海綿藻針', price:'$2000', duration:2, active:true},
 
-            // Wax
             {id:'w1', cat:'wax', group:'wax-body', name:'腋下', price:'$500', duration:0.5, active:true},
             {id:'w2', cat:'wax', group:'wax-body', name:'小手臂', price:'$800', duration:1, active:true},
             {id:'w3', cat:'wax', group:'wax-body', name:'全手', price:'$1200', duration:1.5, active:true},
@@ -255,7 +251,7 @@
             {id:'e3', cat:'skin-event', group:'event', name:'肌膚活動', price:'$1000', duration:2, active:true},
             {id:'e4', cat:'wax-event', group:'event', name:'除毛活動', price:'$1000', duration:1, active:true},
 
-            // Booking Placeholders
+            // Booking Placeholders (For options)
             {id:'b1', cat:'nail', group:'booking', name:'手-不需卸甲', price:'', duration:0, active:true},
             {id:'b2', cat:'nail', group:'booking', name:'手-卸甲續作', price:'', duration:0.5, active:true},
             {id:'b3', cat:'nail', group:'booking', name:'手-卸甲不續作', price:'', duration:1, active:true},
@@ -447,6 +443,7 @@
              document.getElementById('modalBody').innerHTML = html;
         }
 
+        // Settings Render
         window.renderSettings = function(cat, mode, btn) {
             currentSettingsMode = mode;
             if(btn) { document.querySelectorAll('.settings-tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
@@ -510,6 +507,7 @@
             fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) }).then(() => { closeModal('addServiceModal'); fetchData(); });
         }
 
+        // ★ 一鍵匯入修正
         window.initServices = function() { if(confirm("確定匯入？")) { const rows = defaultServices.map(s => [s.id, s.cat, s.group, s.name, s.price, s.duration, s.active]); postData('initServices', 'services', rows).then(()=>alert("匯入完成")); } }
 
         // Standard Helpers
