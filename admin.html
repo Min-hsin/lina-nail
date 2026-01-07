@@ -110,7 +110,9 @@
                 <button class="settings-tab-btn active" onclick="renderSettings('nail', 'booking', this)">美甲</button>
                 <button class="settings-tab-btn" onclick="renderSettings('skin', 'booking', this)">肌膚</button>
                 <button class="settings-tab-btn" onclick="renderSettings('wax', 'booking', this)">除毛</button>
-                <button class="settings-tab-btn" onclick="renderSettings('event', 'booking', this)">活動</button>
+                <button class="settings-tab-btn" onclick="renderSettings('nail-event', 'booking', this)">美甲活動</button>
+                <button class="settings-tab-btn" onclick="renderSettings('skin-event', 'booking', this)">肌膚活動</button>
+                <button class="settings-tab-btn" onclick="renderSettings('wax-event', 'booking', this)">除毛活動</button>
             </div>
             <button class="btn btn-primary" style="width:100%; margin-bottom:15px;" onclick="openAddServiceModal()">+ 新增項目</button>
             <div id="booking-settings-list"></div>
@@ -122,7 +124,9 @@
                 <button class="settings-tab-btn active" onclick="renderSettings('nail', 'price', this)">美甲</button>
                 <button class="settings-tab-btn" onclick="renderSettings('skin', 'price', this)">肌膚</button>
                 <button class="settings-tab-btn" onclick="renderSettings('wax', 'price', this)">除毛</button>
-                <button class="settings-tab-btn" onclick="renderSettings('event', 'price', this)">活動</button>
+                <button class="settings-tab-btn" onclick="renderSettings('nail-event', 'price', this)">美甲活動</button>
+                <button class="settings-tab-btn" onclick="renderSettings('skin-event', 'price', this)">肌膚活動</button>
+                <button class="settings-tab-btn" onclick="renderSettings('wax-event', 'price', this)">除毛活動</button>
             </div>
             <button class="btn btn-primary" style="width:100%; margin-bottom:15px;" onclick="openAddServiceModal()">+ 新增項目</button>
             <div id="price-settings-list"></div>
@@ -146,17 +150,6 @@
         <div class="modal-content">
             <h3>新增項目</h3>
             <div class="form-group"><label>分類</label><select id="new-svc-cat"><option value="nail">美甲</option><option value="skin">肌膚</option><option value="wax">除毛</option><option value="nail-event">美甲活動</option><option value="skin-event">肌膚活動</option><option value="wax-event">除毛活動</option></select></div>
-            <div class="form-group"><label>群組 (前台分類用)</label><select id="new-svc-group">
-                <option value="nail-basic">美甲-基礎</option>
-                <option value="nail-ext">美甲-延甲</option>
-                <option value="nail-style">美甲-款式</option>
-                <option value="nail-care">美甲-保養</option>
-                <option value="skin-basic">肌膚-一般</option>
-                <option value="skin-high">肌膚-高階</option>
-                <option value="wax-body">除毛-身體</option>
-                <option value="wax-private">除毛-私密</option>
-                <option value="event">活動</option>
-            </select></div>
             <div class="form-group"><label>名稱</label><input type="text" id="new-svc-name"></div>
             <div class="form-group"><label>價格</label><input type="text" id="new-svc-price"></div>
             <div class="form-group"><label>工時 (小時)</label><input type="number" step="0.5" id="new-svc-duration" value="2"></div>
@@ -182,84 +175,85 @@
     <script>
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbzDwyByp3GSfOE8w14yHhXiFI-jjD2tjN_xYmjD7YR1ADfAN1Mcg_esb55bKBCm27HhJA/exec'; //
 
-        // ★★★ 完整預設服務 (含 Group 欄位) ★★★
+        // ★★★ 完整預設服務 (含 ID、正確名稱、價格) ★★★
         const defaultServices = [
-            {id:'n1', cat:'nail', group:'nail-basic', name:'手-不需卸甲', price:'', duration:0, active:true},
-            {id:'n2', cat:'nail', group:'nail-basic', name:'手-卸甲續作', price:'$200', duration:0.5, active:true},
-            {id:'n3', cat:'nail', group:'nail-basic', name:'手-卸甲不續作', price:'$500', duration:1, active:true},
-            {id:'n4', cat:'nail', group:'nail-basic', name:'足-不需卸甲', price:'', duration:0, active:true},
-            {id:'n5', cat:'nail', group:'nail-basic', name:'足-卸甲續作', price:'$300', duration:0.5, active:true},
-            {id:'n6', cat:'nail', group:'nail-basic', name:'水晶卸甲', price:'$600', duration:1, active:true}, 
+            // Nail
+            {id:'n1', cat:'nail', name:'手-不需卸甲', price:'', duration:0, active:true},
+            {id:'n2', cat:'nail', name:'手-卸甲續作', price:'$200', duration:0.5, active:true},
+            {id:'n3', cat:'nail', name:'手-卸甲不續作', price:'$500', duration:1, active:true},
+            {id:'n4', cat:'nail', name:'足-不需卸甲', price:'', duration:0, active:true},
+            {id:'n5', cat:'nail', name:'足-卸甲續作', price:'$300', duration:0.5, active:true},
+            {id:'n6', cat:'nail', name:'水晶卸甲', price:'$600', duration:1, active:true}, 
             
-            {id:'n7', cat:'nail', group:'nail-style', name:'透明', price:'$800', duration:2, active:true}, 
-            {id:'n8', cat:'nail', group:'nail-style', name:'透明(足)', price:'$1000', duration:2, active:true},
-            {id:'n9', cat:'nail', group:'nail-style', name:'單色', price:'$1000', duration:2, active:true},
-            {id:'n10', cat:'nail', group:'nail-style', name:'單色(足)', price:'$1200', duration:2, active:true},
-            {id:'n11', cat:'nail', group:'nail-style', name:'漸層', price:'$1200', duration:2.5, active:true},
-            {id:'n12', cat:'nail', group:'nail-style', name:'漸層(足)', price:'$1400', duration:2.5, active:true},
-            {id:'n13', cat:'nail', group:'nail-style', name:'法式', price:'$1400', duration:2.5, active:true},
-            {id:'n14', cat:'nail', group:'nail-style', name:'法式(足)', price:'$1600', duration:2.5, active:true},
-            {id:'n15', cat:'nail', group:'nail-ext', name:'延甲(指模)', price:'$100/指', duration:0.5, active:true},
-            {id:'n16', cat:'nail', group:'nail-ext', name:'足-延甲', price:'$120/指', duration:0.5, active:true},
-            {id:'n17', cat:'nail', group:'nail-ext', name:'手-甲片延甲', price:'$80', duration:0.5, active:true},
+            {id:'n7', cat:'nail', name:'透明', price:'$800', duration:2, active:true}, 
+            {id:'n8', cat:'nail', name:'透明(足)', price:'$1000', duration:2, active:true},
+            {id:'n9', cat:'nail', name:'單色', price:'$1000', duration:2, active:true},
+            {id:'n10', cat:'nail', name:'單色(足)', price:'$1200', duration:2, active:true},
+            {id:'n11', cat:'nail', name:'漸層', price:'$1200', duration:2.5, active:true},
+            {id:'n12', cat:'nail', name:'漸層(足)', price:'$1400', duration:2.5, active:true},
+            {id:'n13', cat:'nail', name:'法式', price:'$1400', duration:2.5, active:true},
+            {id:'n14', cat:'nail', name:'法式(足)', price:'$1600', duration:2.5, active:true},
+            {id:'n15', cat:'nail', name:'延甲(指模)', price:'$100/指', duration:0.5, active:true},
+            {id:'n16', cat:'nail', name:'足-延甲', price:'$120/指', duration:0.5, active:true},
+            {id:'n17', cat:'nail', name:'手-甲片延甲', price:'$80', duration:0.5, active:true},
 
-            {id:'n18', cat:'nail', group:'nail-design', name:'跳一色', price:'$100', duration:2, active:true},
-            {id:'n19', cat:'nail', group:'nail-design', name:'貓眼/鏡面', price:'$200', duration:2, active:true},
-            {id:'n20', cat:'nail', group:'nail-design', name:'暈染', price:'$100 up', duration:2, active:true},
-            {id:'n21', cat:'nail', group:'nail-design', name:'手繪', price:'$50 up', duration:2, active:true},
-            {id:'n22', cat:'nail', group:'nail-design', name:'亮片', price:'$50', duration:2, active:true},
-            {id:'n23', cat:'nail', group:'nail-design', name:'飾品/素材', price:'$20 up', duration:2, active:true},
-            {id:'n24', cat:'nail', group:'nail-design', name:'立體造型', price:'$50 up', duration:2, active:true},
-            {id:'n25', cat:'nail', group:'nail-design', name:'立體鑽飾', price:'$20-120', duration:2, active:true},
-            {id:'n26', cat:'nail', group:'nail-design', name:'施華洛鑽', price:'$30-120', duration:2, active:true},
-            {id:'n27', cat:'nail', group:'nail-design', name:'滿鑽設計', price:'$250 up', duration:2, active:true},
+            {id:'n18', cat:'nail', name:'跳一色', price:'$100', duration:0.5, active:true},
+            {id:'n19', cat:'nail', name:'貓眼/鏡面', price:'$200', duration:0.5, active:true},
+            {id:'n20', cat:'nail', name:'暈染', price:'$100 up', duration:0.5, active:true},
+            {id:'n21', cat:'nail', name:'手繪', price:'$50 up', duration:0.5, active:true},
+            {id:'n22', cat:'nail', name:'亮片', price:'$50', duration:0.5, active:true},
+            {id:'n23', cat:'nail', name:'飾品/素材', price:'$20 up', duration:0.5, active:true},
+            {id:'n24', cat:'nail', name:'立體造型', price:'$50 up', duration:0.5, active:true},
+            {id:'n25', cat:'nail', name:'立體鑽飾', price:'$20-120', duration:0.5, active:true},
+            {id:'n26', cat:'nail', name:'施華洛鑽', price:'$30-120', duration:0.5, active:true},
+            {id:'n27', cat:'nail', name:'滿鑽設計', price:'$250 up', duration:1, active:true},
             
-            {id:'n28', cat:'nail', group:'nail-correct', name:'透明延甲/咬甲', price:'$1200', duration:2.5, active:true},
-            {id:'n29', cat:'nail', group:'nail-correct', name:'水晶璀璨', price:'$1400', duration:2.5, active:true},
-            {id:'n30', cat:'nail', group:'nail-correct', name:'水晶法式', price:'$1500', duration:2.5, active:true},
-            {id:'n31', cat:'nail', group:'nail-correct', name:'手部卷甲', price:'$300', duration:1, active:true},
-            {id:'n32', cat:'nail', group:'nail-correct', name:'足部崁甲', price:'$150', duration:0.5, active:true},
-            {id:'n33', cat:'nail', group:'nail-correct', name:'水晶足崁甲', price:'$250', duration:1, active:true},
+            {id:'n28', cat:'nail', name:'透明延甲/咬甲', price:'$1200', duration:2.5, active:true},
+            {id:'n29', cat:'nail', name:'水晶璀璨', price:'$1400', duration:2.5, active:true},
+            {id:'n30', cat:'nail', name:'水晶法式', price:'$1500', duration:2.5, active:true},
+            {id:'n31', cat:'nail', name:'手部卷甲', price:'$300', duration:1, active:true},
+            {id:'n32', cat:'nail', name:'足部崁甲', price:'$150', duration:0.5, active:true},
+            {id:'n33', cat:'nail', name:'水晶足崁甲', price:'$250', duration:1, active:true},
             
-            {id:'n34', cat:'nail', group:'nail-care', name:'手-基礎保養', price:'$600', duration:1, active:true},
-            {id:'n35', cat:'nail', group:'nail-care', name:'手-嫩白保養', price:'$900', duration:1.5, active:true},
-            {id:'n36', cat:'nail', group:'nail-care', name:'手-深層保養', price:'$1200', duration:2, active:true},
-            {id:'n37', cat:'nail', group:'nail-care', name:'足-基礎保養', price:'$800', duration:1, active:true},
-            {id:'n38', cat:'nail', group:'nail-care', name:'足-足底修護', price:'$1200', duration:1.5, active:true},
-            {id:'n39', cat:'nail', group:'nail-care', name:'足-深層保養', price:'$1500', duration:2, active:true},
-            {id:'n40', cat:'nail', group:'nail-care', name:'加購敷膜', price:'$200', duration:0.5, active:true},
+            {id:'n34', cat:'nail', name:'手部基礎', price:'$600', duration:1, active:true},
+            {id:'n35', cat:'nail', name:'手部嫩白', price:'$900', duration:1.5, active:true},
+            {id:'n36', cat:'nail', name:'手部深層', price:'$1200', duration:2, active:true},
+            {id:'n37', cat:'nail', name:'足部基礎', price:'$800', duration:1, active:true},
+            {id:'n38', cat:'nail', name:'足部修護', price:'$1200', duration:1.5, active:true},
+            {id:'n39', cat:'nail', name:'足部深層', price:'$1500', duration:2, active:true},
+            {id:'n40', cat:'nail', name:'加購敷膜', price:'$200', duration:0.5, active:true},
 
-            {id:'s1', cat:'skin', group:'skin-basic', name:'臉部清潔(體驗價)', price:'$999', duration:1.5, active:true},
-            {id:'s2', cat:'skin', group:'skin-basic', name:'韓國小氣泡深層清潔', price:'$1200', duration:1.5, active:true},
-            {id:'s3', cat:'skin', group:'skin-basic', name:'一般客製化肌膚管理', price:'$1400', duration:2, active:true},
-            {id:'s4', cat:'skin', group:'skin-basic', name:'MTS客製化安瓶課程', price:'$1800', duration:2, active:true},
-            {id:'s5', cat:'skin', group:'skin-basic', name:'升級雪花補水面膜', price:'$50', duration:0, active:true},
-            {id:'s6', cat:'skin', group:'skin-high', name:'黃金24K金箔課程', price:'$2300', duration:2, active:true},
-            {id:'s7', cat:'skin', group:'skin-high', name:'木乃伊緊緻小臉', price:'$2100', duration:2, active:true},
-            {id:'s8', cat:'skin', group:'skin-high', name:'葉綠素抗痘', price:'$2000', duration:2, active:true},
-            {id:'s9', cat:'skin', group:'skin-high', name:'水光炸彈', price:'$2000', duration:2, active:true},
-            {id:'s10', cat:'skin', group:'skin-high', name:'韓國海藻矽針煥膚', price:'$2300', duration:2, active:true},
-            {id:'s11', cat:'skin', group:'skin-high', name:'R2海綿藻針', price:'$2000', duration:2, active:true},
+            {id:'s1', cat:'skin', name:'臉部清潔(體驗價)', price:'$999', duration:1.5, active:true},
+            {id:'s2', cat:'skin', name:'韓國小氣泡深層清潔', price:'$1200', duration:1.5, active:true},
+            {id:'s3', cat:'skin', name:'一般客製化肌膚管理', price:'$1400', duration:2, active:true},
+            {id:'s4', cat:'skin', name:'MTS客製化安瓶課程', price:'$1800', duration:2, active:true},
+            {id:'s5', cat:'skin', name:'升級雪花補水面膜', price:'$50', duration:0, active:true},
+            {id:'s6', cat:'skin', name:'黃金24K金箔課程', price:'$2300', duration:2, active:true},
+            {id:'s7', cat:'skin', name:'木乃伊緊緻小臉', price:'$2100', duration:2, active:true},
+            {id:'s8', cat:'skin', name:'葉綠素抗痘', price:'$2000', duration:2, active:true},
+            {id:'s9', cat:'skin', name:'水光炸彈', price:'$2000', duration:2, active:true},
+            {id:'s10', cat:'skin', name:'韓國海藻矽針煥膚', price:'$2300', duration:2, active:true},
+            {id:'s11', cat:'skin', name:'R2海綿藻針', price:'$2000', duration:2, active:true},
 
-            {id:'w1', cat:'wax', group:'wax-body', name:'腋下', price:'$500', duration:0.5, active:true},
-            {id:'w2', cat:'wax', group:'wax-body', name:'小手臂', price:'$800', duration:1, active:true},
-            {id:'w3', cat:'wax', group:'wax-body', name:'全手', price:'$1200', duration:1.5, active:true},
-            {id:'w4', cat:'wax', group:'wax-body', name:'小腿', price:'$1000', duration:1, active:true},
-            {id:'w5', cat:'wax', group:'wax-body', name:'全腿', price:'$1500', duration:2, active:true},
-            {id:'w6', cat:'wax', group:'wax-body', name:'手指/腳指', price:'$200', duration:0.5, active:true},
-            {id:'w7', cat:'wax', group:'wax-body', name:'手/腳背+指頭', price:'$300', duration:0.5, active:true},
-            {id:'w8', cat:'wax', group:'wax-private', name:'比基尼線', price:'$1500', duration:1, active:true},
-            {id:'w9', cat:'wax', group:'wax-private', name:'巴西式全除', price:'$2000', duration:2, active:true},
-            {id:'w10', cat:'wax', group:'wax-private', name:'私密膜', price:'$350', duration:0, active:true},
-            {id:'w11', cat:'wax', group:'wax-set', name:'腋下+私密處全除', price:'$2300', duration:2, active:true},
-            {id:'w12', cat:'wax', group:'wax-set', name:'小手臂+小腿', price:'$1600', duration:2, active:true},
-            {id:'w13', cat:'wax', group:'wax-set', name:'全身全除', price:'$4900', duration:4, active:true},
+            {id:'w1', cat:'wax', name:'腋下', price:'$500', duration:0.5, active:true},
+            {id:'w2', cat:'wax', name:'小手臂', price:'$800', duration:1, active:true},
+            {id:'w3', cat:'wax', name:'全手', price:'$1200', duration:1.5, active:true},
+            {id:'w4', cat:'wax', name:'小腿', price:'$1000', duration:1, active:true},
+            {id:'w5', cat:'wax', name:'全腿', price:'$1500', duration:2, active:true},
+            {id:'w6', cat:'wax', name:'手指/腳指', price:'$200', duration:0.5, active:true},
+            {id:'w7', cat:'wax', name:'手/腳背+指頭', price:'$300', duration:0.5, active:true},
+            {id:'w8', cat:'wax', name:'比基尼線', price:'$1500', duration:1, active:true},
+            {id:'w9', cat:'wax', name:'巴西式全除', price:'$2000', duration:2, active:true},
+            {id:'w10', cat:'wax', name:'私密膜', price:'$350', duration:0, active:true},
+            {id:'w11', cat:'wax', name:'腋下+私密處全除', price:'$2300', duration:2, active:true},
+            {id:'w12', cat:'wax', name:'小手臂+小腿', price:'$1600', duration:2, active:true},
+            {id:'w13', cat:'wax', name:'全身全除', price:'$4900', duration:4, active:true},
             
             // Events
-            {id:'e1', cat:'nail-event', group:'event', name:'打卡優惠', price:'-$50', duration:0, active:true},
-            {id:'e2', cat:'nail-event', group:'event', name:'本月特惠款', price:'$1000', duration:2.5, active:true},
-            {id:'e3', cat:'skin-event', group:'event', name:'肌膚活動', price:'$1000', duration:2, active:true},
-            {id:'e4', cat:'wax-event', group:'event', name:'除毛活動', price:'$1000', duration:1, active:true}
+            {id:'e1', cat:'nail-event', name:'打卡優惠', price:'-$50', duration:0, active:true},
+            {id:'e2', cat:'nail-event', name:'本月特惠款', price:'$1000', duration:2.5, active:true},
+            {id:'e3', cat:'skin-event', name:'肌膚活動', price:'$1000', duration:2, active:true},
+            {id:'e4', cat:'wax-event', name:'除毛活動', price:'$1000', duration:1, active:true}
         ];
 
         let db = { members: [], transactions: [], appointments: [], services: [], blockedSlots: [], dailySettings: [] };
@@ -450,7 +444,6 @@
             const payload = { 
                 action: 'updateService', isNew: true, 
                 cat: document.getElementById('new-svc-cat').value, 
-                group: document.getElementById('new-svc-group').value,
                 name: document.getElementById('new-svc-name').value, 
                 price: document.getElementById('new-svc-price').value, 
                 duration: document.getElementById('new-svc-duration').value,
@@ -459,7 +452,8 @@
             fetch(GAS_URL, { method: 'POST', body: JSON.stringify(payload) }).then(() => { closeModal('addServiceModal'); fetchData(); });
         }
 
-        function initServices() { if(confirm("確定匯入？")) { const rows = defaultServices.map(s => [s.id, s.cat, s.group, s.name, s.price, s.duration, s.active]); postData('initServices', 'services', rows).then(()=>alert("匯入完成")); } }
+        // ★ 一鍵匯入修正
+        function initServices() { if(confirm("確定匯入？")) { const rows = defaultServices.map(s => [s.id, s.cat, s.name, s.price, s.duration, s.active]); postData('initServices', 'services', rows).then(()=>alert("匯入完成")); } }
 
         // Standard Helpers
         function openTxModal() { 
