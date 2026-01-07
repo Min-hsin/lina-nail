@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lina nail 莉娜時尚館</title>
     <style>
-        /* 原汁原味的 CSS (含 Grid/Flex 修正) */
         :root { --bg-color: #F9F7F2; --card-bg: #FFFFFF; --primary-text: #5D4037; --secondary-text: #8D6E63; --accent-color: #BCAAA4; --accent-light: #EFEBE9; --accent-dark: #8D6E63; --border-color: #E0E0E0; --promo-highlight: #D32F2F; --nav-height: 60px; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "PingFang TC", sans-serif; }
         body { background-color: var(--bg-color); color: var(--primary-text); padding-top: var(--nav-height); line-height: 1.6; padding-bottom: 80px; }
@@ -21,7 +20,7 @@
         .tab-content { display: none; animation: fadeIn 0.3s; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        /* 原始表格樣式 */
+        /* 表格 */
         .grid-3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 5px; padding: 10px 0; border-bottom: 1px dashed var(--border-color); font-size: 0.95rem; align-items: center; }
         .grid-header { font-weight: bold; background: var(--accent-light); border-radius: 6px; text-align: center; padding: 8px 0; border-bottom: none; }
         .col-left { text-align: left; padding-left: 8px; } .col-center { text-align: center; }
@@ -51,7 +50,7 @@
         .radio-item.checked::before { background-color: var(--accent-color); border-color: var(--accent-color); content: '✓'; color: white; text-align: center; line-height: 18px; font-size: 14px; }
         .radio-item input { display: none; }
         .radio-item::before { content: ''; display: inline-block; width: 18px; height: 18px; border: 1px solid #ccc; background: white; margin-right: 12px; border-radius: 4px; }
-        /* 時間按鈕 */
+        /* 時間 */
         .time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
         .time-btn { padding: 10px; border: 1px solid #ddd; background: #fff; border-radius: 8px; text-align: center; cursor: pointer; font-size: 0.9rem; transition: 0.2s; }
         .time-btn.active { background: var(--accent-color); color: #fff; border-color: var(--accent-color); font-weight: bold; }
@@ -127,45 +126,43 @@
                 <div class="grid-3"><div class="col-left" data-bind="n9-name">單色凝膠</div><div class="col-center" data-bind="n9-price">$1000</div><div class="col-center" data-bind="n10-price">$1200</div></div>
                 <div class="grid-3"><div class="col-left" data-bind="n11-name">漸層凝膠</div><div class="col-center" data-bind="n11-price">$1200</div><div class="col-center" data-bind="n12-price">$1400</div></div>
                 <div class="grid-3"><div class="col-left" data-bind="n13-name">法式凝膠</div><div class="col-center" data-bind="n13-price">$1400</div><div class="col-center" data-bind="n14-price">$1600</div></div>
-                <div class="grid-3"><div class="col-left" data-bind="n15-name">延甲(指模)</div><div class="col-center" data-bind="n15-price">$100</div><div class="col-center" data-bind="n16-price">$120</div></div>
+                <div class="grid-3"><div class="col-left" data-bind="n15-name">延甲(指模)/指</div><div class="col-center" data-bind="n15-price">$100</div><div class="col-center" data-bind="n16-price">$120</div></div>
                 <div class="grid-3"><div class="col-left" data-bind="n17-name">延甲(甲片)/指</div><div class="col-center" data-bind="n17-price">$90</div><div class="col-center">-</div></div>
                 
                 <div class="section-title">卸甲 / 修補</div>
                 <div class="removal-box"><div class="removal-title" data-bind="n1-name">凝膠卸甲</div><div class="removal-row"><span data-bind="n2-name">續作</span><span data-bind="n2-price">$200</span></div><div class="removal-row"><span data-bind="n3-name">不續作</span><span data-bind="n3-price">$500</span></div><div class="removal-note">(含簡易保養)</div></div>
-                <div class="removal-box"><div class="removal-title">足部/水晶卸甲</div><div class="removal-row"><span data-bind="n5-name">足部續作</span><span data-bind="n5-price">$300</span></div><div class="removal-row"><span data-bind="n6-name">足部不續作</span><span data-bind="n6-price">$600</span></div><div class="removal-note">(含簡易保養)</div></div>
+                <div class="removal-box"><div class="removal-title">水晶卸甲</div><div class="removal-row"><span data-bind="n5-name">續作</span><span data-bind="n5-price">$300</span></div><div class="removal-row"><span data-bind="n6-name">不續作</span><span data-bind="n6-price">$600</span></div><div class="removal-note">(含簡易保養)</div></div>
                 <div class="list-row"><span class="list-title">水晶修補/指</span><span class="list-price" data-bind="n11-price">$80</span></div>
                 <div class="list-row"><span class="list-title">絲綢補甲/指</span><span class="list-price" data-bind="n12-price">$50</span></div>
                 
                 <div class="section-title">造型設計</div>
-                <div class="list-row"><span class="list-title" data-bind="n18-name">跳一色</span><span class="list-price" data-bind="n18-price">$100</span></div>
-                <div class="list-row"><span class="list-title" data-bind="n19-name">貓眼/鏡面</span><span class="list-price" data-bind="n19-price">$200</span></div>
-                <div class="list-row"><span class="list-title" data-bind="n20-name">暈染</span><span class="list-price" data-bind="n20-price">$100 up</span></div>
-                <div class="list-row"><span class="list-title" data-bind="n21-name">手繪</span><span class="list-price" data-bind="n21-price">$50 up</span></div>
-                <div class="list-row"><span class="list-title" data-bind="n22-name">亮片</span><span class="list-price" data-bind="n22-price">$50</span></div>
-                <div class="list-row"><span class="list-title" data-bind="n23-name">飾品</span><span class="list-price" data-bind="n23-price">$20 up</span></div>
-                <div class="list-row"><span class="list-title" data-bind="n24-name">立體造型</span><span class="list-price" data-bind="n24-price">$50 up</span></div>
-                <div class="list-row"><span class="list-title" data-bind="n25-name">立體鑽</span><span class="list-price" data-bind="n25-price">$20-120</span></div>
-                <div class="list-row"><span class="list-title" data-bind="n26-name">施華洛</span><span class="list-price" data-bind="n26-price">$30-120</span></div>
-                <div class="list-row"><span class="list-title" data-bind="n27-name">滿鑽</span><span class="list-price" data-bind="n27-price">$250 up</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n18-name">跳一色</span><span class="list-price" data-bind="n13-price">$100</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n19-name">貓眼/鏡面</span><span class="list-price" data-bind="n14-price">$200</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n20-name">暈染/指</span><span class="list-price" data-bind="n15-price">$100 up</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n21-name">手繪/指</span><span class="list-price" data-bind="n16-price">$50 up</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n22-name">亮片/指</span><span class="list-price" data-bind="n17-price">$50</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n23-name">飾品/素材</span><span class="list-price" data-bind="n18-price">$20 up</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n24-name">立體造型</span><span class="list-price" data-bind="n19-price">$50 up</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n25-name">立體鑽飾</span><span class="list-price" data-bind="n20-price">$20-120</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n26-name">施華洛鑽</span><span class="list-price" data-bind="n21-price">$30-120</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n27-name">滿鑽設計/指</span><span class="list-price" data-bind="n22-price">$250 up</span></div>
                 
-                <div class="section-title">水晶指甲 (僅手部)</div>
-                <div class="list-row"><span class="list-title" data-bind="n28-name">透明延甲/咬甲矯正</span><span class="list-price" data-bind="n28-price">$1200</span></div>
-                <div class="list-row"><span class="list-title" data-bind="n29-name">璀璨漸層</span><span class="list-price" data-bind="n29-price">$1400</span></div>
-                <div class="list-row"><span class="list-title" data-bind="n30-name">法式</span><span class="list-price" data-bind="n30-price">$1500</span></div>
-                
-                <div class="section-title">矯正系列</div>
-                <div class="list-row"><span class="list-title">手部卷甲</span><span class="list-price" data-bind="n31-price">$300</span></div>
-                <div class="list-row"><span class="list-title">足部崁甲/指</span><span class="list-price" data-bind="n32-price">$150</span></div>
-                <div class="list-row"><span class="list-title">水晶足部崁甲/指</span><span class="list-price" data-bind="n33-price">$250</span></div>
+                <div class="section-title">水晶/矯正</div>
+                <div class="list-row"><span class="list-title" data-bind="n28-name">透明延甲/咬甲矯正</span><span class="list-price" data-bind="n23-price">$1200</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n29-name">璀璨漸層</span><span class="list-price" data-bind="n24-price">$1400</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n30-name">法式</span><span class="list-price" data-bind="n25-price">$1500</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n31-name">手部卷甲</span><span class="list-price" data-bind="n26-price">$300</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n32-name">足部崁甲/指</span><span class="list-price" data-bind="n27-price">$150</span></div>
+                <div class="list-row"><span class="list-title" data-bind="n33-name">水晶足崁甲/指</span><span class="list-price" data-bind="n28-price">$250</span></div>
                 
                 <div class="section-title">保養護理</div>
-                <div class="skin-item"><div class="skin-header"><span data-bind="n34-name">手部基礎</span><span data-bind="n34-price">$600</span></div><div class="skin-flow">舒緩淨手浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 護甲油 - 指緣油</div></div>
-                <div class="skin-item"><div class="skin-header"><span data-bind="n35-name">手部嫩白</span><span data-bind="n35-price">$900</span></div><div class="skin-flow">舒緩淨手浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 去角質(至手腕) - 滋潤修護 - 護甲油 - 指緣油</div></div>
-                <div class="skin-item"><div class="skin-header"><span data-bind="n36-name">手部深層</span><span data-bind="n36-price">$1200</span></div><div class="skin-flow">舒緩淨手浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 去角質(至手肘) - 按摩舒壓 - 滋潤修護 - 護甲油 - 指緣油</div></div>
-                <div class="skin-item"><div class="skin-header"><span data-bind="n37-name">足部基礎</span><span data-bind="n37-price">$800</span></div><div class="skin-flow">舒緩淨足浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 護甲油 - 指緣油</div></div>
-                <div class="skin-item"><div class="skin-header"><span data-bind="n38-name">足部修護</span><span data-bind="n38-price">$1200</span></div><div class="skin-flow">舒緩淨足浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 足底去繭 - 去角質(至腳踝) - 滋潤修護 - 護甲油 - 指緣油</div></div>
-                <div class="skin-item"><div class="skin-header"><span data-bind="n39-name">足部深層</span><span data-bind="n39-price">$1500</span></div><div class="skin-flow">舒緩淨足浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 足底去繭 - 去角質(至膝蓋) - 按摩舒壓 - 滋潤修護 - 護甲油 - 指緣油</div></div>
-                <div class="list-row" style="background:#FDFBF9;"><span class="list-title" data-bind="n40-name">加購嫩白保濕敷膜</span><span class="list-price" data-bind="n40-price">$200</span></div>
+                <div class="skin-item"><div class="skin-header"><span data-bind="n34-name">手部基礎</span><span data-bind="n29-price">$600</span></div><div class="skin-flow">舒緩淨手浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 護甲油 - 指緣油</div></div>
+                <div class="skin-item"><div class="skin-header"><span data-bind="n35-name">手部嫩白</span><span data-bind="n30-price">$900</span></div><div class="skin-flow">舒緩淨手浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 去角質(至手腕) - 滋潤修護 - 護甲油 - 指緣油</div></div>
+                <div class="skin-item"><div class="skin-header"><span data-bind="n36-name">手部深層</span><span data-bind="n31-price">$1200</span></div><div class="skin-flow">舒緩淨手浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 去角質(至手肘) - 按摩舒壓 - 滋潤修護 - 護甲油 - 指緣油</div></div>
+                <div class="skin-item"><div class="skin-header"><span data-bind="n37-name">足部基礎</span><span data-bind="n32-price">$800</span></div><div class="skin-flow">舒緩淨足浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 護甲油 - 指緣油</div></div>
+                <div class="skin-item"><div class="skin-header"><span data-bind="n38-name">足部修護</span><span data-bind="n33-price">$1200</span></div><div class="skin-flow">舒緩淨足浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 足底去繭 - 去角質(至腳踝) - 滋潤修護 - 護甲油 - 指緣油</div></div>
+                <div class="skin-item"><div class="skin-header"><span data-bind="n39-name">足部深層</span><span data-bind="n34-price">$1500</span></div><div class="skin-flow">舒緩淨足浴 - 修型 - 甘皮護理 - 硬皮護理 - 甲面拋光 - 足底去繭 - 去角質(至膝蓋) - 按摩舒壓 - 滋潤修護 - 護甲油 - 指緣油</div></div>
+                <div class="list-row" style="background:#FDFBF9;"><span class="list-title" data-bind="n40-name">加購嫩白保濕敷膜</span><span class="list-price" data-bind="n35-price">$200</span></div>
             </div>
 
             <div id="skin" class="tab-content">
@@ -175,7 +172,6 @@
                 <div class="skin-item"><div class="skin-header"><span data-bind="s3-name">一般客製化肌膚管理</span><span data-bind="s3-price">$1400</span></div><span class="note-red">依照膚況搭配 保濕舒緩</span><div class="skin-flow">卸妝 - 洗臉 - 清粉刺 - 音波去角質/小氣泡 - 照光 - 導入 - 軟膜 - 基本保養 - 防曬</div></div>
                 <div class="skin-item"><div class="skin-header"><span data-bind="s4-name">MTS客製化安瓶課程</span><span data-bind="s4-price">$1800</span></div><span class="note-red">依照膚況搭配安瓶 MTS加強安瓶滲透吸收</span><div class="skin-flow">卸妝 - 洗臉 - 清粉刺 - 音波去角質/小氣泡 - MTS客製化安瓶導入 - 照光 - 安瓶導入 - 軟膜 - 基本保養 - 防曬</div></div>
                 <div class="list-row" style="background:#FDFBF9;"><span class="list-title" data-bind="s5-name">升級雪花補水面膜</span><span class="list-price" data-bind="s5-price">$50</span></div>
-                
                 <div class="section-title">高階課程</div>
                 <div class="skin-item"><div class="skin-header"><span data-bind="s6-name">黃金24K金箔課程</span><span data-bind="s6-price">$2300</span></div><div class="skin-flow">嫩白 淡化細紋黑斑 刺激膠原蛋白增生 排除面部毒素化妝品殘留</div></div>
                 <div class="skin-item"><div class="skin-header"><span data-bind="s7-name">木乃伊緊緻小臉</span><span data-bind="s7-price">$2100</span></div><div class="skin-flow">嫩白保濕 調理暗沉蠟黃膚色不均 緊緻拉提縮小毛孔</div></div>
@@ -213,18 +209,19 @@
             </div>
 
             <div id="member-card" class="tab-content">
-                <div class="skin-item" style="border-left: 4px solid gold; padding-left: 10px;"><div class="skin-header"><span>黃金會員 $8000</span></div><div class="skin-flow">• 消費美甲、肌膚管理、除毛課程均 95折</div></div>
-                <div class="skin-item" style="border-left: 4px solid silver; padding-left: 10px;"><div class="skin-header"><span>白金會員 $17000</span></div><div class="skin-flow">• 購買產品均打 9折<br>• 消費美甲、肌膚管理、除毛課程均打 9折</div></div>
-                <div class="skin-item" style="border-left: 4px solid #b9f2ff; padding-left: 10px;"><div class="skin-header"><span>鑽石會員 $30000</span></div><div class="skin-flow">• 購買產品 9折、課程 85折<br>• 贈送好禮課程三選一</div></div>
+                <div class="skin-item" style="border-left: 4px solid gold; padding-left: 10px;"><div class="skin-header"><span>黃金會員 $8000</span></div><div class="skin-flow">• 贈送黃金卡會員禮一份<br>• 消費美甲、肌膚管理、除毛課程均 95折</div></div>
+                <div class="skin-item" style="border-left: 4px solid silver; padding-left: 10px;"><div class="skin-header"><span>白金會員 $17000</span></div><div class="skin-flow">• 贈送白金卡會員禮一份<br>• 購買產品均打 9折<br>• 消費美甲、肌膚管理、除毛課程均打 9折</div></div>
+                <div class="skin-item" style="border-left: 4px solid #b9f2ff; padding-left: 10px;"><div class="skin-header"><span>鑽石會員 $30000</span></div><div class="skin-flow">• 贈送鑽石卡會員禮一份 + 好禮課程三選一<br>(手部深層保養 / 韓國小氣泡課程 / 小腿除毛)<br>• 購買產品均打 9折<br>• 消費美甲、肌膚管理、除毛課程均打 85折</div></div>
+                <div class="removal-note" style="line-height:1.6; margin-top:20px;">* 會員卡不限本人使用，經本人同意後可與他人共享<br>* 美甲項目可併用當月優惠活動<br>* 體驗價不得使用儲值優惠<br>* 儲值會員可提供無卡分期</div>
             </div>
         </section>
         
         <section id="pay" class="card">
             <h2>支付方式</h2>
             <div class="pay-container">
-                <div class="pay-item"><svg class="pay-icon" viewBox="0 0 24 24"><path fill="#555" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/></svg><span>現金支付</span></div>
-                <div class="pay-item"><svg class="pay-icon" viewBox="0 0 24 24"><path fill="#555" d="M4 10h3v7H4zM10.5 10h3v7h-3zM2 19h20v3H2zM17 10h3v7h-3zM12 1L2 6v2h20V6z"/></svg><span>轉帳</span></div>
-                <div class="pay-item"><svg class="pay-icon" viewBox="0 0 24 24"><path fill="#000" d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zM4 12h16v2H4v-2zm0-2h16V6H4v4zm0 8v-2h16v2H4z"/></svg><span>LINE Pay</span></div>
+                <div class="pay-item"><svg class="pay-icon" viewBox="0 0 24 24"><path fill="#555" d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg><span>現金</span></div>
+                <div class="pay-item"><svg class="pay-icon" viewBox="0 0 24 24"><path fill="#555" d="M12.5 6.9c1.7 0 3.1 1.4 3.1 3.1 0 1.7-1.4 3.1-3.1 3.1-1.7 0-3.1-1.4-3.1-3.1 0-1.7 1.4-3.1 3.1-3.1M4 4h17v13H4V4m0 16h17v2H4v-2m5-7.5c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5-.7-1.5-1.5-1.5-1.5.7-1.5 1.5z"/></svg><span>轉帳</span></div>
+                <div class="pay-item"><svg class="pay-icon" viewBox="0 0 24 24"><path fill="#000" d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zM4 12h16v2H4v-2zm0-2h16V6H4v4zm0 8v-2h16v2H4z"/></svg><span>Line Pay</span></div>
             </div>
         </section>
 
@@ -286,7 +283,7 @@
             </form>
         </section>
         
-        <section id="contact" class="card"><h2>聯絡方式</h2><div class="contact-grid"><a href="https://www.facebook.com/share/18LuFgiUqx" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7h-2.54v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02z"/></svg><span>Facebook</span></a><a href="https://www.instagram.com/lina__.nail" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg><span>Instagram</span></a><a href="https://lin.ee/8eSVhBH" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg><span>官方 Line</span></a><a href="tel:034831890" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg><span>撥打電話</span><span class="contact-sub">03-483-1890</span></a></div><a href="https://maps.app.goo.gl/e3jjS3mCBjc5YgAq9?g_st=ipc" target="_blank" class="address-box"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>桃園市觀音區莊敬路100-1號1樓</a></section>
+        <section id="contact" class="card"><h2>聯絡方式</h2><div class="contact-grid"><a href="https://www.facebook.com/share/18LuFgiUqx" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2.04c-5.5 0-10 4.49-10 10.02 0 5 3.66 9.15 8.44 9.9v-7h-2.54v-2.9h2.54V9.85c0-2.51 1.49-3.89 3.78-3.89 1.09 0 2.23.19 2.23.19v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33v7a10 10 0 0 0 8.44-9.9c0-5.53-4.5-10.02-10-10.02z"/></svg><span>Facebook</span></a><a href="https://www.instagram.com/lina__.nail" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0-3-3z"/></svg><span>Instagram</span></a><a href="https://lin.ee/8eSVhBH" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>官方 Line</span></a><a href="tel:034831890" class="contact-btn"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg><span>撥打電話</span><span class="contact-sub">03-483-1890</span></a></div><a href="https://maps.app.goo.gl/e3jjS3mCBjc5YgAq9?g_st=ipc" target="_blank" class="address-box"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>桃園市觀音區莊敬路100-1號1樓</a></section>
     </div>
 
     <script>
@@ -299,24 +296,13 @@
 
         function showLoading(show) { document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none'; }
         async function initDB() { try { const res = await fetch(GAS_URL + '?action=getAll'); db = await res.json(); bindPrices(); renderServices(); } catch(e) {} }
-        // ★ 確保 showTab 是全域函式
-        window.showTab = function(id, btn) { 
-            document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active')); 
-            document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-            document.getElementById(id).classList.add('active'); 
-            btn.classList.add('active'); 
-        };
-        // ★ 確保 switchNailSub 是全域函式
-        window.switchNailSub = function(part) { 
-            document.getElementById('nail-hand-options').style.display = (part==='hand')?'block':'none'; 
-            document.getElementById('nail-foot-options').style.display = (part==='foot')?'block':'none'; 
-            document.querySelectorAll('.nail-sub-btn').forEach(b => b.classList.remove('active')); 
-            event.target.classList.add('active'); 
-        };
+        
+        // ★★★ 將所有函式綁定到 Window (全域)，解決按鈕沒反應 ★★★
+        window.showTab = function(id, btn) { document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); document.getElementById(id).classList.add('active'); btn.classList.add('active'); };
+        window.switchNailSub = function(part) { document.getElementById('nail-hand-options').style.display = (part==='hand')?'block':'none'; document.getElementById('nail-foot-options').style.display = (part==='foot')?'block':'none'; document.querySelectorAll('.nail-sub-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); };
         
         window.onload = async function() { await initDB(); setServiceCat('nail'); };
         
-        // ★ ID 綁定價格文字
         function bindPrices() {
             db.services.forEach(s => {
                 const nameEl = document.querySelector(`[data-bind="${s.id}-name"]`);
@@ -326,7 +312,6 @@
             });
         }
         
-        // ★ 預約選項歸類 (手/足/其他)
         function renderServices() {
             const handOpts = document.getElementById('nail-hand-options');
             const footOpts = document.getElementById('nail-foot-options');
@@ -339,10 +324,15 @@
                 const html = `<label class="radio-item"><input type="checkbox" class="event-opt" value="${s.name}" data-cat="${s.cat}"> ${s.name}</label>`;
                 
                 if(s.cat === 'nail') {
-                    // 根據名稱判斷歸類到手或足
-                    if(s.name.includes('手') || s.name.includes('指模') || s.name.includes('卷甲')) handOpts.innerHTML += html;
+                    if(s.group === 'nail-basic' || s.group === 'nail-ext' || s.group === 'nail-design' || s.group === 'nail-care' || s.name.includes('手')) {
+                         if(s.name.includes('足')) footOpts.innerHTML += html; // 特例
+                         else handOpts.innerHTML += html;
+                    }
+                    if(s.group === 'nail-basic' && s.name.includes('足')) footOpts.innerHTML += html;
                     else if(s.name.includes('足') || s.name.includes('崁甲')) footOpts.innerHTML += html;
-                    else { handOpts.innerHTML += html; footOpts.innerHTML += html; } // 兩邊都放 (如卸甲通用)
+                    
+                    // 通用項目兩邊都加 (卸甲)
+                    if(s.group.includes('removal')) { handOpts.innerHTML += html; footOpts.innerHTML += html; }
                 } else if(s.cat === 'skin') {
                     document.getElementById('skinOptions').innerHTML += html;
                 } else if(s.cat === 'wax') {
@@ -356,15 +346,13 @@
             bindRadioEvents();
         }
         
-        // ★ 會員狀態修正 (去除非數字符號比對)
-        function checkMemberStatus() {
-            const phone = document.getElementById('custPhone').value.replace(/\D/g, ''); // 只留數字
+        window.checkMemberStatus = function() {
+            const phone = document.getElementById('custPhone').value.replace(/\D/g, ''); 
             const member = db.members.find(m => String(m.phone).replace(/\D/g, '') === phone);
-            
             if (member) {
                 document.getElementById('bookingForm').dataset.blacklist = (String(member.isblacklisted)==="TRUE" || String(member.isblacklisted)==="true") ? "true" : "false";
                 document.getElementById('newGuestSection').classList.remove('open');
-                document.getElementById('custName').value = member.name; // 自動帶入姓名
+                document.getElementById('custName').value = member.name; 
                 enableWaxOptions();
             } else { 
                 document.getElementById('bookingForm').dataset.blacklist = "false"; 
@@ -373,7 +361,6 @@
             }
         }
 
-        // ... (TimeButtons, Submit, Login, History functions copied from previous successful version)
         document.getElementById('shopTitle').addEventListener('click', ()=>{ window.location.href='admin.html'; });
         const dateInput = document.getElementById('bookDate');
         const customTimeInput = document.getElementById('customTimeInput');
@@ -422,19 +409,18 @@
             const date = document.getElementById('bookDate').value; let duration = 2.5; const data = getSelectedData(); if(data.totalDuration > 0) duration = data.totalDuration;
             if(!isSlotAvailable(date, time, duration)) { alert("該時段已被預約"); document.getElementById('customTimeInput').value = ""; document.getElementById('bookTime').value = ""; }
         }
-        function setServiceCat(cat) { 
+        window.setServiceCat = function(cat) { 
             document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active')); document.getElementById('btn-'+cat).classList.add('active'); 
             document.querySelectorAll('.srv-group').forEach(g=>g.style.display='none'); document.getElementById('srv-'+cat).style.display='block'; 
             const ec = document.getElementById(cat+'-event-container'); if(ec) ec.style.display = db.services.some(s=>s.cat===cat+'-event'&&String(s.active)==='true')?'block':'none';
             const dateVal = document.getElementById('bookDate').value; if(dateVal) renderTimeButtons(dateVal);
         }
-        function switchNailSub(part) { document.getElementById('nail-hand-options').style.display = (part==='hand')?'block':'none'; document.getElementById('nail-foot-options').style.display = (part==='foot')?'block':'none'; document.querySelectorAll('.nail-sub-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); }
         function getSelectedData() { let items=[]; let totalDuration=0; document.querySelectorAll('input.event-opt:checked').forEach(i => { items.push(i.value); const s = db.services.find(s=>s.name===i.value); if(s) totalDuration+=parseFloat(s.duration); }); return {items, totalDuration}; }
         function bindRadioEvents() { document.querySelectorAll('.event-opt').forEach(i => i.addEventListener('click', ()=>{ if(i.checked) i.closest('.radio-item').classList.add('checked'); else i.closest('.radio-item').classList.remove('checked'); updateBookingSummary(); })); }
         function updateBookingSummary() { const d = getSelectedData(); const list = document.getElementById('summaryList'); list.innerHTML=''; if(d.items.length>0) { document.getElementById('bookingSummary').style.display='block'; d.items.forEach(i=>{ list.innerHTML+=`<li>${i}</li>`; }); const date=document.getElementById('bookDate').value; if(date) renderTimeButtons(date); } else document.getElementById('bookingSummary').style.display='none'; }
         
         async function copyText(text) { try { await navigator.clipboard.writeText(text); } catch (err) { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); } }
-        function submitBooking() { 
+        window.submitBooking = function() { 
              const name = document.getElementById('custName').value; const phone = document.getElementById('custPhone').value; const date = document.getElementById('bookDate').value; let time = document.getElementById('bookTime').value; if(time==='其他') time=document.getElementById('customTimeInput').value; const note = document.getElementById('custNote').value;
              if(!name || !phone || !date || !time) { alert("請填寫完整"); return; }
              const data = getSelectedData(); if(data.items.length===0) { alert("請選擇項目"); return; }
@@ -443,7 +429,7 @@
              fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'add', sheet: 'appointments', data: bd }) }).then(() => { showLoading(false); alert("已複製！請跳轉 LINE"); window.location.href="https://lin.ee/8eSVhBH"; });
         }
         
-        function login() { 
+        window.login = function() { 
              initDB(); const p = document.getElementById('mPhone').value.replace(/\D/g,''); const n = document.getElementById('mName').value; 
              const m = db.members.find(x => x.name===n && String(x.phone).replace(/\D/g,'').includes(p));
              if(m) { currentMember=m; document.getElementById('loginSection').style.display='none'; document.getElementById('dashboardSection').style.display='block'; document.getElementById('welcomeName').innerText=m.name; document.getElementById('mLevel').innerText=m.level; document.getElementById('mBalance').innerText=m.balance; document.getElementById('custName').value=m.name; document.getElementById('custPhone').value=m.phone; if(m.courses) document.getElementById('courseList').innerHTML=`<li>${m.courses}</li>`; checkMemberStatus(); renderHistory(); } else alert("失敗");
@@ -462,16 +448,14 @@
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
             listContent.innerHTML = txHistory.slice(start, end).map(h => `<div class="history-card"><div class="h-row-top"><span>${formatDateBeautiful(h.date)}</span><span>$${h.amount}</span></div><div class="h-row-btm"><span>${h.item} <span style="font-size:0.8rem; color:#888;">${h.note ? '('+h.note+')' : ''}</span></span><span class="h-balance">${h.type}</span></div></div>`).join('');
-            // ... (Pagination logic same as before)
         }
         function changePage(d) { currentPage+=d; displayHistoryPage(); }
         function formatDateBeautiful(d) { if(!d)return''; try{if(d.includes('-')){const p=d.split('-');return `${parseInt(p[0])}/${parseInt(p[1])}/${parseInt(p[2])}`;}return d;}catch(e){return d;} }
-        function getDiscountText(l) { return l; }
-        function logout() { document.getElementById('loginSection').style.display='block'; document.getElementById('dashboardSection').style.display='none'; }
-        function showAsset(type, btn) { document.querySelectorAll('.mem-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); document.querySelectorAll('.asset-info-box').forEach(b => b.classList.remove('show')); document.getElementById('info-' + type).classList.add('show'); }
-        function switchHistoryTab(tab, btn) { document.querySelectorAll('.h-tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.history-list').forEach(l => l.style.display = 'none'); btn.classList.add('active'); document.getElementById('tab-' + tab).style.display = 'block'; }
-        function updateWaxingOptions() {}
-        function enableWaxOptions() {}
+        window.logout = function() { document.getElementById('loginSection').style.display='block'; document.getElementById('dashboardSection').style.display='none'; }
+        window.showAsset = function(type, btn) { document.querySelectorAll('.mem-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); document.querySelectorAll('.asset-info-box').forEach(b => b.classList.remove('show')); document.getElementById('info-' + type).classList.add('show'); }
+        window.switchHistoryTab = function(tab, btn) { document.querySelectorAll('.h-tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.history-list').forEach(l => l.style.display = 'none'); btn.classList.add('active'); document.getElementById('tab-' + tab).style.display = 'block'; }
+        window.updateWaxingOptions = function() {}
+        window.enableWaxOptions = function() {}
     </script>
 </body>
 </html>
